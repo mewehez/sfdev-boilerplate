@@ -4,7 +4,6 @@ description: Représente un <rôle> réel face à une idée ou une interface.
   Convoqué par idea-grill, ou sur "que dirait un <rôle>", "teste ça sur
   un <rôle>". Simulé — jamais une source de vérité.
 tools: Read, Grep, Glob
-model: claude-sonnet-4-5
 ---
 
 # <Rôle> — persona simulé

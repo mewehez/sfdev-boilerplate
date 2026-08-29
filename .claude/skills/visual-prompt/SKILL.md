@@ -36,10 +36,14 @@ updated: AAAA-MM-JJ
 - <ce que le lecteur doit comprendre ou ressentir — une ligne>
 
 ## Prompt
-- <le prompt exact, copiable tel quel>
+```
+<le prompt exact, copiable tel quel, sans tiret ni puce>
+```
 
 ## Négatif
-- <ce qu'on exclut>
+```
+<ce qu'on exclut>
+```
 
 
 ## Variantes essayées

@@ -15,8 +15,7 @@ Une idée qui arrive n'est PAS une tâche. Capture ≠ décision.
 Jamais d'implémentation dans le tour où une idée apparaît.
 
 ## Choix du mode
-- Une idée arrive → **CAPTURE**. Toujours. Même si elle semble évidente,
-  même si elle est minuscule, même si on vient d'en parler.
+- Une idée arrive → **CAPTURE**. Toujours. Même minuscule, même évidente.
 - L'utilisateur demande explicitement d'arbitrer → **GRILL**.
 - En cas de doute → CAPTURE. Capturer à tort coûte trois lignes ;
   griller à tort coûte une session d'attention.
@@ -28,11 +27,13 @@ Jamais d'implémentation dans le tour où une idée apparaît.
 Ne jamais interrompre ce qu'on est en train de faire.
 
 ## Procédure
-1. Lire `product/INDEX.md` pour le prochain IDEA-nnn libre.
-2. Vérifier le doublon : grep le titre dans `product/ideas/`.
-   Si l'idée existe déjà → ajouter une ligne au fichier existant et
-   répondre `IDEA-nnn enrichie. On reprend.`
-3. Sinon, écrire `product/ideas/IDEA-nnn.md` :
+1. Lire product/INDEX.md pour le prochain IDEA-nnn libre. Prendre en
+   compte la section `## IDs réservés — archivés` : un ID qui y figure
+   est pris, même s'il n'apparaît pas dans la liste IDEA.
+2. Vérifier le doublon : grep le titre dans product/ideas/.
+   Si l'idée existe → ajouter une ligne au fichier existant, répondre
+   `IDEA-nnn enrichie. On reprend.`
+3. Sinon, écrire product/ideas/IDEA-nnn.md :
 
 ---
 id: IDEA-nnn
@@ -65,8 +66,7 @@ ingrillables séparément.
 ## Interdits du mode CAPTURE
 - Reformuler l'idée pour la rendre "meilleure". Le verbatim est la donnée.
 - Ajouter analyse, coût, estimation, avis.
-- Demander une clarification. Si c'est flou, c'est flou —
-  `? Non tranché` existe pour ça.
+- Demander une clarification. `? Non tranché` existe pour ça.
 - Créer une SPEC ou une TASK.
 - Enchaîner sur "veux-tu qu'on l'implémente ?"
 - Basculer en mode GRILL sans que l'utilisateur l'ait demandé.
@@ -76,7 +76,7 @@ ingrillables séparément.
 # MODE GRILL
 
 ## G0 — Vider la file
-1. Lire `product/INDEX.md` § File de grill.
+1. Lire product/INDEX.md § File de grill.
 2. Afficher ≤ 8 bullets, la plus ancienne en premier :
    `IDEA-nnn — <titre> (capturée le JJ/MM, contexte : <...>)`
 3. `? On commence par laquelle, ou dans l'ordre ?`
@@ -87,17 +87,23 @@ Ne jamais enchaîner sans redemander. Le grill consomme de l'attention,
 et l'attention est la ressource rare.
 
 ## G1 — Grill d'une idée
-Convoquer par sous-agents, selon le régime de preuve d'ADR-002 :
+
+Deux mécanismes distincts, ne pas les confondre :
+
+**Skills, invoquées en séquence dans cette session :**
 - `domain-expert` — ce problème existe-t-il vraiment dans le domaine ?
-- `<role>-persona` — sauf en régime auto-usage : le vivrais-tu ?
-  que fais-tu aujourd'hui à la place ?
-- `product-owner` — qu'est-ce que ça déclasse dans le backlog ?
 - `software-architect` — ça casse quelle décision existante ?
+  (consultation seule : il ne scaffolde rien ici)
 
-En régime auto-usage, tu remplaces le persona par une question directe :
-`? Tu l'as vécu combien de fois cette semaine ?`
+**Agents, dispatchés en sous-agents :**
+- `<role>-persona` — le vivrais-tu ? que fais-tu aujourd'hui à la place ?
+  SAUTÉ en régime auto-usage : poser à la place
+  `? Tu l'as vécu combien de fois cette semaine ?`
+- `product-owner` — qu'est-ce que ça déclasse ?
 
-Si une question reste sans réponse → convoquer `suggester`.
+Si une question reste sans réponse → dispatcher `suggester`.
+L'option retenue crée un SUG-nnn `pending` que je dois inscrire dans
+les `links:` de la SPEC si l'idée passe en specd.
 
 ## G2 — Verdict (≤ 12 bullets)
 
@@ -109,23 +115,39 @@ Si une question reste sans réponse → convoquer `suggester`.
 ## Verdict : specd | parked | killed
 ## ? La question qui décide  (une seule, obligatoire si parked)
 
-`parked` est le verdict par défaut.
-Une idée parquée garde sa raison de parcage — c'est elle qu'on relit
-pour la dégeler, pas l'idée.
+`parked` est le verdict par défaut. Une idée parquée garde sa raison de
+parcage — c'est elle qu'on relit pour la dégeler, pas l'idée.
 
-Mettre à jour le `status:` du fichier IDEA. Un `killed` part dans
-`product/archive/` — le hook l'exclut du graphe et garde l'ID réservé.
+Mettre à jour le `status:` du fichier IDEA.
+Un `killed` est déplacé dans product/archive/ideas/ — frontmatter intact.
+Le hook l'exclut du graphe et réserve l'ID définitivement.
 
 ## G3 — Si specd
-- créer SPEC-nnn, `links: [IDEA-nnn, DOM-nnn | TRC-nnn | INT-nnn]`
-- ne pas créer de TASK : c'est `product-owner` qui décide du moment
-- ne pas compiler : c'est `spec-compiler` qui produit le BRIEF
+Écrire product/specs/SPEC-nnn.md :
+
+---
+id: SPEC-nnn
+title: ...
+status: specd
+links: [IDEA-nnn, <DOM/TRC/INT-nnn>, <SUG-nnn si applicable>]
+updated: AAAA-MM-JJ
+---
+
+Contraintes vérifiées par le hook :
+- `links:` DOIT contenir l'IDEA parente, sinon la SPEC est orpheline
+- au moins une preuve dans la chaîne (DOM, TRC ou INT), sinon le BRIEF
+  issu de cette SPEC sera bloqué plus tard
+- tout SUG pending ayant servi au verdict doit y figurer
+
+Puis s'arrêter :
+- ne pas créer de TASK — c'est `product-owner` qui décide du moment
+- ne pas compiler — c'est `spec-compiler` qui produit le BRIEF
 
 ## G4 — Dégel d'une parquée
-Une idée `parked` ne revient pas parce qu'elle est vieille. Elle revient
-quand sa `? La question qui décide` a trouvé sa réponse.
+Une idée `parked` ne revient pas parce qu'elle est vieille, mais quand
+sa `? La question qui décide` a trouvé sa réponse.
 Sur "dégèle les idées parquées" : lister uniquement celles dont la
-question décisive est désormais couverte par un DOM, TRC ou INT récent.
+question décisive est couverte par un DOM, TRC ou INT récent.
 Si aucune → le dire en une ligne, ne pas proposer de dégeler quand même.
 
 ## Interdits du mode GRILL

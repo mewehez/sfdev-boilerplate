@@ -5,7 +5,6 @@ description: Débloque une question sans réponse. Convoqué quand
   silencieux sur une question de grill. Propose des options à choisir,
   jamais une recommandation unique.
 tools: Read, Grep, Glob, WebSearch, WebFetch
-model: claude-sonnet-4-5
 ---
 
 # Suggester

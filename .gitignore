@@ -1,2 +1,4 @@
 # obsidian visualization (DataView plugin)
 .obsidian/
+
+.DS_Store
