@@ -114,6 +114,10 @@ Lire `DESIGN.md`, **§ Promesses en premier**. Puis, en 4 bullets maximum :
 - **La hiérarchie** — ce qui est lu en premier, deuxième, jamais.
 - **Les cinq états** — vide, chargement, erreur récupérable, erreur
   définitive, succès. Aucun ne se découvre en production.
+- **Le refus** — si l'écran a un formulaire : que se passe-t-il quand
+  il est incomplet ? Un bouton grisé ne dit pas CE QUI manque. On laisse
+  cliquer et on répond sur le champ fautif. Un bouton ne se désactive
+  que si la raison est affichée à sa place.
 - **Ce que je réutilise** — les composants existants, nommés.
 
 ## Pendant
@@ -141,6 +145,15 @@ remonte, ou écrire pourquoi on ne l'applique pas.
 - Ajouter une couleur, une taille ou un espacement hors des tokens.
   Si le token manque, modifier `DESIGN.md` d'abord — et le dire.
 - Livrer un écran sans état d'erreur ni état de chargement.
+- Désactiver un bouton sans afficher pourquoi. Le grisé est un refus
+  muet : l'utilisateur cherche, ne trouve pas, et part.
+- Répéter la marque sur un écran d'usage. Elle sert là où quelqu'un ne
+  sait pas encore où il est, nulle part ailleurs.
+- Laisser une page de réglages dépasser deux écrans : chaque groupe
+  devient sa page, avec son retour.
+- Mélanger un contrôle natif du navigateur (date, couleur, sélecteur)
+  avec des contrôles maison. Il arrive avec ses tailles et son
+  vocabulaire ; le produit n'a qu'un seul objet par geste.
 - Sortir un design "moderne", "épuré", "premium" : ces mots ne décrivent
   rien. Décrire ce qui est à l'écran.
 - Copier une esthétique occidentale par défaut quand le contexte d'usage

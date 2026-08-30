@@ -333,3 +333,34 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
   d'un produit qu'il ne verra jamais. La section de `DESIGN.md` et la
   lentille du critique sont ce qu'on peut faire de mécanique ; le reste
   demande de relire la liste, et ça se dégrade.
+
+---
+
+## 2026-08-30 — Quatre défauts d'ergonomie qu'aucune règle ne couvrait
+
+- **Symptôme** : l'utilisateur a buté sur un bouton grisé et a mis un
+  moment à comprendre qu'il manquait un choix d'opérateur ; il a relevé
+  un bandeau de marque répété sur tous les écrans, une page de profil
+  devenue interminable, et des champs de date deux fois plus grands que
+  les autres avec le calendrier natif du navigateur.
+- **Cause** : `design-direction` impose les cinq états d'un écran —
+  vide, chargement, erreur récupérable, erreur définitive, succès —
+  mais aucun ne couvre le **refus d'un formulaire incomplet**. Un
+  bouton `disabled` passait donc pour un design correct. Rien non plus
+  n'interdisait la marque répétée, la page-liste, ni le mélange d'un
+  contrôle natif avec des contrôles maison.
+- **Correction** :
+  - `design-direction` gagne une question avant écriture — « que se
+    passe-t-il quand ce formulaire est incomplet ? » — et quatre
+    interdits : désactiver un bouton sans afficher pourquoi, répéter la
+    marque sur un écran d'usage, laisser une page de réglages dépasser
+    deux écrans, mélanger un contrôle natif avec des contrôles maison.
+  - Dans Paymex, `DESIGN.md` gagne les composants correspondants
+    (`entete`, `identite`, `avatar`, `lien-ligne`, `calendrier`) et un
+    calendrier maison qui reprend la grille de jours déjà employée pour
+    le virement planifié.
+- **Reste ouvert** : ces quatre défauts se voient en trois secondes sur
+  un écran, et aucun test ne les aurait trouvés. Le socle a un critique
+  à contexte vierge (`design-critic`) qui pourrait les voir — mais il
+  lit du code, pas une capture. Tant qu'il ne regarde pas l'écran rendu,
+  il restera aveugle à ce qu'un humain repère instantanément.
