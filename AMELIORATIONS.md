@@ -214,3 +214,51 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
   nom du projet et sa phrase d'intention. Il dit explicitement qu'il est
   à réécrire quand quelque chose tournera.
 - **Reste ouvert** : rien.
+
+---
+
+## 2026-08-30 — Un blocage oublié dans la passe D2 : copywriting
+
+- **Symptôme** : demande d'une landing page pour Paymex. La skill
+  `copywriting` porte, en tête de fichier :
+  « Refuser dans tous les cas s'il n'existe aucune SPEC ». Paymex a zéro
+  SPEC — le circuit long n'a jamais été emprunté, `feature-build` a
+  construit directement. La skill aurait refusé d'écrire la page d'un
+  produit qui tourne déjà.
+- **Cause** : `.claude/skills/copywriting/SKILL.md`, § garde-fou
+  d'entrée. La passe D2 a traité `spec-compiler`, `software-architect`,
+  `domain-expert`, `idea-grill` et le hook, mais pas `copywriting` —
+  son blocage ne portait pas sur la *preuve* mais sur l'existence d'un
+  objet du graphe, et il est passé au travers de la relecture.
+- **Correction** : le garde-fou devient « aucun refus ». La règle qui
+  reste — ne rien promettre qui n'existe pas — se vérifie désormais
+  contre `src/`, les TASK `done` et les ADR, pas contre une SPEC.
+  Ce que le produit ne sait pas faire devient une section
+  « où en est le produit » dans la page, pas un refus d'écrire.
+- **Reste ouvert** : j'ai trouvé celui-là parce qu'il m'a gêné en
+  construisant. Rien ne garantit qu'il n'en reste pas d'autres dans les
+  skills que cette session n'a pas exercées — `visual-prompt` et
+  `graph-index` n'ont jamais tourné. Une relecture ne les trouve pas ;
+  seul l'usage les trouve.
+
+---
+
+## 2026-08-30 — copywriting et feature-build se contredisaient
+
+- **Symptôme** : `copywriting` impose « produire 2 angles, laisser
+  l'utilisateur choisir, ne pas recommander ». `feature-build` interdit
+  « poser plus d'une question avant d'écrire du code ». Écrire la landing
+  demandait de violer l'une des deux. Arbitré à la main.
+- **Cause** : les deux skills ont été écrites pour des moments
+  différents sans que la frontière soit dite. Le choix entre deux angles
+  est un arbitrage de positionnement — il a du sens quand on s'adresse à
+  de vraies personnes, pas quand on monte la première version d'une page.
+- **Correction** : la règle des deux angles devient dépendante de la
+  phase. En `local`, un angle est monté et l'autre reste dans le COPY,
+  marqué `<!-- écarté -->` avec sa raison ; une ligne dit lequel a été
+  monté et que l'autre se remonte en un tour. En `pilote`, les deux
+  angles sont présentés et l'utilisateur choisit.
+- **Reste ouvert** : c'est la deuxième fois qu'une contradiction entre
+  deux skills se résout par le champ `phase`. Si un troisième cas
+  apparaît, la phase mérite d'être un en-tête explicite dans chaque
+  SKILL.md plutôt qu'une mention dispersée dans le corps.

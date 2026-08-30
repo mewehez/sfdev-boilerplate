@@ -7,18 +7,30 @@ description: Produit les textes destinés à l'utilisateur final — landing,
 
 # Copywriting
 
-## Garde-fou d'entrée — selon ADR-002
-- **auto-usage** : pas de persona. Écrire pour soi, en s'appuyant sur
-  product/JOURNAL.md. `! Tu écris pour toi : le texte te paraîtra
-  évident. Fais-le relire.`
-- **traces** : persona requis. S'il est absent → `! Aucun persona.
-  Pour qui j'écris ?` Sinon, estampiller le COPY `confiance: traces`.
-- **terrain** : persona requis. Si 0 INT `humain: oui` → écrire quand
-  même, estampiller `confiance: miroir`, et le dire à l'utilisateur en
-  une ligne.
+## Entrée — aucun refus
 
-Refuser dans tous les cas s'il n'existe aucune SPEC : le copy promet
-un comportement, il ne l'invente pas.
+En régime `exploration` (défaut) : **écrire**. Aucun persona requis,
+aucune SPEC requise, aucune interview requise.
+
+- Sans persona : estampiller `confiance: miroir` et le dire en une ligne.
+  Un texte écrit sans avoir parlé à personne n'est pas interdit, il est
+  déclaré. La première chose à faire vérifier par un vrai utilisateur se
+  note en tête du COPY.
+- Les autres régimes ajoutent des exigences de persona :
+  `.claude/optional/RIGUEUR.md`.
+
+## La seule règle qui ne cède pas : ne rien promettre qui n'existe
+
+Le copy promet un comportement, il ne l'invente pas. Mais la référence
+n'est pas une SPEC — la plupart des projets n'en ont pas, et refuser
+pour ça bloquerait un texte sur un produit qui tourne déjà.
+
+Vérifier contre ce qui existe **vraiment**, dans cet ordre :
+`src/` (le code), les TASK `done`, les ADR, product/domain/.
+
+Ce que le produit ne sait pas encore faire ne se cache pas : ça devient
+une section **« où en est le produit »**, en clair, dans la page. Sur une
+page de vente, c'est ce qui rend le reste croyable.
 
 ## Procédure
 1. Lire le persona : `Ce qu'il ne fera pas` et `Ce qui lui coûte` sont
@@ -28,7 +40,16 @@ un comportement, il ne l'invente pas.
 3. Produire 2 angles différents, jamais un seul :
    - un qui nomme la douleur
    - un qui nomme le résultat
-   Laisser l'utilisateur choisir. Ne pas recommander.
+
+   **En phase `local`** : ne pas s'arrêter pour faire choisir. Monter un
+   angle, écrire l'autre dans le COPY marqué `<!-- écarté -->` avec la
+   raison, et le dire en une ligne :
+   `Angle <douleur|résultat> monté. L'autre est dans COPY-nnn, il se
+   remonte en un tour.` Attendre un choix avant d'écrire l'écran, c'est
+   le détour qu'on a retiré du chemin par défaut.
+
+   **En phase `pilote`** : les deux angles, l'utilisateur choisit, aucune
+   recommandation.
 
 ## Écriture
 product/copy/COPY-nnn.md :
@@ -56,7 +77,9 @@ champ — le hook rejetterait un lien vers un nom de fichier.
 - Promettre une capacité absente des SPEC. Vérifier avant d'écrire.
 - Écrire en français métropolitain pour un persona qui ne l'est pas.
 - Livrer un mur de texte : bullets et blocs courts, toujours.
-- Recommander un des deux angles.
+- Recommander un des deux angles en phase `pilote`.
+- Refuser d'écrire faute de SPEC, de persona ou d'interview.
+- Supprimer l'angle écarté. C'est la mémoire de ce qui n'a pas été choisi.
 
 ## Enchaînement visuel
 Quand un bloc appelle une illustration, ne pas la décrire dans le COPY.
