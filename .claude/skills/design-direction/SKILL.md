@@ -26,18 +26,22 @@ dribbble shots, pas des templates : des produits que des gens utilisent.
 Privilégier ceux du même contexte géographique et matériel que
 l'utilisateur final.
 
-Pour chacun, relever, factuellement :
-- **structure de navigation** — combien de niveaux, où vit l'action
-  principale, ce qui est toujours visible
-- **densité** — combien d'objets par écran, tailles de cible tactile
-- **typographie** — familles, nombre de tailles réellement utilisées,
-  graisses
-- **palette** — combien de couleurs portent du sens, laquelle est la
-  couleur d'action, comment le succès et l'échec sont signalés
-- **états d'erreur et de chargement** — la partie que tout le monde
-  saute et qui distingue un produit d'une maquette
+**Ce qu'une recherche textuelle donne vraiment** — le relever, l'écrire
+en `DOM-nnn` avec sa `source:`, et s'en servir pour trancher le parti :
+- ce que le produit met en avant : l'action qu'il rend évidente, ce qu'il
+  relègue, combien de niveaux de navigation il assume
+- les gestes réels du métier — un code dicté à voix haute, un scan, un
+  numéro tapé. Ils écrivent l'interface plus sûrement qu'une palette.
+- les contraintes documentées : délais, plafonds, frais, codes d'erreur
+- les états que le produit doit couvrir, déduits de ses modes de panne
 
-Écrire ce qui est trouvé en `DOM-nnn` (avec `source:`), pas en mémoire.
+**Ce qu'elle ne donne jamais** : une valeur de couleur, un nom de police,
+une densité mesurée. Ne pas prétendre les avoir trouvées.
+- `? Tu as une capture d'écran d'un de ces produits ?` — poser une fois.
+  Si oui, la lire. Si non, avancer : ce n'est pas une condition.
+- Sans capture, la palette et la typographie sont des **choix**, dérivés
+  du contexte d'usage (§ Contexte) et non d'une référence. `DESIGN.md`
+  doit le dire, à sa section Références.
 
 ## 2. Trancher
 Ne pas moyenner les cinq. Choisir **un parti** et nommer ce qu'il
@@ -53,6 +57,8 @@ nœud.
     - <une phrase : ce que l'interface privilégie, et ce qu'elle sacrifie>
     ## Références
     - <produit> — <ce qu'on lui prend> [DOM-nnn]
+    <!-- Ce qui vient d'une capture est sourcé. Ce qui vient du contexte
+         d'usage est un choix : le dire, ne pas l'habiller en référence. -->
     ## Contexte d'usage
     - <appareil, taille d'écran, luminosité, connexion, main libre ou non>
 
@@ -131,3 +137,5 @@ remonte, ou écrire pourquoi on ne l'applique pas.
 - Copier une esthétique occidentale par défaut quand le contexte d'usage
   dit autre chose.
 - Établir la direction sans avoir regardé de vrais produits.
+- Présenter une palette ou une typographie comme « reprise de X » quand
+  elle n'a pas été vue. Un choix assumé vaut mieux qu'une fausse source.
