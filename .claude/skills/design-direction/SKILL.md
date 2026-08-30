@@ -77,6 +77,9 @@ nœud.
 
     ## Composants de base
     - <nom> — quand l'utiliser, quand ne pas l'utiliser
+    <!-- Cette table est aussi le registre des NOMS pris. Avant d'en
+         créer un, la relire : une collision de classes ne se voit pas
+         dans le gabarit, elle se voit à l'écran, plus tard. -->
     (bouton primaire/secondaire, champ, carte, badge de statut, montant,
      état vide, erreur en ligne, indicateur de chargement)
 
@@ -119,6 +122,9 @@ Lire `DESIGN.md`, **§ Promesses en premier**. Puis, en 4 bullets maximum :
   cliquer et on répond sur le champ fautif. Un bouton ne se désactive
   que si la raison est affichée à sa place.
 - **Ce que je réutilise** — les composants existants, nommés.
+- **Les noms que j'introduis** — vérifiés contre la table des composants
+  de `DESIGN.md`. Un nom déjà pris hérite silencieusement d'une autre
+  mise en page.
 
 ## Pendant
 - Aucune valeur en dur : tout passe par les tokens. Une couleur écrite en

@@ -364,3 +364,31 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
   à contexte vierge (`design-critic`) qui pourrait les voir — mais il
   lit du code, pas une capture. Tant qu'il ne regarde pas l'écran rendu,
   il restera aveugle à ce qu'un humain repère instantanément.
+
+---
+
+## 2026-08-30 — Deux collisions de noms CSS, la même cause
+
+- **Symptôme** : deux fois dans la même session, une classe nouvelle a
+  repris un nom déjà employé. `.hero` — carte de montant des écrans
+  d'usage — réutilisé pour l'accroche de la vitrine, ce qui aurait
+  appliqué un fond accentué à l'en-tête. Puis `.point` — les cartes
+  « ce qui est difficile » de la vitrine — réutilisé pour le badge d'un
+  bouton de filtre, qui a gonflé de 8 px à 34 et débordé de l'écran.
+  Aucun des deux ne se voit dans le gabarit. Le premier a été attrapé en
+  relisant, le second seulement sur une capture.
+- **Cause** : `DESIGN.md` a une table des composants, mais rien ne dit
+  qu'elle est **aussi le registre des noms pris**. Ni la skill ni le
+  critique ne demandaient de la relire avant de nommer.
+- **Correction** :
+  - `design-direction` : la table est déclarée registre des noms, et le
+    mode UX/UI SENIOR ajoute une question avant écriture — « quels noms
+    est-ce que j'introduis, et sont-ils libres ? ».
+  - `design-critic` : « nom de composant déjà pris » devient sa deuxième
+    lentille, juste après la promesse contredite. C'est le défaut le
+    moins cher à trouver en lisant, et le plus cher à trouver autrement.
+- **Reste ouvert** : un contrôle mécanique serait possible — comparer
+  les classes d'un gabarit aux sélecteurs déjà définis ailleurs — mais
+  il faudrait analyser la feuille de style, et le socle ne sait pas dans
+  quel langage le projet écrit son CSS. La lentille du critique est ce
+  qu'on peut faire sans supposer une stack.

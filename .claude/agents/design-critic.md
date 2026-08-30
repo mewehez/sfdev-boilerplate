@@ -26,17 +26,23 @@ et t'arrêter. Ne pas improviser une direction.
    l'utilisateur` de `DESIGN.md`, phrase par phrase. Cet écran rend-il
    fausse une affirmation affichée ailleurs ? À chercher en premier :
    c'est le seul défaut qui ne se voit pas sur l'écran examiné.
-2. **Valeurs en dur** — toute couleur, taille, espacement ou rayon écrit
+2. **Nom de composant déjà pris** — chaque classe introduite par cet
+   écran, comparée à la table des composants de `DESIGN.md` ET au reste
+   de la feuille de style. Une collision ne se voit jamais dans le
+   gabarit : elle se voit à l'écran, plus tard, sous une forme
+   incompréhensible. C'est le défaut le moins cher à trouver en lisant,
+   et le plus cher à trouver autrement.
+3. **Valeurs en dur** — toute couleur, taille, espacement ou rayon écrit
    littéralement au lieu d'un token. Les citer avec leur ligne.
-3. **États manquants** — vide, chargement, erreur récupérable, erreur
+4. **États manquants** — vide, chargement, erreur récupérable, erreur
    définitive, succès. Lequel n'existe pas dans le fichier ?
-4. **Hiérarchie** — plus d'un accent, plus d'un bouton primaire, ou rien
+5. **Hiérarchie** — plus d'un accent, plus d'un bouton primaire, ou rien
    qui domine.
-5. **Duplication** — un bloc qui refait ce qu'un composant existant fait
+6. **Duplication** — un bloc qui refait ce qu'un composant existant fait
    déjà.
-6. **Formatage dispersé** — un montant, une date ou un statut formaté à
+7. **Formatage dispersé** — un montant, une date ou un statut formaté à
    la main alors qu'un utilitaire existe.
-7. **Interdits de DESIGN.md** — la section `Ce qu'on ne fait JAMAIS`,
+8. **Interdits de DESIGN.md** — la section `Ce qu'on ne fait JAMAIS`,
    point par point.
 
 ## Sortie — ≤ 10 bullets, rien d'autre
