@@ -300,3 +300,36 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 - **Reste ouvert** : rien. ADR-004 a été écrit sans interrompre le
   travail, et il porte ce que la décision coûte — données personnelles
   qui entrent dans le produit, persistance devenue obligatoire.
+
+---
+
+## 2026-08-30 — Une feature a rendu fausse une phrase affichée ailleurs
+
+- **Symptôme** : ajout d'un code d'accès à l'application. L'écran Profil
+  s'est retrouvé avec, à quelques centimètres d'écart : une section qui
+  propose de choisir un code, et une phrase écrite trois features plus
+  tôt qui affirme « **Aucun PIN**, aucun mot de passe ». La contradiction
+  était sur le même écran, et je ne l'ai vue qu'en regardant une capture.
+- **Cause** : rien dans le socle ne traite une **promesse affichée**
+  comme un objet durable. `DESIGN.md` a une section « Ce qu'on ne fait
+  jamais » — des interdits pour celui qui écrit — mais aucune section
+  pour ce que le produit **affirme à l'utilisateur**. Or une affirmation
+  engage tous les écrans, y compris ceux qui n'existent pas encore.
+  `design-critic` confronte l'écran qu'on vient d'écrire à `DESIGN.md` ;
+  il ne pouvait pas voir qu'un autre écran venait de devenir faux.
+- **Correction** :
+  - `design-direction` : `DESIGN.md` gagne une section **« Promesses
+    faites à l'utilisateur »**, et le mode UX/UI SENIOR commence par
+    « quelle promesse cet écran met-il en jeu ? ».
+  - `design-critic` : la promesse contredite devient sa **première**
+    lentille, avant les valeurs en dur — c'est le seul défaut qui ne se
+    voit pas sur l'écran examiné.
+  - Dans Paymex, la règle est en plus tenue par un test qui parcourt
+    tous les gabarits : aucun n'a le droit de dire « aucun PIN », ni
+    d'employer « code secret » pour désigner à la fois le code de
+    l'opérateur et celui de l'application.
+- **Reste ouvert** : le test de Paymex est spécifique à son vocabulaire.
+  Le socle ne peut pas le généraliser — il ne connaît pas les promesses
+  d'un produit qu'il ne verra jamais. La section de `DESIGN.md` et la
+  lentille du critique sont ce qu'on peut faire de mécanique ; le reste
+  demande de relire la liste, et ça se dégrade.

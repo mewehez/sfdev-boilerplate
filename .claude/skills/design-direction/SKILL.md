@@ -83,6 +83,11 @@ nœud.
     ## États — obligatoires pour chaque écran
     - vide, chargement, erreur récupérable, erreur définitive, succès
 
+    ## Promesses faites à l'utilisateur
+    - <ce que l'interface AFFIRME : « nous ne stockons jamais X »,
+       « vous voyez toujours Y ». Chacune engage tout le produit,
+       y compris les écrans qui n'existent pas encore.>
+
     ## Ce qu'on ne fait JAMAIS
     - <interdits explicites, tirés du contexte d'usage>
 
@@ -99,7 +104,11 @@ nœud.
 Déclenché quand `DESIGN.md` existe et qu'un écran est à écrire ou à revoir.
 
 ## Avant d'écrire
-Lire `DESIGN.md`. Puis, en 4 bullets maximum :
+Lire `DESIGN.md`, **§ Promesses en premier**. Puis, en 4 bullets maximum :
+
+- **La promesse que cet écran met en jeu** — laquelle des affirmations
+  déjà faites ailleurs cet écran pourrait-il rendre fausse ? Une feature
+  qui contredit une promesse écrite est un bug, même si elle marche.
 - **Le travail de l'écran** — la seule chose que l'utilisateur vient y
   faire. Une seule. S'il y en a deux, c'est deux écrans.
 - **La hiérarchie** — ce qui est lu en premier, deuxième, jamais.

@@ -22,17 +22,21 @@ et t'arrêter. Ne pas improviser une direction.
 
 ## Ce que tu cherches, dans cet ordre
 
-1. **Valeurs en dur** — toute couleur, taille, espacement ou rayon écrit
+1. **Promesse contredite** — la section `Promesses faites à
+   l'utilisateur` de `DESIGN.md`, phrase par phrase. Cet écran rend-il
+   fausse une affirmation affichée ailleurs ? À chercher en premier :
+   c'est le seul défaut qui ne se voit pas sur l'écran examiné.
+2. **Valeurs en dur** — toute couleur, taille, espacement ou rayon écrit
    littéralement au lieu d'un token. Les citer avec leur ligne.
-2. **États manquants** — vide, chargement, erreur récupérable, erreur
+3. **États manquants** — vide, chargement, erreur récupérable, erreur
    définitive, succès. Lequel n'existe pas dans le fichier ?
-3. **Hiérarchie** — plus d'un accent, plus d'un bouton primaire, ou rien
+4. **Hiérarchie** — plus d'un accent, plus d'un bouton primaire, ou rien
    qui domine.
-4. **Duplication** — un bloc qui refait ce qu'un composant existant fait
+5. **Duplication** — un bloc qui refait ce qu'un composant existant fait
    déjà.
-5. **Formatage dispersé** — un montant, une date ou un statut formaté à
+6. **Formatage dispersé** — un montant, une date ou un statut formaté à
    la main alors qu'un utilitaire existe.
-6. **Interdits de DESIGN.md** — la section `Ce qu'on ne fait JAMAIS`,
+7. **Interdits de DESIGN.md** — la section `Ce qu'on ne fait JAMAIS`,
    point par point.
 
 ## Sortie — ≤ 10 bullets, rien d'autre
