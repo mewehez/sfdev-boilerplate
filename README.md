@@ -50,6 +50,13 @@ et tu dis : `nouveau projet` — ou directement ta première feature.
 Tu dis `je veux que…`, `ajoute…`, `l'écran doit…`. Claude construit,
 puis écrit la trace. Dans cet ordre, jamais l'inverse.
 
+**Quand tu ne sais plus quoi faire**
+
+Tu dis `des idées de features ?`. Claude lit ce qui existe déjà — les
+faits de domaine, le parcours réel, les décisions prises — et propose
+**trois choses au maximum**, chacune tirée du produit et non d'une liste
+générique. Celles que tu ne retiens pas sont capturées, rien ne se perd.
+
 **Une idée qui passe**
 
 Tu dis « et si on… » au milieu d'autre chose. Elle est capturée en trois
@@ -107,6 +114,7 @@ AMELIORATIONS.md             journal des frictions rencontrées
     feature-build            LE chemin par défaut : feature → écran qui tourne
     design-direction         direction de design, puis rôle d'UX/UI senior
     software-architect       pose src/, choisit la stack
+    feature-scout            propose des features quand tu es à court d'idées
     idea-grill               capture une idée sans casser ce qu'on fait
     spec-compiler            compile une SPEC en brief exécutable (phase pilote)
     domain-expert            cherche et écrit les faits du domaine
