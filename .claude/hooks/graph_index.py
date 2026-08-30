@@ -8,6 +8,10 @@ Zéro dépendance externe.
 
 Principe : ce hook CONSTATE, il ne range pas. Il ne crée aucun dossier
 (sauf product/ pour écrire l'index) et ne déplace aucun fichier.
+
+Régime par défaut : `exploration`. Aucune alerte de preuve, aucun blocage.
+Les régimes `traces` et `terrain` ne s'activent que s'ils sont écrits
+explicitement dans ADR-002 (voir .claude/optional/RIGUEUR.md).
 """
 import re
 import sys
@@ -27,8 +31,17 @@ KINDS = ["IDEA", "SPEC", "BRIEF", "ADR", "DOM", "TRC", "SUG", "INT",
          "COPY", "PROMPT", "TASK"]
 ID_RE = re.compile(r"\b((?:" + "|".join(KINDS) + r")-\d{3})\b")
 
-IGNORE = {"INDEX.md", "README.md", "ART-DIRECTION.md", "JOURNAL.md"}
-IGNORE_DIRS = {"grill"}          # transcripts bruts : sources, pas des nœuds
+IGNORE = {"INDEX.md", "README.md", "ART-DIRECTION.md", "JOURNAL.md",
+          "DESIGN.md", "AMELIORATIONS.md"}
+# hors graphe : ce sont des sources ou des brouillons, pas des nœuds
+#   grill  transcripts d'ouverture de projet
+#   legal  templates à trous de la phase `dur` — présents, jamais bloquants
+IGNORE_DIRS = {"grill", "legal"}
+
+# Une TASK écrite par `feature-build` est rétroactive : le code existait
+# avant elle. Lui réclamer un parent, c'est réclamer le processus qu'on a
+# précisément retiré du chemin par défaut. Elle est comptée, pas signalée.
+DISPENSE_PARENT = {"feature-build"}
 
 PARENT_RULES = {
     "SPEC":   ["IDEA"],
@@ -47,6 +60,15 @@ ATTENDU = [
     "product/copy", "product/assets", "product/assets/prompts",
     "product/archive", "backlog/tasks",
 ]
+
+# phases d'exécution (D4) — l'ordre est une contrainte, pas un conseil
+PHASES = ["local", "pilote", "dur"]
+OUVERT = ("todo", "doing")
+
+# extensions qui font un écran : leur présence exige une direction de design
+ECRAN_EXT = {".tsx", ".jsx", ".vue", ".svelte", ".html", ".astro"}
+DESIGN_MD = ROOT / "product" / "assets" / "DESIGN.md"
+SRC = ROOT / "src"
 
 # skills locales qui empiéteraient sur l'aval (Superpowers)
 AVAL = {"tdd", "test-driven", "debug", "code-review", "executing-plans",
@@ -80,11 +102,27 @@ def parse(path):
 
 
 def read_regime():
-    """Lit le régime de preuve déclaré dans ADR-002."""
+    """Régime déclaré dans ADR-002. Absent ou illisible => exploration."""
     if not ADR_REGIME.exists():
-        return None
+        return "exploration"
     m = re.search(r"regime:\s*([\w-]+)", ADR_REGIME.read_text(encoding="utf-8"))
-    return m.group(1) if m else None
+    return m.group(1) if m else "exploration"
+
+
+def fichiers_src():
+    """Fichiers de code sous src/, hors dépendances."""
+    if not SRC.is_dir():
+        return [], []
+    skip = {"node_modules", ".venv", "venv", "__pycache__", "dist",
+            "build", ".next", "target"}
+    tous, ecrans = [], []
+    for f in SRC.rglob("*"):
+        if not f.is_file() or skip & set(f.relative_to(SRC).parts):
+            continue
+        tous.append(f)
+        if f.suffix.lower() in ECRAN_EXT:
+            ecrans.append(f)
+    return tous, ecrans
 
 
 def source_key(meta):
@@ -176,8 +214,11 @@ for nid in nodes:
     expected = PARENT_RULES.get(kind)
     if not expected:
         continue
-    if kind == "TASK" and nodes[nid].get("chemin") == "court":
-        continue                                  # dispense chemin court
+    if kind == "TASK" and (
+        nodes[nid].get("chemin") == "court"
+        or nodes[nid].get("origine") in DISPENSE_PARENT
+    ):
+        continue                     # dispense : chemin court, ou feature-build
     if not any(l.split("-")[0] in expected for l in outgoing[nid]):
         problems.append(f"{nid} orphelin — aucun parent {'/'.join(expected)}")
 
@@ -206,10 +247,9 @@ for nid, meta in sugs:
 
 # ====================================================== RÉGIME DE PREUVE
 regime = read_regime()
-if regime is None:
-    problems.append("ADR-002 absent — régime de preuve non déclaré")
-elif regime not in ("auto-usage", "traces", "terrain"):
-    problems.append(f"ADR-002 : régime inconnu '{regime}'")
+if regime not in ("exploration", "auto-usage", "traces", "terrain"):
+    problems.append(f"ADR-002 : régime inconnu '{regime}' — voir .claude/optional/RIGUEUR.md")
+    regime = "exploration"
 
 vieilles = 0
 
@@ -279,11 +319,49 @@ elif regime == "terrain":
 
 
 # ================================================ FRONTIÈRE SUPERPOWERS
-for nid, meta in by_kind.get("BRIEF", []):
-    if meta.get("status") == "ready" and not any(
-        b.startswith("TASK") for b in backlinks[nid]
-    ):
-        problems.append(f"{nid} ready sans TASK — relais Superpowers non amorcé")
+if regime != "exploration":
+    for nid, meta in by_kind.get("BRIEF", []):
+        if meta.get("status") == "ready" and not any(
+            b.startswith("TASK") for b in backlinks[nid]
+        ):
+            problems.append(f"{nid} ready sans TASK — relais Superpowers non amorcé")
+
+
+# ================================================== PHASES D'EXÉCUTION (D4)
+tasks = by_kind.get("TASK", [])
+par_phase = defaultdict(list)
+for nid, m in tasks:
+    ph = m.get("phase")
+    if ph is None:
+        problems.append(f"{nid} sans champ phase — attendu local | pilote | dur")
+        continue
+    if ph not in PHASES:
+        problems.append(f"{nid} phase invalide : '{ph}' — attendu local | pilote | dur")
+        continue
+    par_phase[ph].append((nid, m))
+
+locales_ouvertes = sorted(
+    nid for nid, m in par_phase["local"] if m.get("status") in OUVERT
+)
+dures_ouvertes = sorted(
+    nid for nid, m in par_phase["dur"] if m.get("status") in OUVERT
+)
+if locales_ouvertes and dures_ouvertes:
+    problems.append(
+        "Ordre rompu : " + ", ".join(dures_ouvertes) + " (dur) ouverte(s) alors que "
+        + ", ".join(locales_ouvertes) + " (local) ne l'est pas encore — "
+        "l'app doit tourner avant le juridique"
+    )
+
+
+# ======================================================== CODE ET DESIGN
+src_files, src_ecrans = fichiers_src()
+design_ok = DESIGN_MD.exists()
+if src_ecrans and not design_ok:
+    problems.append(
+        f"{len(src_ecrans)} écran(s) sous src/ sans product/assets/DESIGN.md — "
+        "invoquer la skill design-direction"
+    )
 
 skills_dir = ROOT / ".claude" / "skills"
 if skills_dir.exists():
@@ -341,6 +419,8 @@ cutoff = (date.today() - timedelta(days=30)).isoformat()
 recent = [(nid, m) for nid, m in by_kind.get("TASK", [])
           if str(m.get("updated", "")) >= cutoff]
 courts = [nid for nid, m in recent if m.get("chemin") == "court"]
+directes = [nid for nid, m in by_kind.get("TASK", [])
+            if m.get("origine") in DISPENSE_PARENT]
 part_courte = round(100 * len(courts) / len(recent)) if recent else 0
 
 
@@ -350,11 +430,33 @@ lines = [
     "status: generated", "updated: auto", "---", "",
     "> Régénéré automatiquement par .claude/hooks/graph_index.py.",
     "> Ne pas éditer à la main.", "",
-    f"Régime de preuve : **{regime or 'non déclaré'}**", "",
+    f"Régime : **{regime}**"
+    + ("  (mode unique par défaut — aucun blocage)" if regime == "exploration" else ""),
+    "",
+    f"Code : **{len(src_files)}** fichier(s) sous src/, dont {len(src_ecrans)} écran(s)."
+    + ("  DESIGN.md présent." if design_ok else "  Pas de DESIGN.md."),
+    "",
 ]
 
 if problems:
     lines += ["## ! Incohérences", ""] + [f"- {p}" for p in problems] + [""]
+
+if directes:
+    lines += [f"Dont **{len(directes)}** TASK écrite(s) après le code "
+              f"(`origine: feature-build`) — sans parent, par construction.", ""]
+
+if tasks:
+    lines += ["## Phases", ""]
+    for ph in PHASES:
+        items = par_phase.get(ph, [])
+        if not items:
+            continue
+        ouv = [n for n, m in items if m.get("status") in OUVERT]
+        lines.append(
+            f"- `{ph}` — {len(items)} TASK, {len(ouv)} ouverte(s)"
+            + (f" : {', '.join(sorted(ouv))}" if ouv else "")
+        )
+    lines += [""]
 
 if raw:
     lines += ["## File de grill", ""]
@@ -429,11 +531,22 @@ if reserved:
 
 summary = [
     tete,
+    f"Code : {len(src_files)} fichier(s) sous src/, {len(src_ecrans)} écran(s)"
+    + ("" if design_ok else " | pas de DESIGN.md"),
     f"À GRILLER : {len(raw)}" + (f" — {', '.join(raw[:6])}" if raw else " — file vide"),
-    f"Parquées : {len(parked)} | Specs prêtes : {len(specd)} | Briefs ready : {len(ready)}",
 ]
 
-if regime == "auto-usage":
+if tasks:
+    detail = " | ".join(
+        f"{ph} {len([1 for n, m in par_phase.get(ph, []) if m.get('status') in OUVERT])}"
+        f"/{len(par_phase.get(ph, []))}"
+        for ph in PHASES if par_phase.get(ph)
+    )
+    summary.append(f"TASK ouvertes/total par phase : {detail}")
+
+if regime == "exploration":
+    pass                     # mode par défaut : rien à annoncer, rien à bloquer
+elif regime == "auto-usage":
     summary.append("Régime auto-usage — tu es l'utilisateur.")
 elif regime == "traces":
     total = sum(len(v) for v in domaines.values())
@@ -451,29 +564,29 @@ elif regime == "terrain":
         f"Régime terrain — {len(ints)} interviews dont {len(humans)} humaines"
         + ("  ! BRIEF bloqués tant que 0 humaine" if not humans else "")
     )
-else:
-    summary.append("! ADR-002 absent — régime de preuve non déclaré.")
+
 
 if sugs:
-    ligne = f"Suggestions : {len(pending)} pending, {len(sugs) - len(pending)} tranchée(s)"
-    if porteurs:
-        ligne += f" — {len(porteurs)} décision(s) en dépendent"
-    summary.append(("! " + ligne + "  la dette s'accumule") if len(pending) >= 5 else ligne)
+    # en exploration, une hypothèse est tracée, pas reprochée
+    summary.append(
+        f"Hypothèses : {len(pending)} pending, {len(sugs) - len(pending)} tranchée(s)"
+    )
 
-if briefs_dette:
+if regime != "exploration" and briefs_dette:
     summary.append(
         f"! {len(briefs_dette)} BRIEF ready reposent sur du [SUPPOSÉ] : "
         + ", ".join(briefs_dette[:4])
     )
 
-if recent:
-    ligne = f"Chemin court : {part_courte}% sur 30 j ({len(courts)}/{len(recent)})"
-    if part_courte > 60:
-        ligne += "  ! soit le processus est trop lourd, soit tu contournes"
-    summary.append(ligne)
+if locales_ouvertes and dures_ouvertes:
+    summary.append(
+        f"! {len(dures_ouvertes)} TASK `dur` ouverte(s) alors que "
+        f"{len(locales_ouvertes)} `local` reste(nt) — le hook de garde les refusera"
+    )
 
-if len(raw) >= 5:
-    summary.append(f'! {len(raw)} idées non grillées — dis "on grille" pour vider la file.')
+if src_ecrans and not design_ok:
+    summary.append("! écrans sans DESIGN.md — invoquer design-direction")
+
 if problems:
     summary.append(f"! {len(problems)} incohérence(s) — voir product/INDEX.md")
 

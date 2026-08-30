@@ -1,5 +1,11 @@
 # Règles projet
 
+## Le contrat en une phrase
+Une idée exprimée devient un produit qui tourne. La traçabilité suit,
+elle ne précède jamais. Rien n'attend une preuve pour exister.
+
+---
+
 ## Concision (s'applique à TOUS les agents et skills)
 - Bullet points. Jamais de paragraphes.
 - Aucun préambule, aucun récapitulatif de ce que tu viens de faire.
@@ -10,6 +16,80 @@
 - Écran maximum. Si ça dépasse, écris dans un fichier et donne-moi
   le chemin + 3 bullets de synthèse.
 - Jamais de validation gratuite ("bonne idée", "excellent point").
+
+---
+
+## Mode par défaut : `exploration`
+
+C'est le mode unique, actif sans rien déclarer.
+
+- **Aucun blocage, nulle part.** Ni sur une SPEC, ni sur un BRIEF, ni sur
+  une TASK, ni sur le scaffolding. Aucun objet n'attend une preuve.
+- Une hypothèse se trace (`SUG`), elle ne freine rien.
+- Une recherche web et un raisonnement suffisent à écrire un `DOM`.
+- Le hook affiche des lignes factuelles. Il ne produit aucune alerte de
+  preuve, aucune injonction à interviewer.
+- On construit par intuition, ou pour un portfolio. Un visuel sert
+  justement à approcher les gens : il vient avant eux, pas après.
+
+**Ce qui bloque quand même**, parce que ça relève de l'ordre et non de la
+preuve — deux refus, deux seulement, tenus par `.claude/hooks/phase_guard.py` :
+1. une TASK `phase: dur` tant qu'une TASK `phase: local` est ouverte ;
+2. un écran sous `src/` tant que `product/assets/DESIGN.md` n'existe pas.
+
+Un refus se lève en faisant la chose dans le bon ordre, jamais en
+argumentant avec le hook.
+
+### Activer la rigueur, plus tard
+Une piste se confirme, de l'argent ou la confiance d'autrui entre en jeu :
+écris `regime: traces` (ou `terrain`) dans le corps de
+`product/decisions/ADR-002-regime-preuve.md` — mode d'emploi complet dans
+`.claude/optional/RIGUEUR.md`.
+
+---
+
+## Phases d'exécution
+
+Champ `phase:` obligatoire sur toute TASK. Trois valeurs, dans cet ordre :
+
+| phase    | ce qu'elle contient |
+|----------|---------------------|
+| `local`  | ce qui fait tourner l'app sur la machine |
+| `pilote` | ce qu'il faut pour la montrer à quelqu'un de réel |
+| `dur`    | forme juridique, nom de domaine, hébergement, conformité, CGU, contrats opérateurs |
+
+**Règle, tenue par le hook :** aucune TASK `dur` ouverte tant qu'une TASK
+`local` reste ouverte.
+
+Le juridique produit des **templates à trous** (`product/legal/`, hors
+graphe, sans ID), jamais des blocages. Un template s'écrit quand on veut,
+sans TASK — c'est une TASK `dur` qui est refusée, pas un fichier.
+
+### Tests, par phase
+- `local` : tester les **invariants métier** et les **erreurs qui coûtent
+  cher** (argent, double débit, perte de commande). Pas chaque fonction.
+- `pilote` : le TDD complet de Superpowers démarre ici.
+- `dur` : sans objet.
+
+Écrire un test par fonction en phase `local` est une perte nette. Écrire
+zéro test sur un invariant d'argent est une faute.
+
+---
+
+## Le chemin par défaut : la feature
+
+L'étalon est le mode non structuré : l'utilisateur dit une feature, un
+écran tourne à la fin du tour. Si le processus produit moins que ça,
+c'est le processus qui a tort.
+
+Sur "je veux que…", "ajoute…", "l'écran doit…" → skill `feature-build`.
+Elle construit d'abord et trace ensuite, dans le même tour.
+
+Le circuit long (IDEA → grill → SPEC → BRIEF → TASK) existe pour ce qui
+est cher à défaire : un contrat de données, un format d'échange, de
+l'argent, de l'authentification. Pas pour le reste.
+
+---
 
 ## Conventions d'ID
 
@@ -22,14 +102,17 @@ BRIEF-nnn   product/specs/briefs/         spec compilée, prête à exécuter
 ADR-nnn     product/decisions/            décision + alternatives écartées
 DOM-nnn     product/domain/               fait de domaine, sourcé
 TRC-nnn     product/domain/traces/        observation publique, sourcée, datée
-SUG-nnn     product/domain/suggestions/   option retenue sur proposition
-                                          d'un agent, non validée
+SUG-nnn     product/domain/suggestions/   hypothèse retenue, non validée
 INT-nnn     product/domain/interviews/    échange avec un expert
 COPY-nnn    product/copy/                 texte destiné à l'utilisateur final
 PROMPT-nnn  product/assets/prompts/       prompt de génération visuelle
 TASK-nnn    backlog/tasks/                unité d'implémentation
 
-Avant d'attribuer un ID : lire product/INDEX.md, y compris la section
+Hors graphe — le hook les ignore (ni ID, ni frontmatter attendus) :
+`product/grill/`, `product/legal/`,
+`product/assets/DESIGN.md`, `product/JOURNAL.md`, `AMELIORATIONS.md`.
+
+Avant d'attribuer un ID : lire `product/INDEX.md`, y compris la section
 `## IDs réservés — archivés`. Un ID archivé n'est JAMAIS réattribué.
 
 ### Frontmatter — commun à tous
@@ -54,158 +137,124 @@ COPY    draft | retenu | rejeté
 PROMPT  draft | generated | retenu | rejeté
 TASK    todo | doing | done
 
-Aucun autre status. Le hook n'en vérifie qu'une partie — la liste fait foi.
-
 ### Champs supplémentaires obligatoires
+TASK    phase: local | pilote | dur
+        origine: feature-build     (si la trace a été écrite après le code)
 IDEA    origine: utilisateur | agent   contexte: <où l'idée est née>
-TRC     source: <URL ou libellé stable>
-        type: avis | support | forum | emploi | reglementaire | presse | produit
-        echantillon: <nombre d'items observés>
 DOM     source: <URL ou libellé stable>
 SUG     question: <la question restée sans réponse>
-        appelant: <skill ou agent>   recherche: oui | non
-        preuve: <vide tant que pending>
+        appelant: <skill ou agent>   preuve: <vide tant que pending>
+TRC     source, type, echantillon        (régime `traces` — voir RIGUEUR.md)
 INT     humain: oui | non
-TASK    chemin: normal | court
 COPY    persona: <role>-persona (sauf auto-usage)
-        confiance: traces | miroir | auto-usage
 PROMPT  outil: <modèle utilisé>
 
-## Règles de graphe
-- Une SPEC sans lien vers une IDEA est orpheline → interdite.
-- Un BRIEF doit citer au moins une SPEC.
-- Une TASK sans lien vers une SPEC ou un BRIEF est orpheline → interdite.
-  Seule exception : `chemin: court`.
-- Un COPY sans lien vers une SPEC ou une IDEA est orphelin.
-- Un PROMPT sans lien vers le COPY ou la SPEC qui le motive est orphelin.
-- Un fait de domaine sans source datée est `[SUPPOSÉ]`, pas un DOM.
-- Un BRIEF est immuable une fois `ready` — une correction crée
-  BRIEF-nnn+1 qui référence l'ancien.
+`chemin: court` reste accepté sur une TASK, mais ne sert plus à
+contourner un blocage : il n'y en a plus.
 
-## Règle des suggestions
+---
+
+## Règles de graphe
+
+Ce sont des constats, pas des barrières. Le hook les liste dans
+`! Incohérences` ; rien ne s'arrête.
+
+- Une SPEC cite l'IDEA dont elle vient.
+- Un BRIEF cite au moins une SPEC.
+- Une TASK cite une SPEC ou un BRIEF — sauf si elle porte
+  `origine: feature-build` (trace écrite après le code) ou
+  `chemin: court`. Le hook lit ces deux champs et dispense ; sans eux,
+  il signale.
+- Un COPY cite la SPEC ou l'IDEA qu'il sert.
+- Un PROMPT cite le COPY ou la SPEC qui le motive.
+- Un fait sans source est `[SUPPOSÉ]`, pas un DOM.
+- Un BRIEF `ready` est immuable — une correction crée BRIEF-nnn+1 qui
+  référence l'ancien.
+
+### Hypothèses
 Une option choisie dans une liste proposée par `suggester` reste
 `[SUPPOSÉ]`. La cocher ne la transforme pas en fait.
 
-  pending    retenu, sans preuve
+  pending    retenu, sans preuve — **ne freine rien**
   validé     un TRC/INT/DOM postérieur le confirme (renseigner `preuve:`)
   invalidé   une preuve postérieure le contredit
   abandonné  l'option n'est plus dans le projet
 
-Tout objet dont une décision repose sur un SUG `pending` le déclare
-dans `links:`. C'est ce lien qui rend la dette visible.
+Tout objet dont une décision repose sur un SUG `pending` le déclare dans
+`links:`. C'est ce lien qui rend la dette visible — visible, pas bloquante.
 
-## Régime de preuve
-Déclaré dans ADR-002 à l'ouverture du projet, ligne exacte lue par
-le hook : `regime: auto-usage | traces | terrain`
-
-- auto-usage : je suis l'utilisateur. Preuve = usage documenté
-  (product/JOURNAL.md). Aucun persona n'est instancié.
-- traces : preuve = TRC. Les personas sont construits à partir des TRC,
-  jamais d'imagination. Deux traces du même `type` ET du même domaine
-  ne comptent que comme une source — la diversité vaut plus que le nombre.
-- terrain : INT humain obligatoire avant tout BRIEF `ready`.
+---
 
 ## Recherche en ligne
-Toute recherche web demande l'autorisation, une fois par sujet :
-`? Il me manque X. Je cherche en ligne ? (o/n)`
-Sans exception, y compris pendant un grill. Ce qui est trouvé est
-écrit en DOM ou TRC, jamais gardé en tête.
+Chercher librement. Ce qui est trouvé est écrit en DOM (ou TRC) avant
+d'être utilisé, jamais gardé en tête. Priorité de sources : régulateur,
+opérateur, documentation officielle, avant blogs et comparatifs.
 
-## Chemin court
+Demander l'autorisation seulement si la recherche va coûter plusieurs
+tours, ou sortir du sujet en cours.
 
-Le processus complet existe pour ce qu'on ne peut pas défaire facilement.
-Pas pour le reste.
+---
 
-### Éligible — les trois conditions ensemble
-- < 30 min de travail
-- réversible : un `git revert` suffit, rien à migrer, rien à prévenir
-- n'entre en contradiction avec aucun ADR
+## Design
 
-Exemples : bug local, renommage, style, message d'erreur, dépendance
-mise à jour, test ajouté, refactor sans changement de contrat.
+Avant le premier écran : skill `design-direction`. Elle écrit
+`product/assets/DESIGN.md` (tokens, composants, ce qu'on ne fait jamais)
+à partir de 3 à 5 produits réels du domaine.
 
-### Non éligible — processus complet obligatoire
-- touche un contrat : schéma de données, API publique, format de fichier
-- touche l'argent, les données personnelles, l'authentification, les droits
-- ajoute une dépendance externe ou un service tiers
-- change ce que l'utilisateur final voit ou peut faire
-- contredit un ADR — même « juste un peu »
-- tu hésites → ce n'est pas éligible
+Tout écran est confronté à `DESIGN.md` avant d'être écrit. Un écran qui
+s'en écarte s'écarte volontairement, et le dit.
 
-### Procédure
-1. Faire.
-2. Écrire la TASK rétroactive, `status: done`, `chemin: court`.
-   `## Fini quand` décrit ce qui a été fait, pas ce qui était prévu.
-3. Dispensée de parent SPEC — seule exception à la règle d'orphelinat,
-   et elle est visible : le hook la compte.
+`phase_guard.py` refuse tout fichier d'écran sous `src/` tant que
+`DESIGN.md` est absent. Ce n'est pas un avertissement.
 
-### Garde-fou
-Au-delà de 60 % de chemin court sur 30 jours, le hook signale.
-Ce n'est pas un reproche, c'est une mesure : soit le processus est trop
-lourd, soit tu contournes. Les deux se traitent différemment. Si c'est
-le processus, c'est le processus qui change — écrire un ADR pour ça.
-
-### Escalade
-Si pendant un chemin court ça touche un contrat ou un ADR : arrêter,
-`git stash`, capturer en IDEA, sortir. Ne jamais finir « puisqu'on y est ».
+---
 
 ## Archivage
-Va dans product/archive/ (sous-chemin d'origine conservé) :
-- IDEA killed
-- SPEC/BRIEF caducs
-- SUG abandonné
-- TRC dont la source a disparu
+Va dans `product/archive/` (sous-chemin d'origine conservé) :
+IDEA killed, SPEC/BRIEF caducs, SUG abandonné, TRC dont la source a disparu.
 
-Ne va JAMAIS dans l'archive :
-- un ADR — une décision reste vraie même remplacée.
-  Marquer `status: remplacé par ADR-nnn` et laisser en place.
-- un INT ou un DOM — une observation ne devient pas fausse. Elle vieillit.
+N'y va JAMAIS : un ADR (une décision reste vraie même remplacée — marquer
+`status: remplacé par ADR-nnn`), un INT, un DOM (une observation ne
+devient pas fausse, elle vieillit).
 
 On archive, on ne supprime pas. Le frontmatter reste intact.
 
-## Navigation
-product/INDEX.md est régénéré automatiquement par
-.claude/hooks/graph_index.py aux événements SessionStart et Stop.
-Ne jamais l'éditer à la main — toute modification sera écrasée.
-La skill `graph-index` sert à LIRE l'index et à réparer le graphe,
-pas à produire l'index.
+---
 
-Ouvrir product/ comme coffre Obsidian : les [[ID]] deviennent
+## Navigation
+`product/INDEX.md` est régénéré par `.claude/hooks/graph_index.py` aux
+événements SessionStart et Stop. Ne jamais l'éditer à la main.
+La skill `graph-index` sert à LIRE l'index et à réparer le graphe.
+
+Ouvrir `product/` comme coffre Obsidian : les `[[ID]]` deviennent
 cliquables, la vue graphe est native.
+
+---
 
 ## Répartition avec Superpowers
 
 Ce dépôt gère l'AMONT : quoi construire, pourquoi, dans quel ordre.
 Superpowers gère l'AVAL : comment le construire correctement.
 
-Frontière : le BRIEF en `ready`.
-  amont  IDEA → SPEC → BRIEF          (nos skills)
-  aval   plan → TDD → revue → merge   (Superpowers)
+- En phase `local`, `feature-build` construit directement. Superpowers
+  n'est pas convoqué pour un écran de démo.
+- En phase `pilote` et au-delà, un BRIEF `ready` passe la main à
+  Superpowers via `/write-plan` ou `/execute-plan`, jamais en paraphrasant
+  le BRIEF dans le chat.
+- Retour : TASK `done`, BRIEF `shipped`. Si l'implémentation révèle un
+  manque, capturer en IDEA — ne pas patcher un BRIEF `ready`.
 
-Nos skills n'écrivent JAMAIS de code applicatif.
-Superpowers ne décide JAMAIS du quoi ni du pourquoi.
+Ce qu'on ne réécrit jamais : TDD, débogage systématique, revue en deux
+temps, sous-agents, plans d'exécution. Toute skill locale qui recouvre
+ça est à supprimer — le hook le signale.
 
-### Passage de relais
-Un BRIEF `ready` est l'unique entrée de Superpowers, via /write-plan ou
-/execute-plan. Jamais en paraphrasant le BRIEF dans le chat : il a été
-compilé pour ça.
+Collision de vocabulaire : `/brainstorm` de Superpowers raffine une
+exigence avant code ; nos grills décident s'il faut construire.
 
-### Retour de relais
-Superpowers finit → TASK `done`, BRIEF `shipped`.
-Si l'implémentation révèle un manque : capturer en IDEA, ne pas patcher
-le BRIEF. Un BRIEF `ready` est immuable — c'est ce qui rend la trace lisible.
+---
 
-### Ce qu'on ne réécrit pas
-TDD, débogage systématique, revue en deux temps, sous-agents, plans
-d'exécution. Toute skill locale qui recouvre ça est à supprimer.
-
-### Collision de vocabulaire
-Le /brainstorm de Superpowers raffine une exigence avant code.
-Nos grills décident s'il faut construire. /brainstorm arrive APRÈS
-le verdict.
-
-### Budget de contexte au SessionStart
+## Budget de contexte au SessionStart
 Superpowers et notre hook injectent tous les deux. Le nôtre tient en
-4 lignes quand tout va bien, jusqu'à 9 quand plusieurs alertes tombent.
+4 lignes quand tout va bien, jusqu'à 8 quand plusieurs constats tombent.
 Si le SessionStart devient lourd, retirer le hook `Stop` avant de
 toucher au `SessionStart`.

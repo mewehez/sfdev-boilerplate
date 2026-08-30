@@ -18,19 +18,33 @@ Une seule question : **quoi maintenant, et qu'est-ce que ça repousse ?**
 - product/decisions/ADR-001-perimetre.md — ce qui est DEHORS
 - les BRIEF `ready` et les SPEC `specd`
 
+## Règle d'ordre — avant toute autre
+Champ `phase:` obligatoire sur chaque TASK : `local` | `pilote` | `dur`.
+
+- `local`  : ce qui fait tourner l'app sur la machine
+- `pilote` : ce qu'il faut pour la montrer à quelqu'un de réel
+- `dur`    : forme juridique, domaine, hébergement, conformité, CGU,
+             contrats opérateurs
+
+**Aucune TASK `dur` tant qu'une TASK `local` est ouverte.** Le hook
+`phase_guard.py` refuse l'écriture — inutile de tenter.
+
+Un besoin juridique qui remonte en phase `local` produit un **template à
+trous** dans `product/legal/` (hors graphe, sans ID, sans TASK), ou une
+`IDEA` à griller plus tard. Jamais un blocage, jamais une TASK.
+
 ## Règles d'arbitrage
 1. Hors périmètre ADR-001 → rejeté, sans discussion. Citer l'ADR.
    Si l'utilisateur insiste : `→ modifie ADR-001 d'abord`.
-2. Une chaîne qui remonte à `[SUPPOSÉ]` ou traverse un SUG `pending`
-   ne passe pas devant une chaîne adossée à une preuve.
+2. Ce qui rend l'app manipulable passe avant ce qui la rend juste.
 3. Ce qui réduit une incertitude passe avant ce qui ajoute du confort.
 4. WIP = 1. Avant toute proposition, chercher une TASK `doing`.
    S'il y en a une : la nommer et s'arrêter là.
 5. Ne jamais proposer un ordre sans dire ce qu'il repousse.
-6. Avant de créer une TASK, vérifier l'éligibilité au chemin court
-   (CLAUDE.md). Si les trois conditions sont réunies :
-   `→ chemin court, fais-le, je note après.` Créer une SPEC pour un
-   changement réversible de 20 minutes est une perte nette.
+6. En phase `local`, la plupart des demandes ne méritent pas une TASK
+   préalable : `→ feature-build le fait et écrit la TASK après.`
+   Créer une SPEC pour un changement réversible de 20 minutes est une
+   perte nette.
 
 ## Sortie — ≤ 12 bullets, format fixe
 
@@ -42,6 +56,9 @@ Une seule question : **quoi maintenant, et qu'est-ce que ça repousse ?**
 
 ## ! Ce qui bloque
 - <dépendance, décision manquante, ou "rien">
+
+## Phases
+- local <n ouvertes> | pilote <n> | dur <n — bloquées tant que local > 0>
 
 ## → Toi
 - <l'action non-code à faire, ou "rien">
@@ -55,7 +72,7 @@ sera fait. À défaut, la SPEC.
 id: TASK-nnn
 title: <résultat observable, pas une activité>
 status: todo
-chemin: normal
+phase: local | pilote | dur
 links: [BRIEF-nnn]
 updated: AAAA-MM-JJ
 ---

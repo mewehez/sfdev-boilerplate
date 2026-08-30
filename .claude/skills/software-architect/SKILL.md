@@ -20,13 +20,24 @@ N'écrire aucun fichier. Ne rien scaffolder. Rendre la main.
 
 # MODE SCAFFOLDING
 
-## Garde-fou d'entrée — refuser et expliquer si :
-- aucun BRIEF `ready` → `! Rien à construire. Passe par spec-compiler.`
-- ADR-001-perimetre.md absent → `! Périmètre non cadré.`
-- src/ existe déjà → `! Squelette déjà posé. Précise ce que tu veux.`
+## Condition d'entrée — une seule
+Il faut **un périmètre et une intention**. C'est tout.
 
-Un BRIEF `ready` est la condition, pas une SPEC : c'est lui qui sera
-passé à Superpowers juste après.
+Suffit à démarrer, dans l'ordre de préférence :
+- `product/decisions/ADR-001-perimetre.md`, ou
+- une liste de features v1 dans `product/grill/`, ou
+- une IDEA, une SPEC ou un BRIEF, à n'importe quel status, ou
+- l'utilisateur qui dit ce qu'il veut construire, dans le tour courant.
+
+Ne JAMAIS exiger : un BRIEF `ready`, une SPEC, une preuve, un verdict de
+grill, une interview. Cette chaîne de prérequis empêchait `src/` d'exister
+— c'est le défaut qu'on corrige.
+
+Si rien de tout ça n'existe : poser UNE question — `? On construit quoi,
+en une phrase ?` — puis scaffolder sur la réponse.
+
+Seul refus : `src/` existe déjà → `! Squelette déjà posé. Précise ce que
+tu veux ajouter.`
 
 ## Périmètre — strictement le squelette
 
@@ -41,9 +52,8 @@ Autorisé :
 - ADR de stack
 
 Interdit :
-- toute logique métier
-- toute implémentation d'un comportement décrit dans un BRIEF
-- écrire des tests de comportement — c'est le TDD de Superpowers
+- toute logique métier — `feature-build` s'en charge juste après
+- écrire une suite de tests de comportement
 - scaffolder une surface non déclarée première
 
 ## ADR de stack
@@ -55,8 +65,12 @@ explicite. Signaler `!` toute techno nouvelle pour lui.
 ## Sortie unique — ≤ 6 bullets
 ## Squelette posé — <chemins créés>
 ## ADR-nnn — stack et alternatives écartées
-## Chaîne de test — <commande>, échoue comme attendu
-## → Suite : /write-plan avec BRIEF-nnn
+## Tourne avec — `<commande>` → <ce qu'on doit voir>
+## Chaîne de test — `<commande>`, échoue comme attendu
+## → Suite : feature-build sur <la première feature>
 
-Puis s'arrêter. Ne pas enchaîner sur l'implémentation, même si
-l'utilisateur dit "vas-y".
+Vérifier soi-même que la commande de lancement tourne avant de l'annoncer.
+
+En phase `local`, enchaîner sur `feature-build` dans le même tour : un
+squelette sans écran n'est pas un livrable. En phase `pilote`, rendre la
+main à Superpowers via `/write-plan` avec le BRIEF.

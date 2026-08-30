@@ -103,13 +103,14 @@ Deux mécanismes distincts, ne pas les confondre :
 
 Si une question reste sans réponse → dispatcher `suggester`.
 L'option retenue crée un SUG-nnn `pending` que je dois inscrire dans
-les `links:` de la SPEC si l'idée passe en specd.
+les `links:` de la SPEC si l'idée passe en specd. Un SUG `pending` ne
+freine rien : il rend la dette visible, c'est tout.
 
 ## G2 — Verdict (≤ 12 bullets)
 
 ## IDEA-nnn — <titre>
 ## Ce que ça résout        (1 bullet ; si vide → killed)
-## Preuve                  (DOM-nnn / TRC-nnn / INT-nnn, ou `[SUPPOSÉ]`)
+## Sur quoi ça repose      (DOM-nnn / TRC-nnn / INT-nnn, ou `[SUPPOSÉ]`)
 ## ! Coût réel             (ce que ça complexifie durablement)
 ## Ce que ça déclasse
 ## Verdict : specd | parked | killed
@@ -123,6 +124,10 @@ Un `killed` est déplacé dans product/archive/ideas/ — frontmatter intact.
 Le hook l'exclut du graphe et réserve l'ID définitivement.
 
 ## G3 — Si specd
+
+En phase `local`, ne pas enchaîner sur `spec-compiler` : proposer
+`feature-build` directement. Le BRIEF sert la phase `pilote`.
+
 Écrire product/specs/SPEC-nnn.md :
 
 ---
@@ -133,11 +138,12 @@ links: [IDEA-nnn, <DOM/TRC/INT-nnn>, <SUG-nnn si applicable>]
 updated: AAAA-MM-JJ
 ---
 
-Contraintes vérifiées par le hook :
-- `links:` DOIT contenir l'IDEA parente, sinon la SPEC est orpheline
-- au moins une preuve dans la chaîne (DOM, TRC ou INT), sinon le BRIEF
-  issu de cette SPEC sera bloqué plus tard
-- tout SUG pending ayant servi au verdict doit y figurer
+Contraintes vérifiées par le hook (constats, pas blocages) :
+- `links:` contient l'IDEA parente, sinon la SPEC est signalée orpheline
+- tout SUG pending ayant servi au verdict y figure
+
+Aucune preuve n'est requise en régime `exploration`. Une SPEC adossée à
+du `[SUPPOSÉ]` se compile et se construit.
 
 Puis s'arrêter :
 - ne pas créer de TASK — c'est `product-owner` qui décide du moment
@@ -154,4 +160,4 @@ Si aucune → le dire en une ligne, ne pas proposer de dégeler quand même.
 - Griller une idée qui n'a pas été capturée d'abord.
 - Griller plusieurs idées sans redemander entre chaque.
 - Transformer un `[SUPPOSÉ]` en preuve parce que l'idée plaît.
-- Rendre un verdict `specd` sans au moins une ligne dans "Preuve".
+- Refuser un `specd` faute de preuve. Marquer `[SUPPOSÉ]` et avancer.

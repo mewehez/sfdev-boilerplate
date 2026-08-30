@@ -1,143 +1,124 @@
 ---
 name: project-grill
-description: Interrogatoire d'ouverture d'un nouveau projet. Déclencher sur
-  "nouveau projet", "j'ai une idée de projet", "on démarre". Produit un
-  verdict GO/NO-GO, puis le régime de preuve, le cadrage, et la
-  proposition d'outillage. Aucun contenu projet n'est écrit avant le verdict.
+description: Ouverture d'un nouveau projet. Commence par capturer la VISION
+  PRODUIT — features, écran principal, parcours — puis cadre le périmètre.
+  Déclencher sur "nouveau projet", "j'ai une idée de projet", "on démarre".
+  Ne rend aucun verdict et ne bloque rien.
 ---
 
-# Grill de projet
+# Ouverture de projet
+
+Ce grill sert à savoir **quoi construire**, pas à décider s'il faut le
+construire. La décision est déjà prise : l'utilisateur est là.
 
 ## Interdits
-- Proposer une solution, une feature, une techno avant l'ÉTAPE 4.
+- Poser une question de validation (marché, concurrence, interviews,
+  business model) avant l'ÉTAPE 2. Elles n'arrivent qu'en mode rigueur.
 - Enchaîner plusieurs questions dans un tour.
-- Traiter une réponse invérifiée comme un fait. Marquer `[SUPPOSÉ]`.
-- Écrire ou écraser CLAUDE.md, les skills, les agents, le hook.
-  Ils viennent du boilerplate. Ce grill remplit product/, jamais .claude/
-  ni la racine.
+- Écrire ou écraser CLAUDE.md, les skills, les agents, les hooks.
+- Rendre un verdict GO/NO-GO. Il n'y en a plus en `exploration`.
 
 ---
 
 ## ÉTAPE 0 — Vérifier le socle
-Contrôler la présence de : CLAUDE.md, .claude/hooks/graph_index.py,
-.claude/skills/, product/, backlog/.
-Manquant → `! Boilerplate incomplet, je m'arrête.` et lister ce qui manque.
-Ne rien créer pour compenser.
+Contrôler : `CLAUDE.md`, `.claude/hooks/graph_index.py`,
+`.claude/hooks/phase_guard.py`, `.claude/skills/`, `product/`, `backlog/`.
+Manquant → `! Boilerplate incomplet` + la liste. Ne rien créer pour
+compenser.
 
 ---
 
-## ÉTAPE 1 — Compréhension (avant tout verdict)
+## ÉTAPE 1 — Vision produit  ← EN PREMIER, TOUJOURS
 
-Une question par tour, dans cet ordre :
+**Mode capture.** On écoute. On ne challenge pas, on ne réduit pas, on ne
+propose pas d'alternative. Une question par tour, dans cet ordre :
 
-1. Le projet en une phrase : pour QUI, quel PROBLÈME, à quel MOMENT.
-2. Pourquoi ce problème mérite d'être résolu ? Que coûte-t-il
-   aujourd'hui à celui qui le vit ?
-3. Qui le vit exactement ? (rôle, contexte, volume — pas une démographie)
-4. Que font-ils aujourd'hui à la place ?
-5. Qui résout déjà ça ?
-   Demander d'abord : `? Je cherche les acteurs en place en ligne ? (o/n)`
-   Si oui : chercher, présenter les acteurs, puis
-   "pourquoi te choisirait-on ?". Refuser "je ferai mieux", exiger
-   un mécanisme. Écrire ce qui est trouvé en TRC.
-   Si non : demander à l'utilisateur ce qu'il connaît, marquer `[SUPPOSÉ]`.
-6. Quelle contrainte externe tue le projet si elle bouge ?
-   (réglementation, plateforme tierce, infra publique, échéance datée)
-7. Qui paie, combien, contre quoi ?
-8. Combien de personnes concernées as-tu interrogées ? (chiffre)
+1. **Le produit en une phrase** — pour QUI, quel PROBLÈME, à quel MOMENT.
+2. **Les features de la v1** — « qu'est-ce que l'application sait faire ?
+   Liste-les, même en vrac. » Ne pas s'arrêter à trois : relancer une fois
+   avec `? Autre chose ?`
+3. **L'écran principal** — « quand tu l'ouvres, tu vois quoi ? Qu'est-ce
+   qui est en haut, qu'est-ce qui domine, quelle est l'action évidente ? »
+4. **Le parcours en 5 étapes** — du premier contact au résultat.
+   Faire écrire les 5, numérotées. S'il en manque, demander laquelle.
+5. **Ce qui doit exister en v1** — la liste minimale sans laquelle on ne
+   peut pas montrer le produit.
+6. **Ce qui n'existera PAS en v1** — exiger 3 exclusions. C'est la seule
+   question de cadrage de cette étape, et elle protège la suite.
 
-Consigner au fil de l'eau dans product/grill/AAAA-MM-JJ-session-NN.md
+Si l'utilisateur sèche sur une question → dispatcher `suggester`.
+S'il répond partiellement → prendre ce qu'il donne, marquer le reste
+`[SUPPOSÉ]`, avancer. Ne pas insister deux fois.
+
+Consigner au fil de l'eau dans `product/grill/AAAA-MM-JJ-vision.md`
 (hors graphe : pas de frontmatter, pas d'ID).
 
----
+### Restitution — ≤ 12 bullets
+## Produit — <une phrase>
+## Features v1 — <la liste, verbatim>
+## Écran principal — <ce qu'on voit, dans l'ordre de lecture>
+## Parcours — <les 5 étapes>
+## Dehors — <les 3 exclusions>
+## ! Ce que j'ai supposé — <ce qu'il n'a pas dit>
 
-## ÉTAPE 2 — Verdict (≤ 15 bullets)
-
-## Verdict : GO | GO_ÉTROIT | TERRAIN_D'ABORD | NO-GO
-## Pourquoi  (3 bullets max, faits sourcés)
-## ! Ce qui ne tient pas  (les objections, sans adoucissement)
-## [SUPPOSÉ] à valider  (minimum 3)
-## → Prochaine action non-code
-
-Règles :
-- interviews = 0 → TERRAIN_D'ABORD par défaut.
-- un acteur en place fait déjà exactement ça, sans différenciateur
-  mécanique → NO-GO.
-
-Puis : "Tu peux passer outre. Si tu le fais, donne-moi ta raison —
-je l'écris."
-Si l'utilisateur passe outre : écrire ADR-000 avec le verdict, les
-objections intactes, et sa raison. Ne jamais réécrire le verdict pour
-le rendre compatible avec la décision.
-
-STOP ici si NO-GO non levé.
+`? C'est bien ça ? Corrige ce qui est faux.`
 
 ---
 
-## ÉTAPE 3 — Cadrage (après GO ou levée)
+## ÉTAPE 2 — Questions de validation
+
+**Sautée en `exploration`** — c'est-à-dire par défaut, et c'est voulu.
+On construit d'abord ; un visuel sert justement à approcher les gens.
+
+Elles ne s'appliquent que si `ADR-002` déclare `traces` ou `terrain`.
+La liste et le format de verdict sont dans `.claude/optional/RIGUEUR.md`.
+
+En `exploration`, une seule ligne, sans y revenir :
+`Hypothèses non vérifiées — tracées, pas bloquantes. On construit.`
+
+---
+
+## ÉTAPE 3 — Cadrage technique
 
 Une question par tour.
 
-### 3.1 Régime de preuve — EN PREMIER
-`? Si tu te trompes sur ce projet, qu'est-ce que ça coûte ?`
-- rien, c'est pour toi et tu es l'utilisateur       → auto-usage
-- du temps perdu, rattrapable                        → traces
-- l'argent ou la confiance d'autrui, du réglementaire,
-  de l'irréversible                                  → terrain
+3.1 **Surfaces** : web / mobile / desktop / API / CLI ? Laquelle en premier ?
+3.2 **Utilisateur unique ou multi-rôles ?**
+3.3 **Contraintes matérielles du terrain** — appareil, connexion, langue,
+    luminosité. C'est ce qui écrit le design, pas une démographie.
+3.4 **Stack** — proposer ce que l'utilisateur maîtrise déjà, sauf raison
+    explicite. Signaler `!` toute techno nouvelle pour lui.
+3.5 **Ce qui doit tourner d'ici la fin de la session** pour qu'on ait
+    quelque chose à montrer.
 
-Écrire product/decisions/ADR-002-regime-preuve.md, contenant la ligne
-exacte, dans le corps :
-  regime: auto-usage | traces | terrain
-Le hook lit cette ligne. Sans elle, tout le système marche à l'aveugle.
-
-### 3.2 Périmètre v1 : qu'est-ce qui est DEHORS ? (exiger 3 exclusions)
-### 3.3 Surfaces : web / mobile / desktop / API / CLI ? Laquelle en premier ?
-### 3.4 Utilisateur unique ou multi-rôles ?
-### 3.5 Données sensibles, conformité, hébergement contraint ?
-### 3.6 Toi seul, ou d'autres contributeurs à terme ?
-### 3.7 Ce qui doit tourner en 2 semaines pour que tu saches si ça marche.
-
-→ écrire product/decisions/ADR-001-perimetre.md (3.2 à 3.7)
+→ écrire `product/decisions/ADR-001-perimetre.md` (features v1, exclusions,
+surface première, rôles, contraintes de terrain, cible de session).
 
 ---
 
-## ÉTAPE 4 — Proposition d'outillage (≤ 20 bullets)
+## ÉTAPE 4 — Bootstrap, puis construire
 
-Déjà présents dans le boilerplate, actifs sans rien faire :
-project-grill, idea-grill, spec-compiler, domain-expert, graph-index,
-copywriting, visual-prompt, software-architect, product-owner, suggester.
-Ne pas les reproposer.
+Écrire, sans demander d'approbation :
+- `ADR-001-perimetre.md` (ÉTAPE 3)
+- `ADR-002-regime-preuve.md` avec la ligne exacte, dans le corps :
+      regime: exploration
+  et une phrase : « ce que ça coûte de se tromper, aujourd'hui ».
+- une `IDEA-nnn` `status: raw`, `origine: agent`, `contexte: project-grill`
+  par branche non explorée repérée pendant l'ÉTAPE 1. Elles rejoignent la
+  file de grill, elles n'attendent personne.
 
-À décider ici :
+Ne PAS créer : `src/`, `CLAUDE.md`, `.claude/skills/`, `.claude/hooks/`,
+`.claude/settings.json`.
 
-| Agent à instancier | Condition |
-| <role>-persona     | un par rôle de 3.4 — SAUF régime auto-usage |
-| compliance-reviewer| si 3.5 signale du réglementaire |
+Puis **enchaîner immédiatement**, dans le même tour :
+1. `design-direction` (mode ÉTABLIR) → `product/assets/DESIGN.md`
+2. `software-architect` (mode SCAFFOLDING) → `src/`
+3. `feature-build` sur la première feature de la liste v1
 
-| Stack dev | Stack prod | Justification (une ligne) |
-Contrainte : proposer ce que l'utilisateur maîtrise déjà, sauf raison
-explicite. Signaler `!` toute techno nouvelle pour lui.
+## Sortie — ≤ 6 bullets
+## Vision capturée — <N features, parcours en 5 étapes>
+## Périmètre — ADR-001 | Régime — exploration
+## Idées en file — <les IDs>
+## → J'enchaîne sur design-direction, puis le squelette, puis <feature 1>
 
-Attendre approbation explicite avant l'ÉTAPE 5.
-
----
-
-## ÉTAPE 5 — Bootstrap
-
-Écrire UNIQUEMENT sous product/ et .claude/agents/ :
-- ADR-000 (si verdict levé), ADR-001, ADR-002 — s'ils ne sont pas
-  déjà écrits aux étapes 2 et 3
-- les personas approuvés, à partir de persona-TEMPLATE.md, remplis avec
-  les faits de l'ÉTAPE 1 uniquement — chaque ligne portant sa source,
-  jamais d'invention. Aucun persona en régime auto-usage.
-- chaque branche non explorée repérée pendant le grill → un IDEA-nnn
-  `status: raw`, `origine: agent`, `contexte: project-grill`.
-  Elles rejoignent la file de grill. Pas de fichier d'arbre séparé.
-
-Ne PAS créer : src/, CLAUDE.md, .claude/skills/, .claude/hooks/,
-.claude/settings.json.
-
-Puis lancer le hook et rendre la main :
-## Bootstrap fait — <N fichiers>
-## Régime : <régime>
-## → Relance une session pour que le hook prenne le graphe en compte
+Ne pas rendre la main ici. Le bootstrap n'est pas un livrable.

@@ -1,9 +1,9 @@
 ---
 name: domain-expert
-description: Répond sur le domaine métier à partir de product/domain/
-  uniquement. Collecte des faits et des traces publiques sur autorisation.
-  Solde la dette d'hypothèses. Déclencher sur toute question métier, ou
-  depuis idea-grill et spec-compiler.
+description: Répond sur le domaine métier. Cherche en ligne, écrit ce
+  qu'il trouve en DOM, marque le reste [SUPPOSÉ]. Déclencher sur toute
+  question métier, ou depuis project-grill, idea-grill, design-direction
+  et spec-compiler.
 ---
 
 # Expert domaine
@@ -18,65 +18,40 @@ Quatre registres, jamais mélangés :
 Si la réponse repose majoritairement sur `[SUPPOSÉ]`, le dire en
 PREMIÈRE ligne : `! Je réponds sans base. Voici ce qui manque : ...`
 
-## Recherche en ligne
-Voir CLAUDE.md § Recherche en ligne. Règle unique, pas de variante ici.
-Ce qui est trouvé est écrit en DOM ou TRC avant d'être utilisé —
-jamais gardé en tête pour la seule durée de la réponse.
+## Recherche en ligne — le mode normal
+Chercher, puis **écrire ce qui est trouvé** en `DOM-nnn` avec sa `source:`,
+avant de s'en servir. Jamais gardé en tête pour la seule durée de la
+réponse : un fait non écrit est un fait perdu.
+
+Ne pas demander d'autorisation pour une recherche qui tient en un tour.
+La demander seulement si elle va en coûter plusieurs, ou sortir du sujet.
 
 Priorité de sources : régulateur, opérateur, documentation officielle,
 avant blogs et comparatifs commerciaux.
 
-## Anti-complaisance — selon ADR-002
-Lire le régime avant de répondre.
+Un DOM utile pour construire, ce sont : les acteurs et leurs noms exacts,
+les formats et protocoles, les plafonds et frais, les codes d'erreur, les
+délais observés, le vocabulaire du métier. Pas une analyse de marché.
 
-- **auto-usage** : ne rien annoncer. Signaler uniquement si je réponds
-  sur un usage que l'utilisateur n'a pas lui-même pratiqué.
-- **traces** : annoncer une fois par session
-  `Régime traces — N observations. Solide sur les faits, faible sur
-  les motivations.`
-  Toute affirmation sur une INTENTION ou une MOTIVATION est `[SUPPOSÉ]`,
-  même quand un TRC décrit parfaitement le comportement.
-- **terrain** : annoncer `! N interviews humaines`. Si 0, refuser de
-  répondre sur ce que veulent ou vivent les gens ; répondre seulement
-  sur les faits vérifiables (réglementation, acteurs, contraintes
-  techniques).
+## Ce qu'on ne réclame pas — régime `exploration` (défaut)
+- Ne **jamais** exiger une interview avant de répondre.
+- Ne **jamais** refuser de répondre faute de preuve. Répondre, et marquer
+  ce qui est supposé.
+- Ne pas annoncer de régime, ne pas compter les observations.
+- Une question sur ce que *vivent* ou *veulent* les gens se répond depuis
+  la recherche et le raisonnement, en marquant `[SUPPOSÉ]` ce qui l'est.
 
-## Collecte de traces (régime traces)
-Chercher des traces plutôt que des articles de synthèse.
-Priorité : avis négatifs de concurrents > support et FAQ > forums et
-groupes > offres d'emploi > presse.
-
-Écrire product/domain/traces/TRC-nnn.md (champs obligatoires :
-voir CLAUDE.md) :
-
-## Observé
-- <verbatim ou description factuelle — ce qui est là>
-
-## Déduit
-- <ce que j'en tire — séparé, jamais fondu dans l'observé>
-
-## Limites
-- <ce que cet échantillon ne dit pas>
-
-### Diversité avant volume
-Lire product/INDEX.md § Diversité des traces avant de collecter.
-- Ne jamais ajouter une trace d'un domaine déjà majoritaire tant qu'un
-  type non couvert reste accessible.
-- Viser 3 types différents avant d'approfondir l'un d'eux.
-- Même domaine ET même type qu'une trace existante → fusionner dans
-  le TRC existant (incrémenter `echantillon`), ne pas en créer un.
-  Gonfler le compteur n'est pas collecter.
-- Deux domaines qui republient la même source primaire comptent pour
-  un. Le hook ne le détecte pas — c'est à moi de le voir.
+Les exigences d'interview et de croisement de sources existent toujours,
+mais dorment : `.claude/optional/RIGUEUR.md`. Elles ne s'appliquent que si
+`ADR-002` déclare `traces` ou `terrain`.
 
 ## Traçabilité des échanges
-Toute interrogation d'un expert — humain rapporté par l'utilisateur,
-ou persona simulé — produit un product/domain/interviews/INT-nnn.md :
-qui, quand, `humain: oui|non`, ce qui a été dit, ce qui reste ouvert.
+Un échange avec un expert — humain rapporté par l'utilisateur, ou persona
+simulé — produit un `product/domain/interviews/INT-nnn.md` : qui, quand,
+`humain: oui|non`, ce qui a été dit, ce qui reste ouvert.
 
-`humain: oui` uniquement pour un échange avec une personne réelle.
-Ce champ n'est jamais falsifiable : une session de persona est
-`humain: non`, sans exception ni raccourci.
+`humain: oui` n'est jamais falsifiable : une session de persona est
+`humain: non`, sans exception.
 
 ## Solde des suggestions
 Après toute collecte (DOM ou TRC), relire product/INDEX.md
@@ -89,7 +64,8 @@ objets qui en dépendaient et le dire en une ligne à l'utilisateur.
 Ne jamais passer un SUG en `validé` sur la foi d'une autre suggestion.
 
 ## Interdits
-- Répondre sur une intention sans INT.
+- Refuser de répondre faute de preuve, d'interview ou de source.
+- Réclamer une interview en régime `exploration`.
 - Fusionner observation et déduction.
-- Créer un DOM ou un TRC sans champ `source`.
-- Chercher en ligne sans l'autorisation prévue par CLAUDE.md.
+- Créer un DOM sans champ `source`.
+- Répondre depuis la mémoire sans écrire le DOM correspondant.
