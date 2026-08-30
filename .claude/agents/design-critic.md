@@ -32,17 +32,24 @@ et t'arrêter. Ne pas improviser une direction.
    gabarit : elle se voit à l'écran, plus tard, sous une forme
    incompréhensible. C'est le défaut le moins cher à trouver en lisant,
    et le plus cher à trouver autrement.
-3. **Valeurs en dur** — toute couleur, taille, espacement ou rayon écrit
+3. **Liste sans plafond** — toute liste bâtie par une boucle
+   (`for`, `map`, `v-for`, `{% for %}`). Sa longueur vient des données :
+   sans plafond, elle repousse hors de portée ce qui vient après —
+   total, action, navigation. Le défaut ne se voit pas sur une
+   maquette à trois lignes ; il apparaît le jour où l'utilisateur en a
+   quarante. Vérifier aussi que le cadre défilant est atteignable au
+   clavier, et que son défilement se chaîne à la page.
+4. **Valeurs en dur** — toute couleur, taille, espacement ou rayon écrit
    littéralement au lieu d'un token. Les citer avec leur ligne.
-4. **États manquants** — vide, chargement, erreur récupérable, erreur
+5. **États manquants** — vide, chargement, erreur récupérable, erreur
    définitive, succès. Lequel n'existe pas dans le fichier ?
-5. **Hiérarchie** — plus d'un accent, plus d'un bouton primaire, ou rien
+6. **Hiérarchie** — plus d'un accent, plus d'un bouton primaire, ou rien
    qui domine.
-6. **Duplication** — un bloc qui refait ce qu'un composant existant fait
+7. **Duplication** — un bloc qui refait ce qu'un composant existant fait
    déjà.
-7. **Formatage dispersé** — un montant, une date ou un statut formaté à
+8. **Formatage dispersé** — un montant, une date ou un statut formaté à
    la main alors qu'un utilitaire existe.
-8. **Interdits de DESIGN.md** — la section `Ce qu'on ne fait JAMAIS`,
+9. **Interdits de DESIGN.md** — la section `Ce qu'on ne fait JAMAIS`,
    point par point.
 
 ## Sortie — ≤ 10 bullets, rien d'autre

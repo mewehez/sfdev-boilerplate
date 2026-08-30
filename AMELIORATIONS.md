@@ -420,3 +420,32 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 - **Ce qui l'a attrapé** : une capture d'écran du simulateur. Le même
   outil que pour les deux collisions CSS. Trois défauts sur trois
   trouvés en regardant, aucun en relisant.
+
+---
+
+## 2026-08-30 — Une liste à trois lignes ne montre pas le défaut
+
+- **Symptôme** : l'utilisateur a dû signaler que les pages s'allongeaient
+  sans fin. Chaque écran de Paymex laissait ses listes grandir avec les
+  données — 27 paiements, 40 achats, autant de tentatives qu'un client
+  fait d'essais. Le total en bas, le bouton d'action, la barre
+  d'onglets : tout partait hors de portée. Et l'en-tête, avec son retour,
+  disparaissait dès le premier geste de défilement.
+- **Cause** : les écrans ont été construits, relus et critiqués avec des
+  données de démonstration — trois ou cinq lignes. À trois lignes, une
+  liste sans plafond est indiscernable d'une liste plafonnée. Ni la
+  skill ni le critique ne demandaient « et avec quarante ? ». Le défaut
+  n'est pas dans le gabarit : il est dans le **volume**.
+- **Correction** :
+  - `design-critic` : « liste sans plafond » devient sa troisième
+    lentille, juste après la collision de noms. Elle vise ce que le
+    gabarit ne montre pas — une boucle dont la longueur vient des
+    données — et vérifie les deux corollaires : le cadre défilant doit
+    être atteignable au clavier, et son défilement doit se chaîner à la
+    page, sinon la liste est un cul-de-sac.
+  - Côté projet, la règle est passée dans `DESIGN.md` et surtout dans un
+    **test** : toute liste bâtie par une boucle porte la classe, ou son
+    exemption est écrite avec sa raison. Le test a immédiatement trouvé
+    deux listes que je n'avais pas vues.
+- **Ce qui vaut d'être retenu** : une exemption écrite dans un test vaut
+  mieux qu'une règle en prose. La prose se relit ; le test se heurte.
