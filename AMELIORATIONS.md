@@ -472,3 +472,28 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
   écran, un seul défilement, et ce qui déborde part sur son propre écran.
 - **Ce qui l'a attrapé** : encore une capture. La quatrième de suite.
   Aucun de ces quatre défauts n'était visible dans le code.
+
+---
+
+## 2026-08-31 — Le web avait un chemin, le port en avait deux
+
+- **Symptôme** : l'utilisateur s'est déconnecté de l'application Paymex
+  et n'a pas eu « content de vous revoir » — il est retombé sur le choix
+  du rôle, comme si l'appareil n'avait jamais vu personne. J'avais
+  pourtant vérifié ce parcours en capture, la veille, et il marchait.
+- **Cause** : il marchait **par le chemin que je venais d'écrire**. Sur
+  le web, une session s'ouvre dans une seule fonction, qui pose le
+  cookie de session et celui de l'appareil d'un même geste — un endroit,
+  rien à oublier. Le port a deux chemins : saisir le code, ou voir son
+  jeton restauré au démarrage. Je n'avais couvert que le premier. Le cas
+  découvert est exactement celui de quelqu'un qui était **déjà
+  connecté** quand la nouvelle version est arrivée — donc invisible tant
+  qu'on teste avec une installation neuve.
+- **Correction** : `portage` gagne une étape — pour chaque état que le
+  port conserve, « par combien de chemins peut-on l'atteindre, et
+  est-ce qu'ils l'écrivent tous ? » — et un interdit correspondant.
+- **Ce qui vaut d'être retenu** : ouvrir chaque écran ne suffit pas si
+  on les ouvre toujours dans le même ordre, depuis une installation
+  neuve. Le défaut vivait dans la **deuxième** session, pas dans la
+  première. C'est le premier des cinq derniers défauts qu'une capture
+  n'aurait pas attrapé.

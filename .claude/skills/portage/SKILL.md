@@ -170,7 +170,23 @@ autrement. Le porter en écrivant l'intention dans la TASK — pas le nom
 du composant d'origine — évite qu'on « corrige » plus tard le port pour
 le faire ressembler au web.
 
-### 6. Vérifier sur l'appareil
+### 6. Compter les chemins, pas les écrans
+Le web écrit souvent un état **en un seul endroit**, parce qu'il n'a
+qu'un chemin pour l'atteindre : une session s'ouvre dans une fonction,
+et cette fonction pose tout ce qu'il y a à poser. Le port, lui, en a
+presque toujours **plusieurs** — l'écran que l'on vient d'écrire, et le
+jeton restauré au démarrage, et la reprise après mise à jour.
+
+Donc, pour chaque état que le port conserve :
+
+> **Par combien de chemins peut-on l'atteindre, et est-ce qu'ils
+> l'écrivent tous ?**
+
+Le défaut ne se voit pas en essayant le parcours qu'on vient d'écrire :
+celui-là marche. Il se voit à la deuxième session, chez quelqu'un qui
+était déjà connecté — donc rarement avant la mise en main.
+
+### 7. Vérifier sur l'appareil
 Ne pas conclure sur un émulateur seul. Contrôler : encoche haute et
 barre de geste basse, clavier qui ne recouvre pas le champ actif, retour
 arrière du système, rotation, et la coupure réseau — c'est le cas qui
@@ -203,3 +219,5 @@ compte le plus.
   Un `analyze` vert ne dit rien de ce que le serveur envoie vraiment.
 - Recopier un mécanisme parce qu'il marche sur le web. On porte ce qu'il
   cherchait à obtenir, pas sa mise en œuvre.
+- N'écrire un état persistant que sur le chemin qu'on vient d'écrire.
+  Le web en a un ; le port en a plusieurs.
