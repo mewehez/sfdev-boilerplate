@@ -152,7 +152,25 @@ Donc : lancer, ouvrir **chaque** écran, et le voir. Une capture par
 ne montre — un bouton flottant qui couvre la dernière ligne, une marque
 posée là où elle ne devrait pas être.
 
-### 5. Vérifier sur l'appareil
+### 5. Porter l'intention, pas le mécanisme
+Un mécanisme qui marche sur le web peut devenir un **piège** une fois
+transposé, parce que la plateforme d'arrivée n'a pas les mêmes règles
+sous le capot. L'exemple type : une liste imbriquée qui défile. Le
+navigateur **chaîne** le défilement vers la page dès que la liste touche
+son bord ; la plupart des trousses natives ne le font pas. Copié tel
+quel, le cadre capte le doigt, la page ne bouge plus, et une partie de
+la liste reste hors d'atteinte.
+
+Donc, devant chaque mécanisme à porter, une question avant d'écrire :
+
+> **Qu'est-ce que le navigateur faisait gratuitement, ici ?**
+
+Puis on écrit ce que le mécanisme cherchait à obtenir, et on l'obtient
+autrement. Le porter en écrivant l'intention dans la TASK — pas le nom
+du composant d'origine — évite qu'on « corrige » plus tard le port pour
+le faire ressembler au web.
+
+### 6. Vérifier sur l'appareil
 Ne pas conclure sur un émulateur seul. Contrôler : encoche haute et
 barre de geste basse, clavier qui ne recouvre pas le champ actif, retour
 arrière du système, rotation, et la coupure réseau — c'est le cas qui
@@ -183,3 +201,5 @@ compte le plus.
 - Conclure sans avoir vu tourner sur un appareil réel.
 - Déclarer un port fait sans avoir ouvert et **regardé** chaque écran.
   Un `analyze` vert ne dit rien de ce que le serveur envoie vraiment.
+- Recopier un mécanisme parce qu'il marche sur le web. On porte ce qu'il
+  cherchait à obtenir, pas sa mise en œuvre.

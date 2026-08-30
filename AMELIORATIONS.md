@@ -449,3 +449,26 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
     deux listes que je n'avais pas vues.
 - **Ce qui vaut d'être retenu** : une exemption écrite dans un test vaut
   mieux qu'une règle en prose. La prose se relit ; le test se heurte.
+
+---
+
+## 2026-08-30 — Le mécanisme du web était un piège une fois porté
+
+- **Symptôme** : les listes plafonnées de Paymex, portées telles quelles
+  en Flutter, ont produit l'inverse de ce qu'elles corrigeaient. Sur
+  l'écran des retraits, le cadre de la liste dépassait par le bas de
+  l'écran — et le doigt posé dessus faisait défiler **la liste**, pas la
+  page. Une partie du cadre restait donc inatteignable.
+- **Cause** : le navigateur **chaîne** le défilement — arrivé au bord
+  d'une liste imbriquée, il passe la main à la page. Flutter ne le fait
+  pas. Le mécanisme du web reposait sur un service rendu gratuitement par
+  la plateforme, et que personne n'avait nommé. La skill demandait de ne
+  pas dupliquer les *règles* ; elle ne disait rien des *mécanismes*.
+- **Correction** : `portage` gagne une étape avant d'écrire — « qu'est-ce
+  que le navigateur faisait gratuitement, ici ? » — et un interdit :
+  recopier un mécanisme parce qu'il marche sur le web. On porte ce qu'il
+  cherchait à obtenir. Dans le cas présent, l'intention « la page ne
+  s'allonge pas sans fin » se réalise par une structure différente : un
+  écran, un seul défilement, et ce qui déborde part sur son propre écran.
+- **Ce qui l'a attrapé** : encore une capture. La quatrième de suite.
+  Aucun de ces quatre défauts n'était visible dans le code.
