@@ -497,3 +497,34 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
   neuve. Le défaut vivait dans la **deuxième** session, pas dans la
   première. C'est le premier des cinq derniers défauts qu'une capture
   n'aurait pas attrapé.
+
+---
+
+## 2026-08-31 — Trois pièges de plus, et une liste pour les retenir
+
+- **Symptôme** : l'utilisateur a trouvé, en une session, que la page
+  d'encaissement du port n'avait ni QR ni partage, qu'aucune ligne de
+  paiement n'y ramenait, et qu'une feuille de détail s'ouvrait vide.
+  Chacun a une cause différente, et aucune ne se voyait dans le code.
+- **Causes**, dans l'ordre où elles se sont révélées :
+  1. La feuille plantait sur `demande_a` — un horodatage, pas une chaîne
+     — et le moteur peignait son écran d'erreur, muet en release. C'est la
+     **troisième** fois qu'un `as` sur du JSON fait tomber un écran.
+  2. Le gabarit web formate ses dates dans un filtre serveur ; l'API
+     rendait des nombres. Le port n'avait rien à afficher.
+  3. Le QR se rendait en filets espacés : segno s'appuie sur le
+     `stroke-width: 1` implicite de la norme SVG, qu'un navigateur
+     applique et que le moteur du port applique autrement.
+- **Correction** : plutôt que trois rustines, la skill `portage` gagne une
+  section nommée — **« ce que le navigateur faisait gratuitement »** —
+  qui liste six services que la plateforme d'arrivée ne rend pas :
+  typage, mise en forme, valeurs implicites d'un format, chaînage du
+  défilement, unicité des chemins d'écriture, déclarations de
+  permissions. Chacun avec le défaut observé et la règle qui l'évite. La
+  section porte sa propre consigne d'entretien : *quand un nouveau piège
+  se paie, on l'écrit ici*.
+- **Ce qui vaut d'être retenu** : après le premier `as` cassé j'avais
+  corrigé le champ ; après le deuxième aussi. Il a fallu le troisième
+  pour traiter la **classe** de défaut — remplacer tous les casts par des
+  lecteurs qui ne promettent rien. Une correction qui ne remonte pas à la
+  classe se repaie, et une liste tenue vaut mieux que trois souvenirs.

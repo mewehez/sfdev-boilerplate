@@ -152,41 +152,73 @@ Donc : lancer, ouvrir **chaque** écran, et le voir. Une capture par
 ne montre — un bouton flottant qui couvre la dernière ligne, une marque
 posée là où elle ne devrait pas être.
 
-### 5. Porter l'intention, pas le mécanisme
-Un mécanisme qui marche sur le web peut devenir un **piège** une fois
-transposé, parce que la plateforme d'arrivée n'a pas les mêmes règles
-sous le capot. L'exemple type : une liste imbriquée qui défile. Le
-navigateur **chaîne** le défilement vers la page dès que la liste touche
-son bord ; la plupart des trousses natives ne le font pas. Copié tel
-quel, le cadre capte le doigt, la page ne bouge plus, et une partie de
-la liste reste hors d'atteinte.
+### 5. Ce que le navigateur faisait gratuitement
 
-Donc, devant chaque mécanisme à porter, une question avant d'écrire :
+**C'est la section à relire avant chaque port.** Le navigateur rend une
+foule de services que personne n'a nommés, parce qu'ils n'ont jamais eu
+besoin de l'être. La plateforme d'arrivée n'en rend qu'une partie, et
+les manques ne se voient **ni dans le code, ni à la compilation**. Ils
+se voient à l'exécution, sur un écran, un jour.
+
+Ce sont des défauts observés, pas des hypothèses. La liste s'allonge à
+chaque port : **quand un nouveau piège se paie, on l'écrit ici.**
+
+**1 — Le typage.** Le web ne type rien : un gabarit affiche ce qu'on lui
+donne, quelle qu'en soit la forme. Le port, lui, écrit
+`réponse['champ'] as String` — une **assertion non vérifiée**, une par
+champ lu, que le compilateur accepte et que l'exécution seule tranche.
+Trois écrans sont tombés ainsi : un objet là où on attendait une chaîne,
+un horodatage là où on attendait une date.
+→ **Ne pas caster ce qui vient du réseau.** Écrire des lecteurs qui ne
+promettent rien et rendent un repli. Un champ qui change de forme doit
+faire une ligne vide, pas un écran d'erreur.
+
+**2 — La mise en forme.** Le web formate **côté serveur**, dans ses
+filtres : dates, montants, numéros. Le port reçoit la valeur brute, et
+soit il réinvente le format — deux vérités —, soit il affiche un
+horodatage à l'écran.
+→ **Ce qui s'affiche est mis en forme là où il est décidé.** L'API rend
+le champ ET son texte. Le port n'a rien à formater qu'il n'ait déjà.
+
+**3 — Les valeurs par défaut d'un format.** `stroke-width: 1` est la
+valeur implicite du SVG. Un navigateur l'applique ; un autre moteur
+l'applique à sa façon — dans l'espace mis à l'échelle, par exemple — et
+un QR se rend en filets espacés, illisible pour une caméra.
+→ **Écrire les valeurs, ne pas les sous-entendre**, dès qu'un actif
+traverse la frontière.
+
+**4 — Le chaînage du défilement.** Le navigateur passe la main à la page
+dès qu'une liste imbriquée touche son bord. La plupart des trousses
+natives ne le font pas : le cadre capte le doigt, la page ne bouge plus,
+et une partie du contenu reste hors d'atteinte.
+→ **Un écran, un seul défilement.** Ce qui déborde part sur son propre
+écran.
+
+**5 — L'unicité des chemins.** Le web écrit souvent un état en un seul
+endroit, parce qu'il n'a qu'un chemin pour l'atteindre. Le port en a
+presque toujours plusieurs : l'écran qu'on vient d'écrire, le jeton
+restauré au démarrage, la reprise après mise à jour.
+→ **Pour chaque état conservé, compter les chemins qui l'écrivent.** Le
+défaut ne se voit pas dans le parcours qu'on vient de faire : il se voit
+à la deuxième session.
+
+**6 — Les permissions et les déclarations.** Une page web demande la
+caméra en la demandant. Une app doit l'avoir **déclarée** avant, avec sa
+raison — et pour interroger une autre application, l'avoir déclarée
+aussi.
+→ Chaque capacité touchée ajoute une ligne à un manifeste. L'oublier ne
+casse rien à la compilation ; la fonction répond simplement « non ».
+
+### La question à se poser, à chaque mécanisme
 
 > **Qu'est-ce que le navigateur faisait gratuitement, ici ?**
 
 Puis on écrit ce que le mécanisme cherchait à obtenir, et on l'obtient
-autrement. Le porter en écrivant l'intention dans la TASK — pas le nom
-du composant d'origine — évite qu'on « corrige » plus tard le port pour
-le faire ressembler au web.
+autrement. Écrire l'**intention** dans la TASK — pas le nom du composant
+d'origine — évite qu'on « corrige » plus tard le port pour le faire
+ressembler au web.
 
-### 6. Compter les chemins, pas les écrans
-Le web écrit souvent un état **en un seul endroit**, parce qu'il n'a
-qu'un chemin pour l'atteindre : une session s'ouvre dans une fonction,
-et cette fonction pose tout ce qu'il y a à poser. Le port, lui, en a
-presque toujours **plusieurs** — l'écran que l'on vient d'écrire, et le
-jeton restauré au démarrage, et la reprise après mise à jour.
-
-Donc, pour chaque état que le port conserve :
-
-> **Par combien de chemins peut-on l'atteindre, et est-ce qu'ils
-> l'écrivent tous ?**
-
-Le défaut ne se voit pas en essayant le parcours qu'on vient d'écrire :
-celui-là marche. Il se voit à la deuxième session, chez quelqu'un qui
-était déjà connecté — donc rarement avant la mise en main.
-
-### 7. Vérifier sur l'appareil
+### 6. Vérifier sur l'appareil
 Ne pas conclure sur un émulateur seul. Contrôler : encoche haute et
 barre de geste basse, clavier qui ne recouvre pas le champ actif, retour
 arrière du système, rotation, et la coupure réseau — c'est le cas qui
@@ -219,5 +251,8 @@ compte le plus.
   Un `analyze` vert ne dit rien de ce que le serveur envoie vraiment.
 - Recopier un mécanisme parce qu'il marche sur le web. On porte ce qu'il
   cherchait à obtenir, pas sa mise en œuvre.
-- N'écrire un état persistant que sur le chemin qu'on vient d'écrire.
-  Le web en a un ; le port en a plusieurs.
+- Caster une valeur venue du réseau. C'est une promesse que rien ne
+  tient.
+- Formater dans le port ce que le serveur sait déjà formater.
+- Payer deux fois le même piège sans l'avoir écrit dans « ce que le
+  navigateur faisait gratuitement ».
