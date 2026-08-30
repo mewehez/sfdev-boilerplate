@@ -139,7 +139,20 @@ Chaque capacité native est appelée depuis le web derrière un test de
 disponibilité, pour que **le web reste utilisable seul**. Un port ne rend
 jamais le web moins bon.
 
-### 4. Vérifier sur l'appareil
+### 4. Ouvrir chaque écran, et le regarder
+Compiler et tester ne suffit pas. Sur une réécriture (marche 4), la
+frontière du port lit du JSON : à cet endroit le typage statique ne
+protège plus rien. En Dart `réponse['champ'] as String`, en Kotlin un
+`as`, en TypeScript une interface déclarée — ce sont des **assertions
+non vérifiées**, une par champ lu. Elles compilent toutes. Elles cassent
+à l'exécution, et seulement sur l'écran qui les affiche.
+
+Donc : lancer, ouvrir **chaque** écran, et le voir. Une capture par
+écran. C'est aussi ce qui attrape les défauts visuels qu'aucune relecture
+ne montre — un bouton flottant qui couvre la dernière ligne, une marque
+posée là où elle ne devrait pas être.
+
+### 5. Vérifier sur l'appareil
 Ne pas conclure sur un émulateur seul. Contrôler : encoche haute et
 barre de geste basse, clavier qui ne recouvre pas le champ actif, retour
 arrière du système, rotation, et la coupure réseau — c'est le cas qui
@@ -168,3 +181,5 @@ compte le plus.
 - Porter tant qu'une TASK `local` est ouverte.
 - Corriger dans le port ce qui se corrige dans le CSS du web.
 - Conclure sans avoir vu tourner sur un appareil réel.
+- Déclarer un port fait sans avoir ouvert et **regardé** chaque écran.
+  Un `analyze` vert ne dit rien de ce que le serveur envoie vraiment.

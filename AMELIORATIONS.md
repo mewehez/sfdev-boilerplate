@@ -392,3 +392,31 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
   il faudrait analyser la feuille de style, et le socle ne sait pas dans
   quel langage le projet écrit son CSS. La lentille du critique est ce
   qu'on peut faire sans supposer une stack.
+
+---
+
+## 2026-08-30 — Un port qui compile n'est pas un port qui marche
+
+- **Symptôme** : le portage Flutter de Paymex passait `flutter analyze`
+  sans un seul avertissement, `flutter test` au vert contre le vrai
+  serveur — et le premier écran affiché après connexion était l'écran
+  rouge de Flutter : `_Map<String, dynamic> is not a subtype of String`.
+  Le serveur envoie `avatar` comme objet `{libelle, cle, svg}` ; le code
+  Dart faisait `compte['avatar'] as String`. L'analyseur ne pouvait rien
+  voir : la réponse JSON est `dynamic`, et `as String` sur du `dynamic`
+  est un contrat que le compilateur accepte et que l'exécution seule
+  tranche.
+- **Cause** : la skill `portage` demandait de compiler et de tester. Elle
+  ne demandait pas de **lancer et regarder**. Or c'est exactement à la
+  frontière du port — là où un langage lit le JSON d'un autre — que le
+  typage statique ne protège plus. Les tests d'API ne l'ont pas vu non
+  plus : ils vérifiaient les clés de la réponse, jamais le rendu qui les
+  consomme.
+- **Correction** : `portage` gagne une étape non négociable avant de
+  déclarer un port fait — lancer l'application sur un appareil ou un
+  simulateur, ouvrir **chaque** écran, et le voir. Le motif est nommé :
+  tout `as <Type>` posé sur une valeur venue du réseau est une assertion
+  non vérifiée, et il y en a un par champ lu.
+- **Ce qui l'a attrapé** : une capture d'écran du simulateur. Le même
+  outil que pour les deux collisions CSS. Trois défauts sur trois
+  trouvés en regardant, aucun en relisant.
