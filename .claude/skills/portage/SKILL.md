@@ -26,7 +26,14 @@ est ouverte — on ne porte pas une application inachevée.
 
 ---
 
-## Choisir la cible — trois marches, dans cet ordre
+## Les défauts, décidés une fois pour toutes
+- **Mobile → PWA.**
+- **Desktop → Tauri v2.**
+
+Ce sont les points de départ. On n'en change qu'en nommant la capacité
+qui manque, et en l'écrivant dans un ADR.
+
+## Choisir la cible — quatre marches, dans cet ordre
 
 Ne jamais monter une marche sans que la précédente soit insuffisante.
 Chaque marche coûte un ordre de grandeur de plus que la précédente.
@@ -64,18 +71,37 @@ telle quelle — il faut soit pointer la coquille vers un serveur distant
 soit extraire la partie cliente. **Le dire avant de commencer.** C'est le
 piège classique de cette marche.
 
-### 3. Tauri v2 — pour le desktop, et le mobile si Rust est déjà là
+### 3. Tauri v2 — le défaut pour le desktop
 Binaires très légers, cœur Rust, iOS et Android depuis la v2.
+**C'est le défaut sur ordinateur**, sans discussion préalable.
 
-**Quand** : une application de comptoir sur un ordinateur, ou une équipe
-qui écrit déjà du Rust. Sinon Capacitor est plus court.
+Le cœur est en Rust : **un port dans un autre langage n'est pas un
+problème**. Une coquille écrite ailleurs que dans le langage du produit,
+c'est la norme — Capacitor colle du Swift et du Kotlin, Tauri du Rust.
 
-### Ce qu'on ne fait jamais
-**React Native, Flutter, SwiftUI, Jetpack Compose.** Ce ne sont pas des
-portages, ce sont des réécritures : deux bases de code, deux fois les
-bugs, et une divergence garantie. Si quelqu'un les demande, dire
-exactement cela — puis, si l'utilisateur maintient, écrire un ADR avec
-son motif, sans réécrire le verdict.
+### 4. Réécriture native — Flutter, Kotlin Multiplatform, React Native
+**Ce n'est pas interdit.** C'est une décision, pas une dérive.
+
+Elle se prend les yeux ouverts, avec un ADR qui répond à une seule
+question :
+
+> **Qu'est-ce qui va exister en deux exemplaires, et comment on
+> garantit qu'ils disent la même chose ?**
+
+Ce qui coûte n'est pas le langage : c'est la **duplication d'une règle**.
+Un écran redessiné dans un autre langage se corrige. Une règle d'argent
+— idempotence, réconciliation, calcul d'un solde — écrite deux fois
+diverge, et les deux versions ont raison chacune de son côté.
+
+Donc, dans l'ADR :
+- **La logique qui décide de l'argent n'existe qu'une fois.** Soit elle
+  reste sur le serveur et l'app est un client ; soit elle est déplacée,
+  et le serveur consomme la même. Jamais deux implémentations.
+- Ce qui est légitimement réécrit : écrans, navigation, colle native.
+- Ce qui ne l'est jamais : les invariants, testés une seule fois.
+
+Si l'utilisateur choisit une réécriture, l'accompagner. Ne pas y revenir
+à chaque tour.
 
 ---
 
@@ -92,9 +118,11 @@ son motif, sans réécrire le verdict.
 Une seule question :
 `? Qu'est-ce que le navigateur ne sait pas faire, et dont tu as besoin ?`
 
-- Rien → **PWA**, et s'arrêter là.
+- Rien, sur téléphone → **PWA**. C'est le défaut, s'arrêter là.
+- Poste de travail → **Tauri v2**. C'est le défaut, s'arrêter là.
 - Caméra, biométrie, notifications, magasin → **Capacitor**.
-- Poste de travail, ou Rust déjà présent → **Tauri**.
+- Une raison assumée d'écrire une app native → **marche 4**, avec son
+  ADR et la question de ce qui existera en double.
 
 Écrire un ADR : la cible retenue, la capacité qui la justifie, les
 marches écartées et pourquoi.
@@ -131,7 +159,12 @@ compte le plus.
 - Développer une feature dans le port. Jamais, sous aucun prétexte.
 - Dupliquer un écran, une règle métier, un calcul de montant.
 - Monter une marche sans avoir nommé la capacité qui la justifie.
-- Proposer React Native ou Flutter comme un « portage ».
+- Présenter une réécriture native comme un portage : ce sont deux
+  choses, et les confondre fait sous-estimer le coût.
+- Refuser une réécriture que l'utilisateur a décidée. On l'accompagne,
+  après avoir écrit ce qui existera en double.
+- Laisser une règle d'argent exister en deux exemplaires. C'est la
+  seule ligne qui ne se négocie pas.
 - Porter tant qu'une TASK `local` est ouverte.
 - Corriger dans le port ce qui se corrige dans le CSS du web.
 - Conclure sans avoir vu tourner sur un appareil réel.

@@ -96,9 +96,19 @@ Un cycle web dure quelques secondes ; un cycle natif, quelques minutes.
 Développer dans le port multiplie ce coût par le nombre d'essais. Et une
 feature écrite deux fois diverge toujours.
 
-Le portage est de phase `pilote` : la skill `portage` choisit la cible
-(PWA, puis Capacitor si une capacité native manque, Tauri pour le
-desktop) et emballe. Elle ne développe rien.
+Cibles par défaut : **PWA** sur téléphone, **Tauri v2** sur ordinateur.
+On n'en change qu'en nommant la capacité qui manque.
+
+Un port dans un autre langage n'est pas un problème — Tauri est en Rust.
+Une réécriture native (Flutter, Kotlin Multiplatform) n'est pas interdite
+non plus : c'est une décision, qui s'écrit dans un ADR. La seule ligne
+qui ne se négocie pas : **la logique qui décide de l'argent n'existe
+qu'une fois.** Un écran redessiné se corrige ; une règle d'idempotence
+écrite deux fois diverge, et les deux versions ont raison chacune de son
+côté.
+
+Le portage est de phase `pilote`. La skill `portage` choisit la cible et
+emballe — elle ne développe rien.
 
 ---
 

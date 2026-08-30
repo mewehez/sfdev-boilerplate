@@ -112,6 +112,19 @@ par beaucoup. Et une feature écrite deux fois diverge toujours.
   clavier qui recouvre un champ) se fait dans le CSS du web, pas dans le
   port. Le web doit rester juste tout seul.
 
+**Cibles par défaut** : `PWA` sur téléphone, `Tauri v2` sur ordinateur.
+On n'en change qu'en nommant la capacité qui manque.
+
+Un port écrit dans un **autre langage** n'est pas un problème — Tauri est
+en Rust, Capacitor colle du Swift et du Kotlin. Une **réécriture native**
+(Flutter, Kotlin Multiplatform, React Native) n'est pas interdite non
+plus : c'est une décision, qui s'écrit dans un ADR.
+
+La seule ligne qui ne se négocie pas : **la logique qui décide de
+l'argent n'existe qu'une fois.** Un écran redessiné se corrige ; une
+règle d'idempotence écrite deux fois diverge, et les deux versions ont
+raison chacune de son côté.
+
 Le portage est une activité de **phase `pilote`** : on ne porte pas une
 application qui n'est pas finie. Le hook `phase_guard.py` refuse d'écrire
 sous `mobile/`, `desktop/`, `ios/` ou `android/` tant qu'une TASK `local`
