@@ -15,15 +15,28 @@ Cette skill rend ce mode officiel au lieu de le laisser contourner le
 processus. La traçabilité s'écrit à la fin, pas au début.
 
 ## Quand NE PAS l'utiliser
-Passer par le circuit long (idea-grill → spec-compiler) uniquement si la
-feature :
-- change un contrat de données déjà consommé ailleurs
-- touche l'argent réel, l'authentification ou des données personnelles
-  en production
-- contredit un ADR actif
+Le critère est la **réversibilité dans la phase courante**, pas le sujet.
+« Toucher à l'authentification » n'est pas dangereux en soi ; le devenir
+quand quelqu'un d'autre en dépend, oui.
 
-Dans le doute, construire. Une feature en phase `local` est réversible
-par `git revert`.
+Passer par le circuit long (idea-grill → spec-compiler) si, et seulement
+si, l'une de ces trois choses est vraie :
+- **quelqu'un d'autre dépend déjà** de ce que tu vas changer : un
+  contrat de données consommé ailleurs, un format d'échange publié, une
+  API dont un tiers se sert ;
+- **l'annuler coûterait plus qu'un `git revert`** : une migration, un
+  avertissement à envoyer, de l'argent réel déjà déplacé ;
+- la phase est `pilote` ou au-delà **et** la feature touche l'argent,
+  l'authentification ou des données personnelles réelles.
+
+En phase `local`, aucune de ces trois n'est vraie par construction :
+personne d'autre ne dépend de rien, et rien n'est déployé. Construire.
+
+**Contredire un ADR n'est pas un motif de circuit long** — c'est un
+motif d'écrire un ADR. Voir la procédure dans `product-owner` : une
+ligne pour dire lequel est contredit, un ADR nouveau qui le lève, et on
+construit. Ne jamais s'arrêter pour demander l'autorisation de changer
+un périmètre que l'utilisateur vient lui-même de changer en demandant.
 
 ---
 

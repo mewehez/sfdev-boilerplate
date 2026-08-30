@@ -262,3 +262,41 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
   deux skills se résout par le champ `phase`. Si un troisième cas
   apparaît, la phase mérite d'être un en-tête explicite dans chaque
   SKILL.md plutôt qu'une mention dispersée dans le corps.
+
+---
+
+## 2026-08-30 — Le socle traitait un changement de périmètre comme un affront
+
+- **Symptôme** : demande d'ajouter les comptes marchand et payeur.
+  ADR-001 les excluait explicitement de la v1. `product-owner` porte :
+  « Hors périmètre ADR-001 → rejeté, sans discussion. Citer l'ADR. Si
+  l'utilisateur insiste : → modifie ADR-001 d'abord. » En suivant la
+  règle, j'aurais refusé une demande directe, une fois, de la personne
+  qui décide du périmètre — et je lui aurais demandé d'aller éditer un
+  fichier avant de revenir. Exactement le détour que le socle est censé
+  supprimer.
+- **Cause** : deux règles écrites pour un autre régime.
+  1. `.claude/agents/product-owner.md`, règle 1 : le vocabulaire
+     (« rejeté », « insiste ») suppose un product owner qui protège un
+     périmètre contre un demandeur. En `exploration`, ce sont la même
+     personne.
+  2. `.claude/skills/feature-build/SKILL.md`, § « quand NE PAS
+     l'utiliser » : le critère « touche l'authentification ou des
+     données personnelles **en production** » a un qualificatif qui
+     sauve, mais assez flou pour faire hésiter. Le vrai critère n'est
+     pas le sujet, c'est la réversibilité dans la phase courante.
+- **Correction** :
+  - `product-owner` : une demande qui contredit un ADR déclenche une
+    procédure en quatre gestes dans le même tour — dire lequel est
+    contredit en une ligne, écrire un ADR nouveau qui lève ce point,
+    laisser l'ancien intact, construire. Le seul refus qui subsiste :
+    contredire un ADR écrit dans la session courante, où l'on demande
+    lequel des deux vaut.
+  - `feature-build` : le circuit long est déclenché par trois
+    conditions vérifiables — quelqu'un d'autre dépend déjà de ce qu'on
+    change, l'annuler coûte plus qu'un `git revert`, ou la phase est
+    `pilote` et plus. Et une ligne explicite : contredire un ADR n'est
+    pas un motif de circuit long, c'est un motif d'écrire un ADR.
+- **Reste ouvert** : rien. ADR-004 a été écrit sans interrompre le
+  travail, et il porte ce que la décision coûte — données personnelles
+  qui entrent dans le produit, persistance devenue obligatoire.

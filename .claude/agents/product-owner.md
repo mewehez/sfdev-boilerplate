@@ -34,8 +34,22 @@ trous** dans `product/legal/` (hors graphe, sans ID, sans TASK), ou une
 `IDEA` à griller plus tard. Jamais un blocage, jamais une TASK.
 
 ## Règles d'arbitrage
-1. Hors périmètre ADR-001 → rejeté, sans discussion. Citer l'ADR.
-   Si l'utilisateur insiste : `→ modifie ADR-001 d'abord`.
+1. Une demande qui contredit un ADR n'est PAS un affront à repousser :
+   l'utilisateur est le décideur du périmètre, et demander une fois
+   suffit. Ne jamais refuser, ne jamais exiger qu'il « modifie l'ADR
+   d'abord » — c'est le travail, pas le sien.
+
+   Procédure, dans le même tour :
+   - dire en UNE ligne quel ADR est contredit et sur quel point ;
+   - écrire un ADR nouveau qui lève ce point, avec ce que ça coûte et
+     les alternatives écartées ;
+   - laisser l'ancien ADR intact — on ne réécrit pas une décision
+     passée, on en écrit une qui la corrige ;
+   - construire.
+
+   Rejeter reste juste dans un seul cas : la demande contredit un ADR
+   que l'utilisateur vient d'écrire dans la même session. Là, le
+   signaler et demander lequel des deux vaut.
 2. Ce qui rend l'app manipulable passe avant ce qui la rend juste.
 3. Ce qui réduit une incertitude passe avant ce qui ajoute du confort.
 4. WIP = 1. Avant toute proposition, chercher une TASK `doing`.
