@@ -528,3 +528,31 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
   pour traiter la **classe** de défaut — remplacer tous les casts par des
   lecteurs qui ne promettent rien. Une correction qui ne remonte pas à la
   classe se repaie, et une liste tenue vaut mieux que trois souvenirs.
+
+---
+
+## 2026-08-31 — Porter de mémoire, c'est ne porter que ce qu'on regarde
+
+- **Symptôme** : l'utilisateur a listé, sur le seul écran de profil, trois
+  fonctions absentes du port — choix du motif, apparence, suppression de
+  compte — et a ajouté « et j'en passe ». Il avait raison : un inventaire
+  mécanique du web a trouvé **42 routes, 23 écrans, 45 gestes**, dont
+  cinq écrans entiers jamais portés, deux jeux de filtres, et les
+  virements sautés de l'historique.
+- **Cause** : un port se fait écran par écran, en regardant l'écran qu'on
+  porte. **On ne voit pas ce qu'on ne regarde pas.** Le trou ne se
+  manifeste ni à la compilation, ni en ouvrant les écrans portés — la
+  skill `portage` demandait justement de les ouvrir un par un, ce que
+  j'avais fait. Elle ne demandait nulle part de comparer le port à la
+  **liste** de ce qu'il devait couvrir.
+- **Correction** : nouvelle skill `parite`. Elle dérive la surface de la
+  source par un script — jamais de mémoire, puisque c'est la mémoire qui
+  a échoué —, écrit une table `product/assets/PARITE.md` à deux états
+  seulement (« porté » ou « hors périmètre — raison »), et pose un test
+  qui **échoue si un écran de la source n'a pas sa ligne**. `portage`
+  gagne une étape « vérifier la parité », et CLAUDE.md la règle : un port
+  n'est jamais fini tant que la table n'est pas verte.
+- **Ce qui vaut d'être retenu** : « ouvrir chaque écran » et « n'oublier
+  aucun écran » sont deux problèmes différents, et je traitais le second
+  avec l'outil du premier. Vérifier ce qu'on a écrit ne dit rien de ce
+  qu'on n'a pas écrit. Il faut partir de la **source**, pas du port.

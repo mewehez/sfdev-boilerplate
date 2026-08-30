@@ -202,7 +202,14 @@ restauré au démarrage, la reprise après mise à jour.
 défaut ne se voit pas dans le parcours qu'on vient de faire : il se voit
 à la deuxième session.
 
-**6 — Les permissions et les déclarations.** Une page web demande la
+**6 — La propagation d'un changement.** Le web re-rend la page entière à
+chaque réponse : un réglage enregistré s'applique partout, gratuitement.
+Le port garde son état en mémoire, par écran — on choisit « Sombre », la
+case se coche, et rien ne change tant qu'on n'est pas revenu en arrière.
+→ **Un réglage s'applique à l'instant où il est accepté**, pas au retour.
+Remonter la valeur au sommet, là où l'apparence est décidée.
+
+**7 — Les permissions et les déclarations.** Une page web demande la
 caméra en la demandant. Une app doit l'avoir **déclarée** avant, avec sa
 raison — et pour interroger une autre application, l'avoir déclarée
 aussi.
@@ -218,7 +225,13 @@ autrement. Écrire l'**intention** dans la TASK — pas le nom du composant
 d'origine — évite qu'on « corrige » plus tard le port pour le faire
 ressembler au web.
 
-### 6. Vérifier sur l'appareil
+### 6. Vérifier la parité
+Ouvrir chaque écran ne dit rien des écrans qu'on n'a pas écrits. Avant de
+déclarer le port fini, dériver la surface de la source et la confronter au
+port : **skill `parite`**. Elle produit `product/assets/PARITE.md` et le
+test qui le tient. Un port sans table de parité verte n'est pas fini.
+
+### 7. Vérifier sur l'appareil
 Ne pas conclure sur un émulateur seul. Contrôler : encoche haute et
 barre de geste basse, clavier qui ne recouvre pas le champ actif, retour
 arrière du système, rotation, et la coupure réseau — c'est le cas qui
