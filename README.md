@@ -86,9 +86,25 @@ que ce soit ne tourne.
 
 ---
 
+## Le web est le lieu du développement
+
+Une feature se développe **sur le web**. Le mobile et le desktop ne font
+que le **porter** — ils n'ajoutent jamais un comportement que le web n'a
+pas.
+
+Un cycle web dure quelques secondes ; un cycle natif, quelques minutes.
+Développer dans le port multiplie ce coût par le nombre d'essais. Et une
+feature écrite deux fois diverge toujours.
+
+Le portage est de phase `pilote` : la skill `portage` choisit la cible
+(PWA, puis Capacitor si une capacité native manque, Tauri pour le
+desktop) et emballe. Elle ne développe rien.
+
+---
+
 ## Ce qui bloque vraiment
 
-Deux refus, deux seulement. Ils portent sur l'**ordre**, jamais sur la
+Trois refus, trois seulement. Ils portent sur l'**ordre**, jamais sur la
 preuve. Ils sont dans `.claude/hooks/phase_guard.py` et ils refusent
 l'écriture du fichier — ce ne sont pas des avertissements.
 
@@ -96,6 +112,9 @@ l'écriture du fichier — ce ne sont pas des avertissements.
 2. **Écran sous `src/` sans `product/assets/DESIGN.md`** → refusé.
    Un écran écrit sans direction de design produit une interface
    incohérente. Établir la direction prend un tour.
+3. **Fichier sous `mobile/`, `desktop/`, `ios/` ou `android/` avant que
+   `local` soit fini** → refusé. Porter une application inachevée, c'est
+   la porter deux fois.
 
 Un refus se lève en faisant la chose dans le bon ordre.
 
@@ -113,6 +132,7 @@ AMELIORATIONS.md             journal des frictions rencontrées
     project-grill            ouverture d'un projet — vision produit d'abord
     feature-build            LE chemin par défaut : feature → écran qui tourne
     design-direction         direction de design, puis rôle d'UX/UI senior
+    portage                  emballe le web en PWA, app mobile ou desktop
     software-architect       pose src/, choisit la stack
     feature-scout            propose des features quand tu es à court d'idées
     idea-grill               capture une idée sans casser ce qu'on fait

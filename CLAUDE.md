@@ -91,6 +91,36 @@ l'argent, de l'authentification. Pas pour le reste.
 
 ---
 
+## Le web est le lieu du développement
+
+**Une feature se développe sur le web. Toujours.** Le mobile et le
+desktop ne font que **porter** ce qui existe déjà — ils n'ajoutent jamais
+un comportement que le web n'a pas.
+
+Pourquoi cette règle et pas une autre : un cycle web est de quelques
+secondes — enregistrer, recharger, voir. Un cycle mobile natif est de
+quelques minutes — compiler, signer, installer, relancer. Développer une
+feature dans le port multiplie ce coût par le nombre d'essais, c'est-à-dire
+par beaucoup. Et une feature écrite deux fois diverge toujours.
+
+- Une feature demandée « pour le mobile » se construit **sur le web**,
+  puis se porte.
+- Un port ne contient que : configuration de build, coquille native,
+  branchements de capacités natives (caméra, biométrie, notifications),
+  icônes et signature. **Aucune règle métier, aucun écran.**
+- Un correctif qui ne concerne que le port (une marge sous l'encoche, un
+  clavier qui recouvre un champ) se fait dans le CSS du web, pas dans le
+  port. Le web doit rester juste tout seul.
+
+Le portage est une activité de **phase `pilote`** : on ne porte pas une
+application qui n'est pas finie. Le hook `phase_guard.py` refuse d'écrire
+sous `mobile/`, `desktop/`, `ios/` ou `android/` tant qu'une TASK `local`
+est ouverte.
+
+Skill : `portage`. Elle choisit la cible et écrit le port.
+
+---
+
 ## Conventions d'ID
 
 Format strict : `<TYPE>-nnn` — exactement 3 chiffres, zéros inclus.

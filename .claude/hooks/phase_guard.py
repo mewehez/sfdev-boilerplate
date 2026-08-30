@@ -6,6 +6,9 @@ Garde mécanique PreToolUse. Deux refus, deux seulement.
        hébergement, conformité) tant qu'une TASK `local` reste ouverte.
   G2 — design : on n'écrit pas un écran tant que product/assets/DESIGN.md
        n'existe pas.
+  G3 — portage : on ne porte pas vers le mobile ou le desktop tant qu'une
+       TASK `local` est ouverte. Porter une application inachevée, c'est
+       la porter deux fois.
 
 Ces deux refus ne portent JAMAIS sur la preuve. Ils portent sur l'ordre.
 Un refus est levé en faisant la chose dans le bon ordre, pas en argumentant.
@@ -22,6 +25,8 @@ ROOT = Path(__file__).resolve().parents[2]
 TASKS = ROOT / "backlog" / "tasks"
 DESIGN = ROOT / "product" / "assets" / "DESIGN.md"
 ECRAN_EXT = {".tsx", ".jsx", ".vue", ".svelte", ".astro", ".html"}
+# Dossiers de portage : le web y est emballé, jamais réécrit.
+PORTAGE = ("mobile/", "desktop/", "ios/", "android/")
 OUVERT = ("todo", "doing")
 
 
@@ -107,12 +112,27 @@ def main():
                         "écris-le directement, sans TASK."
                     )
 
+    # ---------------------------------------------------------------- G3
+    try:
+        rel = p.resolve().relative_to(ROOT).as_posix()
+    except Exception:
+        rel = p.as_posix()
+    if rel.startswith(PORTAGE):
+        bloq = locales_ouvertes()
+        if bloq:
+            deny(
+                f"Portage refusé ({rel}) : "
+                + ", ".join(bloq) + " (phase local) sont encore ouvertes.\n"
+                "Le web est le lieu du développement ; le mobile et le "
+                "desktop ne font que le porter.\n"
+                "Porter une application inachevée, c'est la porter deux "
+                "fois — un cycle natif coûte des minutes là où le web "
+                "coûte des secondes.\n"
+                "→ finis les TASK `local`, puis invoque la skill `portage`."
+            )
+
     # ---------------------------------------------------------------- G2
     if p.suffix.lower() in ECRAN_EXT and not DESIGN.exists():
-        try:
-            rel = p.resolve().relative_to(ROOT).as_posix()
-        except Exception:
-            rel = p.as_posix()
         if rel.startswith("src/"):
             deny(
                 f"Écran refusé ({rel}) : product/assets/DESIGN.md n'existe pas.\n"
