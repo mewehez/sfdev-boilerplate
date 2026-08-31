@@ -130,7 +130,19 @@ application qui n'est pas finie. Le hook `phase_guard.py` refuse d'écrire
 sous `mobile/`, `desktop/`, `ios/` ou `android/` tant qu'une TASK `local`
 est ouverte.
 
-Skill : `portage`. Elle choisit la cible et écrit le port.
+Un port se fait écran par écran, de mémoire — et **on ne voit pas ce
+qu'on ne regarde pas**. Le trou ne se manifeste ni à la compilation ni à
+l'ouverture des écrans portés : il se manifeste le jour où quelqu'un
+cherche un réglage et ne le trouve pas. Donc **l'inventaire de ce qu'il
+y a à porter se dérive de la source, jamais de tête**, et il vit dans
+`product/assets/PARITE.md`, tenu par un test.
+
+Un port n'est **jamais fini** tant que cette table n'est pas verte. Un
+geste non porté n'est pas un oubli : c'est une TASK, ou une raison
+écrite en toutes lettres.
+
+Skills : `portage` choisit la cible et écrit le port ; `parite` vérifie
+qu'il dit tout ce que la source dit.
 
 ---
 
@@ -205,7 +217,8 @@ Ce sont des constats, pas des barrières. Le hook les liste dans
 - Une SPEC cite l'IDEA dont elle vient.
 - Un BRIEF cite au moins une SPEC.
 - Une TASK cite une SPEC ou un BRIEF — sauf si elle porte
-  `origine: feature-build` (trace écrite après le code) ou
+  `origine: feature-build | portage | parite` (trace écrite après le
+  code, ou port d'un produit déjà spécifié) ou
   `chemin: court`. Le hook lit ces deux champs et dispense ; sans eux,
   il signale.
 - Un COPY cite la SPEC ou l'IDEA qu'il sert.

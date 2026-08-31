@@ -139,7 +139,99 @@ Chaque capacité native est appelée depuis le web derrière un test de
 disponibilité, pour que **le web reste utilisable seul**. Un port ne rend
 jamais le web moins bon.
 
-### 4. Vérifier sur l'appareil
+### 4. Ouvrir chaque écran, et le regarder
+Compiler et tester ne suffit pas. Sur une réécriture (marche 4), la
+frontière du port lit du JSON : à cet endroit le typage statique ne
+protège plus rien. En Dart `réponse['champ'] as String`, en Kotlin un
+`as`, en TypeScript une interface déclarée — ce sont des **assertions
+non vérifiées**, une par champ lu. Elles compilent toutes. Elles cassent
+à l'exécution, et seulement sur l'écran qui les affiche.
+
+Donc : lancer, ouvrir **chaque** écran, et le voir. Une capture par
+écran. C'est aussi ce qui attrape les défauts visuels qu'aucune relecture
+ne montre — un bouton flottant qui couvre la dernière ligne, une marque
+posée là où elle ne devrait pas être.
+
+### 5. Ce que le navigateur faisait gratuitement
+
+**C'est la section à relire avant chaque port.** Le navigateur rend une
+foule de services que personne n'a nommés, parce qu'ils n'ont jamais eu
+besoin de l'être. La plateforme d'arrivée n'en rend qu'une partie, et
+les manques ne se voient **ni dans le code, ni à la compilation**. Ils
+se voient à l'exécution, sur un écran, un jour.
+
+Ce sont des défauts observés, pas des hypothèses. La liste s'allonge à
+chaque port : **quand un nouveau piège se paie, on l'écrit ici.**
+
+**1 — Le typage.** Le web ne type rien : un gabarit affiche ce qu'on lui
+donne, quelle qu'en soit la forme. Le port, lui, écrit
+`réponse['champ'] as String` — une **assertion non vérifiée**, une par
+champ lu, que le compilateur accepte et que l'exécution seule tranche.
+Trois écrans sont tombés ainsi : un objet là où on attendait une chaîne,
+un horodatage là où on attendait une date.
+→ **Ne pas caster ce qui vient du réseau.** Écrire des lecteurs qui ne
+promettent rien et rendent un repli. Un champ qui change de forme doit
+faire une ligne vide, pas un écran d'erreur.
+
+**2 — La mise en forme.** Le web formate **côté serveur**, dans ses
+filtres : dates, montants, numéros. Le port reçoit la valeur brute, et
+soit il réinvente le format — deux vérités —, soit il affiche un
+horodatage à l'écran.
+→ **Ce qui s'affiche est mis en forme là où il est décidé.** L'API rend
+le champ ET son texte. Le port n'a rien à formater qu'il n'ait déjà.
+
+**3 — Les valeurs par défaut d'un format.** `stroke-width: 1` est la
+valeur implicite du SVG. Un navigateur l'applique ; un autre moteur
+l'applique à sa façon — dans l'espace mis à l'échelle, par exemple — et
+un QR se rend en filets espacés, illisible pour une caméra.
+→ **Écrire les valeurs, ne pas les sous-entendre**, dès qu'un actif
+traverse la frontière.
+
+**4 — Le chaînage du défilement.** Le navigateur passe la main à la page
+dès qu'une liste imbriquée touche son bord. La plupart des trousses
+natives ne le font pas : le cadre capte le doigt, la page ne bouge plus,
+et une partie du contenu reste hors d'atteinte.
+→ **Un écran, un seul défilement.** Ce qui déborde part sur son propre
+écran.
+
+**5 — L'unicité des chemins.** Le web écrit souvent un état en un seul
+endroit, parce qu'il n'a qu'un chemin pour l'atteindre. Le port en a
+presque toujours plusieurs : l'écran qu'on vient d'écrire, le jeton
+restauré au démarrage, la reprise après mise à jour.
+→ **Pour chaque état conservé, compter les chemins qui l'écrivent.** Le
+défaut ne se voit pas dans le parcours qu'on vient de faire : il se voit
+à la deuxième session.
+
+**6 — La propagation d'un changement.** Le web re-rend la page entière à
+chaque réponse : un réglage enregistré s'applique partout, gratuitement.
+Le port garde son état en mémoire, par écran — on choisit « Sombre », la
+case se coche, et rien ne change tant qu'on n'est pas revenu en arrière.
+→ **Un réglage s'applique à l'instant où il est accepté**, pas au retour.
+Remonter la valeur au sommet, là où l'apparence est décidée.
+
+**7 — Les permissions et les déclarations.** Une page web demande la
+caméra en la demandant. Une app doit l'avoir **déclarée** avant, avec sa
+raison — et pour interroger une autre application, l'avoir déclarée
+aussi.
+→ Chaque capacité touchée ajoute une ligne à un manifeste. L'oublier ne
+casse rien à la compilation ; la fonction répond simplement « non ».
+
+### La question à se poser, à chaque mécanisme
+
+> **Qu'est-ce que le navigateur faisait gratuitement, ici ?**
+
+Puis on écrit ce que le mécanisme cherchait à obtenir, et on l'obtient
+autrement. Écrire l'**intention** dans la TASK — pas le nom du composant
+d'origine — évite qu'on « corrige » plus tard le port pour le faire
+ressembler au web.
+
+### 6. Vérifier la parité
+Ouvrir chaque écran ne dit rien des écrans qu'on n'a pas écrits. Avant de
+déclarer le port fini, dériver la surface de la source et la confronter au
+port : **skill `parite`**. Elle produit `product/assets/PARITE.md` et le
+test qui le tient. Un port sans table de parité verte n'est pas fini.
+
+### 7. Vérifier sur l'appareil
 Ne pas conclure sur un émulateur seul. Contrôler : encoche haute et
 barre de geste basse, clavier qui ne recouvre pas le champ actif, retour
 arrière du système, rotation, et la coupure réseau — c'est le cas qui
@@ -168,3 +260,12 @@ compte le plus.
 - Porter tant qu'une TASK `local` est ouverte.
 - Corriger dans le port ce qui se corrige dans le CSS du web.
 - Conclure sans avoir vu tourner sur un appareil réel.
+- Déclarer un port fait sans avoir ouvert et **regardé** chaque écran.
+  Un `analyze` vert ne dit rien de ce que le serveur envoie vraiment.
+- Recopier un mécanisme parce qu'il marche sur le web. On porte ce qu'il
+  cherchait à obtenir, pas sa mise en œuvre.
+- Caster une valeur venue du réseau. C'est une promesse que rien ne
+  tient.
+- Formater dans le port ce que le serveur sait déjà formater.
+- Payer deux fois le même piège sans l'avoir écrit dans « ce que le
+  navigateur faisait gratuitement ».

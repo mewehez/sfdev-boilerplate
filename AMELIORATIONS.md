@@ -392,3 +392,193 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
   il faudrait analyser la feuille de style, et le socle ne sait pas dans
   quel langage le projet écrit son CSS. La lentille du critique est ce
   qu'on peut faire sans supposer une stack.
+
+---
+
+## 2026-08-30 — Un port qui compile n'est pas un port qui marche
+
+- **Symptôme** : le portage Flutter de Paymex passait `flutter analyze`
+  sans un seul avertissement, `flutter test` au vert contre le vrai
+  serveur — et le premier écran affiché après connexion était l'écran
+  rouge de Flutter : `_Map<String, dynamic> is not a subtype of String`.
+  Le serveur envoie `avatar` comme objet `{libelle, cle, svg}` ; le code
+  Dart faisait `compte['avatar'] as String`. L'analyseur ne pouvait rien
+  voir : la réponse JSON est `dynamic`, et `as String` sur du `dynamic`
+  est un contrat que le compilateur accepte et que l'exécution seule
+  tranche.
+- **Cause** : la skill `portage` demandait de compiler et de tester. Elle
+  ne demandait pas de **lancer et regarder**. Or c'est exactement à la
+  frontière du port — là où un langage lit le JSON d'un autre — que le
+  typage statique ne protège plus. Les tests d'API ne l'ont pas vu non
+  plus : ils vérifiaient les clés de la réponse, jamais le rendu qui les
+  consomme.
+- **Correction** : `portage` gagne une étape non négociable avant de
+  déclarer un port fait — lancer l'application sur un appareil ou un
+  simulateur, ouvrir **chaque** écran, et le voir. Le motif est nommé :
+  tout `as <Type>` posé sur une valeur venue du réseau est une assertion
+  non vérifiée, et il y en a un par champ lu.
+- **Ce qui l'a attrapé** : une capture d'écran du simulateur. Le même
+  outil que pour les deux collisions CSS. Trois défauts sur trois
+  trouvés en regardant, aucun en relisant.
+
+---
+
+## 2026-08-30 — Une liste à trois lignes ne montre pas le défaut
+
+- **Symptôme** : l'utilisateur a dû signaler que les pages s'allongeaient
+  sans fin. Chaque écran de Paymex laissait ses listes grandir avec les
+  données — 27 paiements, 40 achats, autant de tentatives qu'un client
+  fait d'essais. Le total en bas, le bouton d'action, la barre
+  d'onglets : tout partait hors de portée. Et l'en-tête, avec son retour,
+  disparaissait dès le premier geste de défilement.
+- **Cause** : les écrans ont été construits, relus et critiqués avec des
+  données de démonstration — trois ou cinq lignes. À trois lignes, une
+  liste sans plafond est indiscernable d'une liste plafonnée. Ni la
+  skill ni le critique ne demandaient « et avec quarante ? ». Le défaut
+  n'est pas dans le gabarit : il est dans le **volume**.
+- **Correction** :
+  - `design-critic` : « liste sans plafond » devient sa troisième
+    lentille, juste après la collision de noms. Elle vise ce que le
+    gabarit ne montre pas — une boucle dont la longueur vient des
+    données — et vérifie les deux corollaires : le cadre défilant doit
+    être atteignable au clavier, et son défilement doit se chaîner à la
+    page, sinon la liste est un cul-de-sac.
+  - Côté projet, la règle est passée dans `DESIGN.md` et surtout dans un
+    **test** : toute liste bâtie par une boucle porte la classe, ou son
+    exemption est écrite avec sa raison. Le test a immédiatement trouvé
+    deux listes que je n'avais pas vues.
+- **Ce qui vaut d'être retenu** : une exemption écrite dans un test vaut
+  mieux qu'une règle en prose. La prose se relit ; le test se heurte.
+
+---
+
+## 2026-08-30 — Le mécanisme du web était un piège une fois porté
+
+- **Symptôme** : les listes plafonnées de Paymex, portées telles quelles
+  en Flutter, ont produit l'inverse de ce qu'elles corrigeaient. Sur
+  l'écran des retraits, le cadre de la liste dépassait par le bas de
+  l'écran — et le doigt posé dessus faisait défiler **la liste**, pas la
+  page. Une partie du cadre restait donc inatteignable.
+- **Cause** : le navigateur **chaîne** le défilement — arrivé au bord
+  d'une liste imbriquée, il passe la main à la page. Flutter ne le fait
+  pas. Le mécanisme du web reposait sur un service rendu gratuitement par
+  la plateforme, et que personne n'avait nommé. La skill demandait de ne
+  pas dupliquer les *règles* ; elle ne disait rien des *mécanismes*.
+- **Correction** : `portage` gagne une étape avant d'écrire — « qu'est-ce
+  que le navigateur faisait gratuitement, ici ? » — et un interdit :
+  recopier un mécanisme parce qu'il marche sur le web. On porte ce qu'il
+  cherchait à obtenir. Dans le cas présent, l'intention « la page ne
+  s'allonge pas sans fin » se réalise par une structure différente : un
+  écran, un seul défilement, et ce qui déborde part sur son propre écran.
+- **Ce qui l'a attrapé** : encore une capture. La quatrième de suite.
+  Aucun de ces quatre défauts n'était visible dans le code.
+
+---
+
+## 2026-08-31 — Le web avait un chemin, le port en avait deux
+
+- **Symptôme** : l'utilisateur s'est déconnecté de l'application Paymex
+  et n'a pas eu « content de vous revoir » — il est retombé sur le choix
+  du rôle, comme si l'appareil n'avait jamais vu personne. J'avais
+  pourtant vérifié ce parcours en capture, la veille, et il marchait.
+- **Cause** : il marchait **par le chemin que je venais d'écrire**. Sur
+  le web, une session s'ouvre dans une seule fonction, qui pose le
+  cookie de session et celui de l'appareil d'un même geste — un endroit,
+  rien à oublier. Le port a deux chemins : saisir le code, ou voir son
+  jeton restauré au démarrage. Je n'avais couvert que le premier. Le cas
+  découvert est exactement celui de quelqu'un qui était **déjà
+  connecté** quand la nouvelle version est arrivée — donc invisible tant
+  qu'on teste avec une installation neuve.
+- **Correction** : `portage` gagne une étape — pour chaque état que le
+  port conserve, « par combien de chemins peut-on l'atteindre, et
+  est-ce qu'ils l'écrivent tous ? » — et un interdit correspondant.
+- **Ce qui vaut d'être retenu** : ouvrir chaque écran ne suffit pas si
+  on les ouvre toujours dans le même ordre, depuis une installation
+  neuve. Le défaut vivait dans la **deuxième** session, pas dans la
+  première. C'est le premier des cinq derniers défauts qu'une capture
+  n'aurait pas attrapé.
+
+---
+
+## 2026-08-31 — Trois pièges de plus, et une liste pour les retenir
+
+- **Symptôme** : l'utilisateur a trouvé, en une session, que la page
+  d'encaissement du port n'avait ni QR ni partage, qu'aucune ligne de
+  paiement n'y ramenait, et qu'une feuille de détail s'ouvrait vide.
+  Chacun a une cause différente, et aucune ne se voyait dans le code.
+- **Causes**, dans l'ordre où elles se sont révélées :
+  1. La feuille plantait sur `demande_a` — un horodatage, pas une chaîne
+     — et le moteur peignait son écran d'erreur, muet en release. C'est la
+     **troisième** fois qu'un `as` sur du JSON fait tomber un écran.
+  2. Le gabarit web formate ses dates dans un filtre serveur ; l'API
+     rendait des nombres. Le port n'avait rien à afficher.
+  3. Le QR se rendait en filets espacés : segno s'appuie sur le
+     `stroke-width: 1` implicite de la norme SVG, qu'un navigateur
+     applique et que le moteur du port applique autrement.
+- **Correction** : plutôt que trois rustines, la skill `portage` gagne une
+  section nommée — **« ce que le navigateur faisait gratuitement »** —
+  qui liste six services que la plateforme d'arrivée ne rend pas :
+  typage, mise en forme, valeurs implicites d'un format, chaînage du
+  défilement, unicité des chemins d'écriture, déclarations de
+  permissions. Chacun avec le défaut observé et la règle qui l'évite. La
+  section porte sa propre consigne d'entretien : *quand un nouveau piège
+  se paie, on l'écrit ici*.
+- **Ce qui vaut d'être retenu** : après le premier `as` cassé j'avais
+  corrigé le champ ; après le deuxième aussi. Il a fallu le troisième
+  pour traiter la **classe** de défaut — remplacer tous les casts par des
+  lecteurs qui ne promettent rien. Une correction qui ne remonte pas à la
+  classe se repaie, et une liste tenue vaut mieux que trois souvenirs.
+
+---
+
+## 2026-08-31 — Porter de mémoire, c'est ne porter que ce qu'on regarde
+
+- **Symptôme** : l'utilisateur a listé, sur le seul écran de profil, trois
+  fonctions absentes du port — choix du motif, apparence, suppression de
+  compte — et a ajouté « et j'en passe ». Il avait raison : un inventaire
+  mécanique du web a trouvé **42 routes, 23 écrans, 45 gestes**, dont
+  cinq écrans entiers jamais portés, deux jeux de filtres, et les
+  virements sautés de l'historique.
+- **Cause** : un port se fait écran par écran, en regardant l'écran qu'on
+  porte. **On ne voit pas ce qu'on ne regarde pas.** Le trou ne se
+  manifeste ni à la compilation, ni en ouvrant les écrans portés — la
+  skill `portage` demandait justement de les ouvrir un par un, ce que
+  j'avais fait. Elle ne demandait nulle part de comparer le port à la
+  **liste** de ce qu'il devait couvrir.
+- **Correction** : nouvelle skill `parite`. Elle dérive la surface de la
+  source par un script — jamais de mémoire, puisque c'est la mémoire qui
+  a échoué —, écrit une table `product/assets/PARITE.md` à deux états
+  seulement (« porté » ou « hors périmètre — raison »), et pose un test
+  qui **échoue si un écran de la source n'a pas sa ligne**. `portage`
+  gagne une étape « vérifier la parité », et CLAUDE.md la règle : un port
+  n'est jamais fini tant que la table n'est pas verte.
+- **Ce qui vaut d'être retenu** : « ouvrir chaque écran » et « n'oublier
+  aucun écran » sont deux problèmes différents, et je traitais le second
+  avec l'outil du premier. Vérifier ce qu'on a écrit ne dit rien de ce
+  qu'on n'a pas écrit. Il faut partir de la **source**, pas du port.
+
+---
+
+## 2026-08-31 — Une skill qui écrit des TASK doit se déclarer au hook
+
+- **Symptôme** : à la relecture de fin de session, `graph_index.py`
+  signalait neuf incohérences. Huit étaient des « TASK orpheline — aucun
+  parent SPEC/BRIEF », toutes écrites par les skills `portage` et
+  `parite`.
+- **Cause** : `DISPENSE_PARENT` ne contenait que `feature-build`. J'ai
+  créé deux skills qui écrivent des TASK sans les y ajouter. Ces TASK
+  n'ont pas de parent **par construction** — leur parent est le produit
+  déjà spécifié qu'on porte — exactement comme celles de
+  `feature-build`. Le hook les comptait donc comme des oublis, et un
+  avertissement qui crie à tort finit par être ignoré, ce qui est
+  précisément ce que le socle cherche à éviter.
+- **Correction** : `DISPENSE_PARENT` accueille `portage` et `parite`, avec
+  le commentaire qui dit pourquoi et qui prévient : **ajouter une skill
+  qui écrit des TASK sans l'ajouter ici fait pleuvoir des « orphelin »
+  qui n'en sont pas.** `PARITE.md` rejoint les fichiers hors graphe, à
+  côté de `DESIGN.md` — c'est une référence, pas un nœud. CLAUDE.md dit
+  les trois origines dispensées au lieu d'une.
+- **Ce qui vaut d'être retenu** : le socle a une couture entre ce que les
+  skills produisent et ce que les hooks attendent. Créer une skill qui
+  écrit dans le graphe sans regarder cette couture produit du bruit — et
+  le bruit use exactement le mécanisme qui devait alerter.
