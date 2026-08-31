@@ -89,12 +89,13 @@ question :
 > garantit qu'ils disent la même chose ?**
 
 Ce qui coûte n'est pas le langage : c'est la **duplication d'une règle**.
-Un écran redessiné dans un autre langage se corrige. Une règle d'argent
-— idempotence, réconciliation, calcul d'un solde — écrite deux fois
-diverge, et les deux versions ont raison chacune de son côté.
+Un écran redessiné dans un autre langage se corrige. Une règle qui
+décide de quelque chose d'irréversible — idempotence, rapprochement de
+deux sources, calcul dont dépend une décision — écrite deux fois diverge,
+et les deux versions ont raison chacune de son côté.
 
 Donc, dans l'ADR :
-- **La logique qui décide de l'argent n'existe qu'une fois.** Soit elle
+- **La logique qui décide de l'irréversible n'existe qu'une fois.** Soit elle
   reste sur le serveur et l'app est un client ; soit elle est déplacée,
   et le serveur consomme la même. Jamais deux implémentations.
 - Ce qui est légitimement réécrit : écrans, navigation, colle native.
@@ -255,7 +256,7 @@ compte le plus.
   choses, et les confondre fait sous-estimer le coût.
 - Refuser une réécriture que l'utilisateur a décidée. On l'accompagne,
   après avoir écrit ce qui existera en double.
-- Laisser une règle d'argent exister en deux exemplaires. C'est la
+- Laisser une règle irréversible exister en deux exemplaires. C'est la
   seule ligne qui ne se négocie pas.
 - Porter tant qu'une TASK `local` est ouverte.
 - Corriger dans le port ce qui se corrige dans le CSS du web.

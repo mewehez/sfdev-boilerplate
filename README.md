@@ -102,10 +102,10 @@ On n'en change qu'en nommant la capacité qui manque.
 Un port dans un autre langage n'est pas un problème — Tauri est en Rust.
 Une réécriture native (Flutter, Kotlin Multiplatform) n'est pas interdite
 non plus : c'est une décision, qui s'écrit dans un ADR. La seule ligne
-qui ne se négocie pas : **la logique qui décide de l'argent n'existe
-qu'une fois.** Un écran redessiné se corrige ; une règle d'idempotence
-écrite deux fois diverge, et les deux versions ont raison chacune de son
-côté.
+qui ne se négocie pas : **la logique qui décide de ce qui est
+irréversible n'existe qu'une fois.** Un écran redessiné se corrige ; une
+règle d'idempotence écrite deux fois diverge, et les deux versions ont
+raison chacune de son côté.
 
 Le portage est de phase `pilote`. La skill `portage` choisit la cible et
 emballe — elle ne développe rien.

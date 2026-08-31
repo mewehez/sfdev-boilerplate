@@ -98,11 +98,12 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
   BRIEF `ready` — pour deux régimes de risque très différents.
 - **Correction** : règle de test par phase dans `CLAUDE.md` et dans
   `feature-build`. En `local` : uniquement les invariants métier et les
-  erreurs qui coûtent de l'argent ou une commande. Le TDD complet de
+  erreurs qui ne se rattrapent pas. Le TDD complet de
   Superpowers démarre en `pilote`.
-- **Reste ouvert** : « invariant métier » reste un jugement. Sur Paymex
-  la liste est évidente (idempotence, double débit, transition d'état) ;
-  sur un domaine plus mou, moins.
+- **Reste ouvert** : « invariant métier » reste un jugement. Sur le
+  produit en cours, la liste était évidente — idempotence, geste joué
+  deux fois, transition d'état interdite ; sur un domaine plus mou,
+  moins.
 
 ---
 
@@ -180,7 +181,7 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 
 ## 2026-08-30 — design-direction demandait ce que le web ne donne pas
 
-- **Symptôme** : mode ÉTABLIR de `design-direction`, sur Paymex. La skill
+- **Symptôme** : mode ÉTABLIR de `design-direction`, sur le produit en cours. La skill
   demande d'extraire de 3 à 5 produits réels leur « typographie, palette,
   densité ». Les recherches ont rendu des descriptions de fonctionnalités
   et des parts de marché — jamais une valeur de couleur ni un nom de
@@ -219,9 +220,9 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 
 ## 2026-08-30 — Un blocage oublié dans la passe D2 : copywriting
 
-- **Symptôme** : demande d'une landing page pour Paymex. La skill
+- **Symptôme** : demande d'une page de vitrine pour le produit. La skill
   `copywriting` porte, en tête de fichier :
-  « Refuser dans tous les cas s'il n'existe aucune SPEC ». Paymex a zéro
+  « Refuser dans tous les cas s'il n'existe aucune SPEC ». Le produit avait zéro
   SPEC — le circuit long n'a jamais été emprunté, `feature-build` a
   construit directement. La skill aurait refusé d'écrire la page d'un
   produit qui tourne déjà.
@@ -267,7 +268,7 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 
 ## 2026-08-30 — Le socle traitait un changement de périmètre comme un affront
 
-- **Symptôme** : demande d'ajouter les comptes marchand et payeur.
+- **Symptôme** : demande d'ajouter deux rôles d'utilisateur d'un coup.
   ADR-001 les excluait explicitement de la v1. `product-owner` porte :
   « Hors périmètre ADR-001 → rejeté, sans discussion. Citer l'ADR. Si
   l'utilisateur insiste : → modifie ADR-001 d'abord. » En suivant la
@@ -324,11 +325,11 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
   - `design-critic` : la promesse contredite devient sa **première**
     lentille, avant les valeurs en dur — c'est le seul défaut qui ne se
     voit pas sur l'écran examiné.
-  - Dans Paymex, la règle est en plus tenue par un test qui parcourt
+  - Dans le produit, la règle est en plus tenue par un test qui parcourt
     tous les gabarits : aucun n'a le droit de dire « aucun PIN », ni
-    d'employer « code secret » pour désigner à la fois le code de
-    l'opérateur et celui de l'application.
-- **Reste ouvert** : le test de Paymex est spécifique à son vocabulaire.
+    d'employer un même mot pour désigner à la fois le secret d'un tiers
+    et celui de l'application.
+- **Reste ouvert** : ce test est spécifique au vocabulaire du produit.
   Le socle ne peut pas le généraliser — il ne connaît pas les promesses
   d'un produit qu'il ne verra jamais. La section de `DESIGN.md` et la
   lentille du critique sont ce qu'on peut faire de mécanique ; le reste
@@ -339,7 +340,7 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 ## 2026-08-30 — Quatre défauts d'ergonomie qu'aucune règle ne couvrait
 
 - **Symptôme** : l'utilisateur a buté sur un bouton grisé et a mis un
-  moment à comprendre qu'il manquait un choix d'opérateur ; il a relevé
+  moment à comprendre qu'il manquait un choix obligatoire ; il a relevé
   un bandeau de marque répété sur tous les écrans, une page de profil
   devenue interminable, et des champs de date deux fois plus grands que
   les autres avec le calendrier natif du navigateur.
@@ -355,7 +356,7 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
     interdits : désactiver un bouton sans afficher pourquoi, répéter la
     marque sur un écran d'usage, laisser une page de réglages dépasser
     deux écrans, mélanger un contrôle natif avec des contrôles maison.
-  - Dans Paymex, `DESIGN.md` gagne les composants correspondants
+  - Dans le produit, `DESIGN.md` gagne les composants correspondants
     (`entete`, `identite`, `avatar`, `lien-ligne`, `calendrier`) et un
     calendrier maison qui reprend la grille de jours déjà employée pour
     le virement planifié.
@@ -397,7 +398,7 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 
 ## 2026-08-30 — Un port qui compile n'est pas un port qui marche
 
-- **Symptôme** : le portage Flutter de Paymex passait `flutter analyze`
+- **Symptôme** : un portage Flutter passait `flutter analyze`
   sans un seul avertissement, `flutter test` au vert contre le vrai
   serveur — et le premier écran affiché après connexion était l'écran
   rouge de Flutter : `_Map<String, dynamic> is not a subtype of String`.
@@ -426,7 +427,7 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 ## 2026-08-30 — Une liste à trois lignes ne montre pas le défaut
 
 - **Symptôme** : l'utilisateur a dû signaler que les pages s'allongeaient
-  sans fin. Chaque écran de Paymex laissait ses listes grandir avec les
+  sans fin. Chaque écran laissait ses listes grandir avec les
   données — 27 paiements, 40 achats, autant de tentatives qu'un client
   fait d'essais. Le total en bas, le bouton d'action, la barre
   d'onglets : tout partait hors de portée. Et l'en-tête, avec son retour,
@@ -454,9 +455,9 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 
 ## 2026-08-30 — Le mécanisme du web était un piège une fois porté
 
-- **Symptôme** : les listes plafonnées de Paymex, portées telles quelles
+- **Symptôme** : les listes plafonnées du web, portées telles quelles
   en Flutter, ont produit l'inverse de ce qu'elles corrigeaient. Sur
-  l'écran des retraits, le cadre de la liste dépassait par le bas de
+  un écran de liste, le cadre dépassait par le bas de
   l'écran — et le doigt posé dessus faisait défiler **la liste**, pas la
   page. Une partie du cadre restait donc inatteignable.
 - **Cause** : le navigateur **chaîne** le défilement — arrivé au bord
@@ -477,7 +478,7 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 
 ## 2026-08-31 — Le web avait un chemin, le port en avait deux
 
-- **Symptôme** : l'utilisateur s'est déconnecté de l'application Paymex
+- **Symptôme** : l'utilisateur s'est déconnecté de l'application portée
   et n'a pas eu « content de vous revoir » — il est retombé sur le choix
   du rôle, comme si l'appareil n'avait jamais vu personne. J'avais
   pourtant vérifié ce parcours en capture, la veille, et il marchait.
@@ -503,7 +504,7 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 ## 2026-08-31 — Trois pièges de plus, et une liste pour les retenir
 
 - **Symptôme** : l'utilisateur a trouvé, en une session, que la page
-  d'encaissement du port n'avait ni QR ni partage, qu'aucune ligne de
+  principal du port n'avait ni QR ni partage, qu'aucune ligne de
   paiement n'y ramenait, et qu'une feuille de détail s'ouvrait vide.
   Chacun a une cause différente, et aucune ne se voyait dans le code.
 - **Causes**, dans l'ordre où elles se sont révélées :
@@ -582,3 +583,38 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
   skills produisent et ce que les hooks attendent. Créer une skill qui
   écrit dans le graphe sans regarder cette couture produit du bruit — et
   le bruit use exactement le mécanisme qui devait alerter.
+
+---
+
+## 2026-08-31 — Le socle avait pris le vocabulaire de son premier projet
+
+- **Symptôme** : l'utilisateur a relevé que le socle parlait d'argent
+  alors qu'il doit être neutre. Le contrôle l'a confirmé et élargi : le
+  produit d'origine était **nommé onze fois** dans le journal, et le
+  domaine du paiement servait de **catégorie** dans trois règles
+  centrales : la ligne non négociable sur la duplication, le seuil de
+  test, et le critère du circuit long. Le socle est public : il léguait
+  ce vocabulaire à tout projet qui le reprendrait.
+- **Cause** : un socle s'écrit **pendant** un projet. Ses règles naissent
+  de frictions réelles, et une friction réelle a un domaine. Le premier
+  produit teint donc le socle sans que personne ne le décide — chaque
+  entrée de ce journal a été écrite en regardant un écran précis.
+- **Le test qui tranche** : l'argent **en exemple dans une liste** reste
+  légitime — il rend la règle concrète. L'argent **comme catégorie** est
+  une fuite : il fait croire que la règle ne vaut que là. La ligne non
+  négociable vise donc désormais ce qui est **irréversible**, et cite
+  plusieurs formes plutôt qu'une seule — une valeur qui bouge, un droit
+  accordé, un envoi parti, un dossier détruit.
+- **Correction** : les règles sont généralisées ; le journal garde ses
+  défauts concrets mais ne nomme plus de produit. Et surtout
+  `outils/neutralite.py`, lancé par `sfdev-new.sh` **au moment où le
+  socle est donné à un nouveau projet** — c'est là que la fuite se
+  paierait. Il ne devine pas les fuites à venir : il garantit qu'une
+  fuite trouvée une fois ne revient pas. Il en a d'ailleurs trouvé une
+  que j'avais manquée à la main — puis il a refusé cette entrée-ci, qui
+  citait les formules fautives pour les montrer. J'ai paraphrasé plutôt
+  que d'ouvrir une exception : une contrainte mécanique qui s'excuse ne
+  contraint plus.
+- **Ce qui vaut d'être retenu** : la neutralité d'un socle n'est pas un
+  état, c'est un entretien. On ne peut pas l'obtenir en écrivant mieux —
+  seulement en la vérifiant au moment où elle compte.

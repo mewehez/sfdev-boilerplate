@@ -41,7 +41,7 @@ Un refus se lève en faisant la chose dans le bon ordre, jamais en
 argumentant avec le hook.
 
 ### Activer la rigueur, plus tard
-Une piste se confirme, de l'argent ou la confiance d'autrui entre en jeu :
+Une piste se confirme, quelqu'un d'autre commence à payer l'erreur :
 écris `regime: traces` (ou `terrain`) dans le corps de
 `product/decisions/ADR-002-regime-preuve.md` — mode d'emploi complet dans
 `.claude/optional/RIGUEUR.md`.
@@ -67,12 +67,13 @@ sans TASK — c'est une TASK `dur` qui est refusée, pas un fichier.
 
 ### Tests, par phase
 - `local` : tester les **invariants métier** et les **erreurs qui coûtent
-  cher** (argent, double débit, perte de commande). Pas chaque fonction.
+  cher** — une valeur qui bouge, un geste joué deux fois, une donnée
+  perdue. Pas chaque fonction.
 - `pilote` : le TDD complet de Superpowers démarre ici.
 - `dur` : sans objet.
 
 Écrire un test par fonction en phase `local` est une perte nette. Écrire
-zéro test sur un invariant d'argent est une faute.
+zéro test sur un invariant qui ne se rattrape pas est une faute.
 
 ---
 
@@ -121,9 +122,11 @@ en Rust, Capacitor colle du Swift et du Kotlin. Une **réécriture native**
 plus : c'est une décision, qui s'écrit dans un ADR.
 
 La seule ligne qui ne se négocie pas : **la logique qui décide de
-l'argent n'existe qu'une fois.** Un écran redessiné se corrige ; une
-règle d'idempotence écrite deux fois diverge, et les deux versions ont
-raison chacune de son côté.
+ce qui est irréversible n'existe qu'une fois.** Un écran redessiné se
+corrige ; une règle d'idempotence écrite deux fois diverge, et les deux
+versions ont raison chacune de son côté. Ce qui ne se reprend pas prend
+mille formes selon le produit — une valeur qui bouge, un droit accordé,
+un envoi parti, un dossier détruit.
 
 Le portage est une activité de **phase `pilote`** : on ne porte pas une
 application qui n'est pas finie. Le hook `phase_guard.py` refuse d'écrire

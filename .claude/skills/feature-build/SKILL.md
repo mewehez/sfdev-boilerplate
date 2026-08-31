@@ -26,8 +26,9 @@ si, l'une de ces trois choses est vraie :
   API dont un tiers se sert ;
 - **l'annuler coûterait plus qu'un `git revert`** : une migration, un
   avertissement à envoyer, de l'argent réel déjà déplacé ;
-- la phase est `pilote` ou au-delà **et** la feature touche l'argent,
-  l'authentification ou des données personnelles réelles.
+- la phase est `pilote` ou au-delà **et** la feature touche quelque chose
+  qui ne se reprend pas : une valeur qui bouge, l'authentification, des
+  données personnelles réelles.
 
 En phase `local`, aucune de ces trois n'est vraie par construction :
 personne d'autre ne dépend de rien, et rien n'est déployé. Construire.
@@ -63,10 +64,10 @@ dans la TASK.
 
 ### 4. Tester ce qui coûte cher — pas le reste
 En phase `local`, écrire un test seulement si l'un des cas s'applique :
-- un **invariant métier** (unicité, idempotence, conservation d'un
-  montant, transition d'état interdite)
-- une **erreur qui coûte de l'argent ou une commande** (double débit,
-  paiement perdu, statut faux)
+- un **invariant métier** (unicité, idempotence, conservation d'une
+  quantité, transition d'état interdite)
+- une **erreur qui ne se rattrape pas** : un geste joué deux fois, un
+  enregistrement perdu, un statut faux
 - un bug qu'on vient de corriger — le test empêche le retour
 
 Ne pas tester : le rendu, le formatage, les getters, les cas que le

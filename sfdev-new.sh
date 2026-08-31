@@ -14,6 +14,20 @@ say "  sfdev — nouveau projet"
 say "  ─────────────────────"
 say ""
 
+# ------------------------------------------------------- neutralité
+# Un socle s'écrit pendant un projet, et finit par en porter le
+# vocabulaire. C'est ici que ça se paie : le projet suivant hériterait
+# des mots du précédent.
+if [ -f "$SRC/outils/neutralite.py" ] && command -v python3 >/dev/null 2>&1; then
+  if ! python3 "$SRC/outils/neutralite.py" >/dev/null 2>&1; then
+    say ""
+    python3 "$SRC/outils/neutralite.py" || true
+    say ""
+    R="$(ask '  Continuer quand même ? [o/N] : ')"
+    case "$R" in o|O|y|Y) ;; *) die "Arrêté. Généraliser d'abord." ;; esac
+  fi
+fi
+
 # ---------------------------------------------------------------- nom
 NAME="${1:-}"
 while [ -z "$NAME" ]; do
