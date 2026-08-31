@@ -32,7 +32,7 @@ KINDS = ["IDEA", "SPEC", "BRIEF", "ADR", "DOM", "TRC", "SUG", "INT",
 ID_RE = re.compile(r"\b((?:" + "|".join(KINDS) + r")-\d{3})\b")
 
 IGNORE = {"INDEX.md", "README.md", "ART-DIRECTION.md", "JOURNAL.md",
-          "DESIGN.md", "AMELIORATIONS.md"}
+          "DESIGN.md", "AMELIORATIONS.md", "PARITE.md"}
 # hors graphe : ce sont des sources ou des brouillons, pas des nœuds
 #   grill  transcripts d'ouverture de projet
 #   legal  templates à trous de la phase `dur` — présents, jamais bloquants
@@ -41,7 +41,12 @@ IGNORE_DIRS = {"grill", "legal"}
 # Une TASK écrite par `feature-build` est rétroactive : le code existait
 # avant elle. Lui réclamer un parent, c'est réclamer le processus qu'on a
 # précisément retiré du chemin par défaut. Elle est comptée, pas signalée.
-DISPENSE_PARENT = {"feature-build"}
+# Une TASK écrite par ces skills n'a pas de parent PAR CONSTRUCTION :
+# `feature-build` construit avant d'écrire la trace ; `portage` et
+# `parite` partent d'un produit déjà spécifié — leur parent, c'est le
+# web lui-même. Ajouter une skill qui écrit des TASK sans l'ajouter ici
+# fait pleuvoir des « orphelin » qui n'en sont pas.
+DISPENSE_PARENT = {"feature-build", "portage", "parite"}
 
 PARENT_RULES = {
     "SPEC":   ["IDEA"],

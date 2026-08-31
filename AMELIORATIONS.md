@@ -556,3 +556,29 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
   aucun écran » sont deux problèmes différents, et je traitais le second
   avec l'outil du premier. Vérifier ce qu'on a écrit ne dit rien de ce
   qu'on n'a pas écrit. Il faut partir de la **source**, pas du port.
+
+---
+
+## 2026-08-31 — Une skill qui écrit des TASK doit se déclarer au hook
+
+- **Symptôme** : à la relecture de fin de session, `graph_index.py`
+  signalait neuf incohérences. Huit étaient des « TASK orpheline — aucun
+  parent SPEC/BRIEF », toutes écrites par les skills `portage` et
+  `parite`.
+- **Cause** : `DISPENSE_PARENT` ne contenait que `feature-build`. J'ai
+  créé deux skills qui écrivent des TASK sans les y ajouter. Ces TASK
+  n'ont pas de parent **par construction** — leur parent est le produit
+  déjà spécifié qu'on porte — exactement comme celles de
+  `feature-build`. Le hook les comptait donc comme des oublis, et un
+  avertissement qui crie à tort finit par être ignoré, ce qui est
+  précisément ce que le socle cherche à éviter.
+- **Correction** : `DISPENSE_PARENT` accueille `portage` et `parite`, avec
+  le commentaire qui dit pourquoi et qui prévient : **ajouter une skill
+  qui écrit des TASK sans l'ajouter ici fait pleuvoir des « orphelin »
+  qui n'en sont pas.** `PARITE.md` rejoint les fichiers hors graphe, à
+  côté de `DESIGN.md` — c'est une référence, pas un nœud. CLAUDE.md dit
+  les trois origines dispensées au lieu d'une.
+- **Ce qui vaut d'être retenu** : le socle a une couture entre ce que les
+  skills produisent et ce que les hooks attendent. Créer une skill qui
+  écrit dans le graphe sans regarder cette couture produit du bruit — et
+  le bruit use exactement le mécanisme qui devait alerter.

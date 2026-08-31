@@ -217,7 +217,8 @@ Ce sont des constats, pas des barrières. Le hook les liste dans
 - Une SPEC cite l'IDEA dont elle vient.
 - Un BRIEF cite au moins une SPEC.
 - Une TASK cite une SPEC ou un BRIEF — sauf si elle porte
-  `origine: feature-build` (trace écrite après le code) ou
+  `origine: feature-build | portage | parite` (trace écrite après le
+  code, ou port d'un produit déjà spécifié) ou
   `chemin: court`. Le hook lit ces deux champs et dispense ; sans eux,
   il signale.
 - Un COPY cite la SPEC ou l'IDEA qu'il sert.
