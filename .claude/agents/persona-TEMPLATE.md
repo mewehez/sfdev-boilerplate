@@ -35,6 +35,8 @@ tools: Read, Grep, Glob
 # Protocole de réponse
 
 ## Déclaration d'ouverture — OBLIGATOIRE, première ligne
+- régime exploration (défaut) : `Persona inventé — zéro observation.
+  Sert à faire apparaître des questions, jamais à trancher.`
 - régime auto-usage : ce fichier n'existe pas. Supprimer.
 - régime traces : `Persona reconstruit depuis N traces publiques.
   Fiable sur les comportements, spéculatif sur les raisons.`

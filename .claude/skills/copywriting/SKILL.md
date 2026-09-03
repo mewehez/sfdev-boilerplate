@@ -7,6 +7,12 @@ description: Produit les textes destinés à l'utilisateur final — landing,
 
 # Copywriting
 
+! **Ce n'est PAS la skill de la page qui présente le produit.** Celle-ci
+écrit pour quelqu'un qui **se sert déjà** du produit : messages, libellés,
+courriels. Là, la précision paie. La page qui s'adresse à quelqu'un qui ne
+connaît rien et n'a pas le temps obéit à la contrainte inverse — c'est
+`page-produit`, et elle interdit ce qu'on encourage ici.
+
 ## Entrée — aucun refus
 
 En régime `exploration` (défaut) : **écrire**. Aucun persona requis,

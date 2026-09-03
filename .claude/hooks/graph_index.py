@@ -48,12 +48,21 @@ IGNORE_DIRS = {"grill", "legal"}
 # fait pleuvoir des « orphelin » qui n'en sont pas.
 DISPENSE_PARENT = {"feature-build", "portage", "parite"}
 
+# Les parents admis, par type.
+#
+# ! `TASK` figure chez COPY et PROMPT, et ce n'est pas une largesse.
+# Le chemin PAR DÉFAUT du socle est `feature-build` : il construit, puis
+# écrit une TASK. En mode `exploration`, un projet entier peut donc
+# n'avoir aucune SPEC — c'est le cas nominal, pas une négligence. Sans
+# TASK ici, tout COPY et tout PROMPT y seraient orphelins **par
+# construction**, et le hook crierait sur chacun. Un avertissement qui
+# crie à tort finit par être ignoré.
 PARENT_RULES = {
     "SPEC":   ["IDEA"],
     "BRIEF":  ["SPEC"],
     "TASK":   ["SPEC", "BRIEF"],
-    "COPY":   ["SPEC", "IDEA"],
-    "PROMPT": ["COPY", "SPEC"],
+    "COPY":   ["SPEC", "IDEA", "TASK"],
+    "PROMPT": ["COPY", "SPEC", "TASK"],
 }
 
 # structure attendue du boilerplate (vérifiée, jamais créée)
@@ -197,9 +206,16 @@ for nid, meta in nodes.items():
     for target in linked:
         backlinks[target].add(nid)
         if target in reserved:
-            problems.append(
-                f"{nid} dépend de {target}, archivé — décision fondée sur du mort"
-            )
+            # Un ADR cite ce qu'il a écarté : c'est sa définition même —
+            # « décision + alternatives écartées ». Le signaler ferait
+            # crier le hook sur le seul type d'objet dont le travail est
+            # de garder la trace du mort. Le corps étant lu comme le
+            # frontmatter, il n'existait aucune façon d'écrire un ADR
+            # conforme sans déclencher l'alerte.
+            if not nid.startswith("ADR-"):
+                problems.append(
+                    f"{nid} dépend de {target}, archivé — décision fondée sur du mort"
+                )
         elif target not in nodes:
             problems.append(f"{nid} pointe vers {target} — inexistant")
 

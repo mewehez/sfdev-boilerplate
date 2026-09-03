@@ -4,6 +4,142 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 
 ---
 
+## 2026-09-03 — La page produit disait tout, donc n'était pas lue
+
+- **Symptôme** : l'utilisateur relève que la page qui présente le produit
+  « étouffe le visiteur ». Mesuré : **1 509 mots, 12 sections**, environ
+  huit écrans à défiler. Une page comparable, prise en exemple, tenait
+  chaque idée en un titre et une phrase.
+- **Cause** : aucune skill ne couvrait cet artefact. `copywriting` traite
+  les textes vus par l'utilisateur **d'un produit** — messages d'erreur,
+  libellés, courriels — c'est-à-dire quelqu'un qui s'en sert déjà. La
+  page qui s'adresse à quelqu'un **qui ne connaît pas** le produit
+  obéit à des contraintes opposées : là où l'un veut de la précision,
+  l'autre n'a pas le temps de la lire. Faute de règle, la page a été
+  écrite comme le reste du projet : en expliquant les raisons, en citant
+  la recherche, en listant tout ce qui existe.
+- **Cause seconde** : le socle valorise, à juste titre, d'écrire pourquoi
+  une décision a été prise. Cette qualité se retourne sur une page
+  produit — le raisonnement intéresse l'équipe, pas le visiteur.
+- **Correction** : une skill `page-produit`, tenue par une seule règle —
+  **une idée = un titre + une phrase** — et par une mesure avant de rendre
+  la main : mots, écrans à défiler, et ce qui tient au-dessus du pli. Les
+  citations de recherche et les explications de choix y sont **interdites**,
+  nommément, parce que c'est exactement ce que le reste du socle
+  encourage. Elle porte aussi le refus de dessiner soi-même un visuel qui
+  demande un métier.
+- **Ce qui vaut d'être retenu** : une règle juste pour un artefact peut
+  être fausse pour un autre. Le socle n'avait pas de mot pour « ce texte
+  s'adresse à quelqu'un qui ne connaît rien et n'a pas le temps » — et
+  sans ce mot, il a appliqué la règle du dessus.
+- **Reste ouvert** : `copywriting` et `page-produit` se contredisent sur
+  la citation d'utilisateur. La frontière est claire — dans le produit
+  contre autour du produit — mais elle n'est écrite que d'un côté.
+
+---
+
+## 2026-08-31 — Le grill coupait dans un produit déjà construit
+
+- **Symptôme** : un projet démarre en reprenant une exploration
+  antérieure, déjà substantielle. À la question « qu'est-ce que
+  l'application sait faire ? », l'utilisateur répond « tout », puis
+  valide une liste de neuf features **écrite par l'agent de mémoire**.
+  La question de cadrage suivante en sort quatre. Deux tours plus tard,
+  le produit construit a deux écrans là où l'existant en avait onze — et
+  l'écart n'apparaît qu'à la relecture du code, une fois la feature
+  livrée.
+- **Cause** : `project-grill` suppose qu'aucun code n'existe. Sur cette
+  hypothèse, deux de ses mécanismes se retournent. **La liste des
+  features vient de la mémoire de l'utilisateur** — plus courte que son
+  produit, et le manque est invisible. Et **les exclusions coupent dans
+  du périmètre** : la question « ce qui n'existera PAS en v1 » est saine
+  quand rien n'est écrit, elle détruit du travail fait quand quelque
+  chose l'est. Les personas, convoqués pour arbitrer, ont argumenté
+  contre des features déjà codées — ils faisaient leur travail, on leur
+  avait posé la mauvaise question.
+- **Correction** : une ÉTAPE 0 bis, déclenchée dès qu'un existant est
+  repris. L'inventaire se **dérive de la source** — routes, écrans,
+  gestes, schéma, référentiels codés en dur — jamais de tête. Il fixe le
+  périmètre, et **le grill ne travaille plus que l'UX** : les exclusions
+  deviennent une question d'ordre, pas de contenu, et les personas sont
+  convoqués écran par écran pour dire ce qui manque et ce qui bloque, non
+  ce qu'on garde. Retirer une feature inventoriée redevient possible,
+  mais par `idea-grill`, qui la juge au vu de ce qu'elle coûte à défaire.
+- **Ce qui vaut d'être retenu** : c'est la troisième fois que le même
+  défaut se paie — après `parite` et `DISPENSE_PARENT`. **Un inventaire
+  pris de mémoire est toujours plus court que la source**, et rien dans
+  la session ne signale l'écart. Partout où le socle doit énumérer un
+  existant, il doit le dériver, jamais le demander.
+- **Reste ouvert** : la détection de l'ÉTAPE 0 bis repose sur l'utilisateur
+  qui mentionne un existant. Rien ne la déclenche si le code est là et que
+  personne n'en parle.
+
+---
+
+## 2026-08-31 — Un ADR ne pouvait pas citer ce qu'il avait écarté
+
+- **Symptôme** : une idée est tranchée puis archivée `killed`, et l'ADR qui
+  consigne la décision la cite comme alternative écartée. Le hook signale
+  aussitôt « ADR-nnn dépend de IDEA-nnn, archivé — décision fondée sur du
+  mort ».
+- **Cause** : `graph_index.py` applique la règle du lien-vers-archivé à
+  **tous** les types d'objets. Elle est juste pour une SPEC, un BRIEF ou une
+  TASK — bâtir dessus, c'est bâtir sur du mort. Elle est fausse pour un ADR,
+  et pour lui seul : le socle le définit comme « décision **+ alternatives
+  écartées** ». Citer l'idée tuée n'est pas en dépendre, c'est la
+  documenter. Le contournement n'existait pas non plus : le corps est lu au
+  même titre que le frontmatter, donc retirer le lien du frontmatter ne
+  suffisait pas. **Il n'y avait aucune façon d'écrire un ADR conforme à sa
+  propre définition sans déclencher l'alerte.**
+- **Correction** : la règle saute les nœuds `ADR-`. Trois lignes, un seul
+  endroit. Le hook ne bloquant rien, le changement ne peut que retirer des
+  alertes fausses — jamais en ajouter, jamais empêcher une écriture.
+- **Ce qui vaut d'être retenu** : c'est la deuxième fois que le même défaut
+  se paie — après `DISPENSE_PARENT`. Une règle de graphe vraie pour la
+  majorité des types est appliquée à tous, et le type dont le métier est
+  précisément l'exception se fait signaler à chaque session. Une règle de
+  graphe se pose **par type**, ou elle criera à tort quelque part.
+- **Reste ouvert** : les autres règles de lien ont-elles la même faiblesse ?
+  Aucune revue systématique n'a été faite, type par type.
+
+---
+
+## 2026-08-31 — Les personas étaient convoqués, jamais écrits
+
+- **Symptôme** : à l'ouverture d'un projet, l'utilisateur laisse la main
+  sur une question produit et demande qu'on travaille avec les personas.
+  Il n'y en a aucun. `.claude/agents/` ne contient que le gabarit.
+- **Cause** : le maillon manque au milieu d'une chaîne branchée des deux
+  côtés. `persona-TEMPLATE.md` porte en commentaire « CHAMPS À REMPLIR
+  PAR project-grill » — et `project-grill/SKILL.md` ne prononçait pas le
+  mot une seule fois. En aval, trois consommateurs supposaient le fichier
+  présent : `idea-grill` dispatche `<role>-persona` en sous-agent,
+  `copywriting` lit « ce qu'il ne fera pas », `visual-prompt` demande la
+  cohérence avec lui. Chacun échouait en silence, sur un fichier que
+  personne n'avait la charge de créer.
+- **Cause seconde** : la déclaration d'ouverture obligatoire du gabarit
+  couvrait `auto-usage`, `traces` et `terrain` — pas `exploration`, qui
+  est le régime **par défaut**. Le seul régime où le persona est une pure
+  invention était le seul à n'avoir aucune phrase pour le dire. Un
+  persona muet sur sa provenance finit cité comme une source.
+- **Correction** : `project-grill` gagne une ÉTAPE 1 bis — les rôles
+  nommés par la vision sont incarnés tout de suite, trois au maximum,
+  déduits de l'ÉTAPE 1 et non demandés champ par champ à un utilisateur
+  qui n'a pas ces réponses. Le gabarit gagne sa ligne `exploration` :
+  « Persona inventé — zéro observation. » L'ÉTAPE 4 les compte parmi ce
+  qu'elle écrit.
+- **Ce qui vaut d'être retenu** : le socle a une seconde couture, jumelle
+  de celle des hooks — celle entre ce qu'une skill **consomme** et ce
+  qu'une autre a la charge de **produire**. Un consommateur qui suppose
+  un fichier sans que personne ne soit nommé pour l'écrire ne casse rien
+  bruyamment : il dégrade. Ajouter un consommateur sans désigner le
+  producteur, c'est ajouter une dépendance à un fichier fantôme.
+- **Reste ouvert** : trois personas au maximum est une limite posée au
+  jugé, pour éviter le chœur. À vérifier sur un produit qui a réellement
+  quatre rôles distincts.
+
+---
+
 ## 2026-08-30 — Le grill ne demandait jamais les features
 
 - **Symptôme** : ouverture d'un projet, 8 questions posées, zéro portant
@@ -618,3 +754,31 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 - **Ce qui vaut d'être retenu** : la neutralité d'un socle n'est pas un
   état, c'est un entretien. On ne peut pas l'obtenir en écrivant mieux —
   seulement en la vérifiant au moment où elle compte.
+
+## 2026-09-03 — Deux serveurs sur le même produit, et c'est le mort qu'on regarde
+
+- **Le défaut** : j'avais une pile conteneurisée sur un port et un serveur
+  de développement sur un autre. J'ai arrêté le second à la fin d'un tour
+  — proprement — et laissé le premier tourner. Il servait des images
+  construites plusieurs tours plus tôt. L'utilisateur a donc ouvert
+  l'adresse qui répondait, et jugé le produit sur une version morte : sans
+  les correctifs du tour, sans les vrais plans, sans rien de ce qui venait
+  d'être fait.
+- **Cause** : le socle disait comment développer sur le web et ne disait
+  rien sur **ce qui reste allumé**. Ouvrir un serveur est un geste
+  d'agent ; le refermer n'était l'obligation de personne. Et un serveur ne
+  vieillit pas visiblement : il répond `200` aussi bien mort que vivant.
+- **Ce qui trompe** : deux adresses vivantes ressemblent à un confort —
+  « celle-ci pour construire, celle-là pour montrer ». C'est l'inverse.
+  Rien ne distingue les deux à l'écran, donc c'est l'habitude qui choisit,
+  et l'habitude choisit celle qu'on a ouverte en premier.
+- **Correction** : `### Un seul endroit où regarder`, dans la section du
+  développement web. Libérer le port avant d'en ouvrir un autre ; refermer
+  ce qu'on a ouvert, ou écrire ce qui reste ouvert, à quelle adresse et de
+  quand ça date. La règle vaut explicitement pour une pile conteneurisée,
+  parce que c'est celle qu'on oublie : elle survit à la fermeture du
+  terminal.
+- **Ce qui vaut d'être retenu** : le coût d'un serveur oublié ne se paie
+  pas sur sa propre machine. Il se paie quand quelqu'un d'autre ouvre
+  l'adresse qu'on lui a donnée. Un agent qui allume doit éteindre — ou
+  dire ce qu'il laisse allumé.

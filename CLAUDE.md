@@ -113,6 +113,27 @@ par beaucoup. Et une feature écrite deux fois diverge toujours.
   clavier qui recouvre un champ) se fait dans le CSS du web, pas dans le
   port. Le web doit rester juste tout seul.
 
+### Un seul endroit où regarder
+
+Un serveur de développement s'ouvre pour être **regardé**. S'il y en a
+deux, l'un des deux ment — et rien ne dit lequel.
+
+- **Avant d'ouvrir un port, libérer celui qui sert déjà le produit.** Pas
+  « en ouvrir un autre à côté » : le port occupé est occupé par une
+  version, et c'est celle-là qu'on va regarder par habitude.
+- **Un serveur laissé derrière soi n'est pas neutre.** Il continue de
+  servir l'état du code au moment où il a démarré. Plus le tour avance,
+  plus ce qu'il montre est faux — et il ne le dit pas.
+- **À la fin d'un tour, on referme ce qu'on a ouvert**, ou on écrit noir
+  sur blanc ce qui reste ouvert, à quelle adresse, et de quand ça date.
+- La même règle vaut pour une pile conteneurisée : une pile qui tourne
+  sur d'anciennes images est un piège, pas une commodité. On la
+  reconstruit, ou on l'arrête.
+
+Le coût de l'oubli ne se paie pas sur sa propre machine : il se paie
+quand quelqu'un d'autre ouvre l'adresse qu'on lui a donnée et juge le
+produit sur une version morte.
+
 **Cibles par défaut** : `PWA` sur téléphone, `Tauri v2` sur ordinateur.
 On n'en change qu'en nommant la capacité qui manque.
 
