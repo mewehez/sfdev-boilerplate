@@ -913,3 +913,33 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 - **Ce qui vaut d'être retenu** : un outil de mesure fait partie du
   système mesuré. On le soupçonne au même titre que le reste — et en
   premier quand il est le seul à se plaindre.
+
+## 2026-09-03 — Une conception faite seul converge vers la première idée
+
+- **Le défaut** : une forme livrée, jugée illisible à l'usage, puis
+  corrigée deux fois de suite sans que le doute porte jamais sur la forme
+  elle-même. Trois tours à réparer un comparateur à poignée avant
+  d'entendre que ce n'était pas la poignée qui n'allait pas — c'était
+  l'idée de comparer par superposition.
+- **Cause** : rien dans le socle ne fait **proposer plusieurs formes**
+  avant d'en construire une. Les agents existants arrivent tous **après**
+  le code — `design-critic` confronte un écran écrit, `directeur-artistique`
+  refuse le tiède, `product-owner` dit ce qu'une idée déclasse. Personne
+  ne conçoit, et personne ne conteste une conception.
+- **Ce qui trompe** : le coût de l'attachement est invisible. Chaque
+  minute passée sur une forme la rend plus chère à abandonner, et à la
+  fin on ne compare plus rien — on justifie. De l'intérieur, ça ressemble
+  à de la cohérence.
+- **Correction** : `conception-adverse`, avec deux agents en contexte
+  vierge. `concepteur` rend **au moins trois formes**, chacune avec ce
+  qu'elle sacrifie et ce qu'elle coûte à défaire. `contradicteur` attaque
+  **celle qui semble gagner** — pas la plus faible — et chaque objection
+  porte un scénario d'échec concret **et** une contre-proposition.
+  `!` Le contradicteur ne reçoit pas la conversation du concepteur : il
+  doit juger la forme, pas l'histoire de la forme.
+  Deux règles mécaniques : « c'est compliqué » n'est pas une objection,
+  et une seule proposition n'est pas un choix.
+- **Ce qui vaut d'être retenu** : les relectures du socle arrivaient
+  toutes après le code. Elles attrapent les fautes d'exécution ; elles
+  n'attrapent jamais le fait qu'on exécute la mauvaise idée — à ce
+  moment-là, la mauvaise idée est déjà la seule qu'on ait.

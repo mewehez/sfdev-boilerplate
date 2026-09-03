@@ -90,6 +90,14 @@ Le circuit long (IDEA → grill → SPEC → BRIEF → TASK) existe pour ce qui
 est cher à défaire : un contrat de données, un format d'échange, de
 l'argent, de l'authentification. Pas pour le reste.
 
+Et quand ce n'est pas le **quoi** qui est en jeu mais la **forme** — il
+faut le faire, reste à savoir comment, et plusieurs manières tiennent
+debout — la skill `conception-adverse` fait proposer par un agent et
+attaquer par un autre avant qu'une ligne soit écrite. Une conception
+faite seul converge vers la première idée : non parce qu'elle est bonne,
+mais parce que chaque minute passée dessus la rend plus coûteuse à
+abandonner.
+
 ---
 
 ## Rien ne se propose qui ne soit déjà écrit
