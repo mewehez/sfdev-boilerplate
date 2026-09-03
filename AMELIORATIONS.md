@@ -782,3 +782,59 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
   pas sur sa propre machine. Il se paie quand quelqu'un d'autre ouvre
   l'adresse qu'on lui a donnée. Un agent qui allume doit éteindre — ou
   dire ce qu'il laisse allumé.
+
+## 2026-09-03 — Un jeu de règles qui ne sait que refuser produit des écrans morts
+
+- **Le défaut** : un écran livré, conforme sur toute la ligne, et dont
+  l'utilisateur a dit « ça ne donne plus envie d'être utilisé ». Six
+  reproches précis, tous de la même forme : à chaque fois qu'une
+  interaction n'était pas évidente, j'avais **ajouté une phrase** au lieu
+  de redessiner. Un bouton introuvable → une phrase d'aide. Un contrôle
+  ambigu → une phrase d'explication. Le champ qui naissait hors de
+  l'écran → un défilement automatique pour aller le chercher.
+- **Cause** : `DESIGN.md` avait une section « Ce qu'on ne fait JAMAIS » et
+  **aucune** qui dise ce qu'on fait toujours. Toutes les règles étaient
+  soustractives : ne pas surcharger, ne pas détourner, ne pas charger
+  lourd. Aucune n'exigeait de franchise du geste ni d'envie. Un écran
+  pouvait donc passer tous les contrôles **sans rien faire de mal** — et
+  ne toucher personne. `design-critic` l'a validé pour la même raison :
+  il cherchait des fautes, il n'en a trouvé aucune.
+- **Ce qui trompe** : un jeu de règles négatives donne l'impression d'être
+  exigeant. Il l'est — sur ce qu'il interdit. Il est totalement muet sur
+  ce qu'il faudrait obtenir, et ce silence ne se voit pas : rien ne
+  signale l'absence d'une exigence qui n'a jamais été écrite.
+- **Le second défaut, dans la méthode** : la recherche de références
+  s'arrêtait aux produits du même domaine. Or dans les métiers où le
+  logiciel est acheté par quelqu'un qui ne s'en sert pas, les produits
+  dominants sont complets et pénibles. S'aligner sur eux revient à
+  **copier leurs défauts** en croyant faire son métier. La règle est
+  venue de l'utilisateur, mot pour mot : si les produits les plus proches
+  sont mauvais, il faut regarder les milieux connexes.
+- **Correction** :
+  - `geste-direct` — sept règles vérifiables par quelqu'un d'autre, dont
+    celle qui commande les autres : **quand une interaction n'est pas
+    évidente, on redessine la forme, on n'ajoute pas une phrase.** Une
+    phrase nécessaire s'inscrit dans la TASK comme un défaut, pas comme
+    une solution.
+  - `references-croisees` — au moins deux références hors du domaine,
+    choisies sur le **problème de forme** et non sur le vocabulaire ; une
+    colonne « ce qu'on lui refuse » sans laquelle une référence n'a pas
+    été examinée mais admirée ; et une ligne pour les hypothèses des
+    autres qui ne tiennent pas chez nous.
+  - `design-direction` — la section « Ce qu'on fait TOUJOURS » devient
+    obligatoire dans `DESIGN.md`, avec quatre exigences imposées par le
+    socle.
+  - `design-critic` — une seconde lentille, six questions dont « qu'est-ce
+    qui, dans cet écran, donne envie de s'en servir ? ». La conformité ne
+    suffit plus à conclure.
+  - `directeur-artistique` — un agent dont le seul travail est de refuser
+    le tiède, contraint par une règle : **un reproche sans référence n'est
+    pas recevable.** Il doit citer un produit précis qui fait mieux. Sans
+    cette contrainte il produit du goût ; avec elle, quelque chose qu'on
+    peut aller vérifier.
+- **Ce qui vaut d'être retenu** : un contrôle qui ne cherche que des
+  fautes valide tout ce qui n'en contient pas. C'est vrai d'un agent
+  comme d'un test. Pour qu'un socle produise autre chose que du correct,
+  il faut qu'une règle au moins exige quelque chose de **positif** — et
+  qu'un relecteur ait le droit de dire « rien ici ne donne envie » sans
+  que ce soit une opinion hors sujet.

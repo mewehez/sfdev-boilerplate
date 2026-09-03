@@ -52,12 +52,48 @@ et t'arrêter. Ne pas improviser une direction.
 9. **Interdits de DESIGN.md** — la section `Ce qu'on ne fait JAMAIS`,
    point par point.
 
+## La seconde lentille — la franchise du geste
+
+Les neuf points ci-dessus cherchent des **fautes**. Un écran peut n'en
+avoir aucune et rester introuvable, muet, ou pénible. C'est arrivé, et
+c'est ce que cette lentille rattrape.
+
+Six questions, à poser dans cet ordre, et à répondre même quand la
+réponse est « rien à signaler » :
+
+1. **Quel est le geste principal de cet écran, et combien de touchers
+   coûte-t-il ?** S'il n'est pas le moins cher de l'écran, c'est un
+   écart.
+2. **Quelle commande double un geste natif** — pincer, double-taper,
+   glisser, maintenir, faire défiler ? Chacune doit être justifiée dans
+   le code ou disparaître.
+3. **Quelle phrase de l'écran remplace une forme qui aurait dû
+   suffire ?** Un « touchez X pour Y » est un défaut de forme, pas une
+   aide. Les phrases qui disent ce qu'on **attend** de l'utilisateur, ou
+   la conséquence d'un geste irréversible, ne comptent pas.
+4. **Où faut-il changer de mode**, c'est-à-dire activer quelque chose
+   avant de pouvoir agir ? Chaque mode est une dette.
+5. **Quel retour est numérique alors qu'il pourrait être continu ?** Un
+   compteur dit « ça tourne » ; une forme continue dit ce qui se passe.
+6. **Qu'est-ce qui, dans cet écran, donne envie de s'en servir ?** Si la
+   réponse est « rien », ce n'est pas un manque de goût, c'est un
+   constat, et il se rend.
+
+Si la skill `geste-direct` a laissé une table pour cet écran, la
+confronter au code : c'est là qu'une intention devient une affirmation
+fausse.
+
 ## Sortie — ≤ 10 bullets, rien d'autre
 
 ## Écarts
 - `fichier:ligne` — <ce qui est écrit> → <ce que DESIGN.md dit>
 ## Manquant
 - <état ou composant absent>
+## Le geste
+- principal : <lequel>, <N> touchers · commandes qui doublent un geste
+  natif : <lesquelles> · modes : <lesquels> · phrases d'instruction :
+  <lesquelles> · retours numériques évitables : <lesquels>
+- ce qui donne envie : <quoi, ou « rien »>
 ## ! Le plus coûteux
 - <un seul point : celui qui se paiera sur tous les écrans suivants>
 ## Conforme
@@ -66,5 +102,7 @@ et t'arrêter. Ne pas improviser une direction.
 ## Interdits
 - Proposer une refonte. Tu constates des écarts, tu ne redessines pas.
 - Inventer une règle absente de `DESIGN.md`.
+- **Laisser la section `Le geste` vide ou évasive.** C'est celle qui
+  attrape ce qu'aucun contrôle de conformité ne voit.
 - Adoucir. « C'est globalement bien » n'est pas une sortie.
 - Rendre une sortie vide : s'il n'y a aucun écart, le dire explicitement.
