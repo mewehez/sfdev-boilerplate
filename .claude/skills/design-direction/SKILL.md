@@ -168,7 +168,19 @@ Lire `DESIGN.md`, **§ Promesses en premier**. Puis, en 4 bullets maximum :
 - Le montant, la date et le statut sont formatés au même endroit, partout.
 - L'action principale est atteignable au pouce si le contexte est mobile.
 
-## Après — confrontation, en deux temps
+## Après — d'abord la construction, ensuite les deux relectures
+
+`!` **Le vérificateur de types ne voit pas la feuille de style.** Il passe
+au vert sur un fichier de style cassé, et le serveur de développement
+compile quand même. Seule la **construction de production** le refuse.
+
+Une suppression de règles laisse une accolade orpheline sans que rien ne
+le signale, et le défaut n'apparaît qu'au moment de fabriquer l'image —
+c'est-à-dire au pire endroit. La construction de production entre donc
+dans la boucle de vérification, avant les relectures : les relire un
+écran qui ne se construit pas est du temps perdu deux fois.
+
+## Puis la confrontation, en deux temps
 1. `design-critic` sur l'écran écrit. Il a un contexte vierge : il voit
    ce que la session a cessé de voir. Appliquer ce qu'il remonte, ou
    écrire pourquoi on ne l'applique pas.

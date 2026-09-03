@@ -838,3 +838,24 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
   il faut qu'une règle au moins exige quelque chose de **positif** — et
   qu'un relecteur ait le droit de dire « rien ici ne donne envie » sans
   que ce soit une opinion hors sujet.
+
+## 2026-09-03 — Le vérificateur de types ne voit pas la feuille de style
+
+- **Le défaut** : `tsc --noEmit` au vert, le serveur de développement qui
+  compile, et la construction de production qui échoue sur une accolade
+  orpheline laissée par une suppression de règles. Le défaut n'est apparu
+  qu'au moment de fabriquer l'image — après un cycle complet de
+  construction, et sur une pile qui a continué de servir l'ancienne
+  version pendant ce temps.
+- **Cause** : la boucle de vérification s'arrêtait au typage. C'est le
+  contrôle le plus rapide, donc celui qu'on prend pour le contrôle. Il ne
+  regarde qu'un langage sur les trois.
+- **Ce qui trompe** : le serveur de développement est tolérant par
+  construction — il doit l'être, sinon on ne pourrait pas travailler sur
+  du code à moitié écrit. Sa tolérance donne l'illusion d'une validation.
+- **Correction** : la **construction de production** entre dans la boucle,
+  et elle passe **avant** les relectures. Faire relire un écran qui ne se
+  construit pas est du temps perdu deux fois.
+- **Ce qui vaut d'être retenu** : un contrôle rapide n'est pas un contrôle
+  complet, et l'écart entre les deux ne se voit pas — c'est le propre
+  d'un angle mort.
