@@ -124,6 +124,17 @@ logiciel est acheté par quelqu'un qui ne s'en sert pas — s'aligner revient
 
 ---
 
+## Le contrôle mécanique
+
+`outils/styles_morts.py` — à lancer sur le dossier des écrans après
+chaque changement de style.
+
+Il signale ce qu'aucune relecture n'attrape : une règle écrite pour un
+sélecteur que le code ne produit plus. Elle ne casse rien, ne ralentit
+rien, ne lève aucune alerte — elle **retire une affordance et se tait**.
+C'est exactement le genre de défaut qui a rendu un geste principal
+invisible, deux fois.
+
 ## La sortie
 
 Avant d'écrire l'écran, rendre ceci — court, et vérifiable après coup :

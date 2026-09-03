@@ -859,3 +859,31 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 - **Ce qui vaut d'être retenu** : un contrôle rapide n'est pas un contrôle
   complet, et l'écart entre les deux ne se voit pas — c'est le propre
   d'un angle mort.
+
+## 2026-09-03 — Une règle de style morte ne se plaint jamais
+
+- **Le défaut** : une règle écrite pour un sélecteur que le code ne
+  produit pas. `[data-pointer="oui"]` sur une visionneuse qui, depuis
+  qu'on lui a retiré un mode, pose `data-actif`. La règle était juste, le
+  composant était juste, et **l'affordance du geste principal avait
+  disparu en silence** — le curseur ne changeait plus, donc rien ne disait
+  que l'objet se touche.
+- **Cause** : rien ne relie une déclaration de style à son emploi réel. Ni
+  le vérificateur de types, ni la construction, ni la relecture humaine —
+  qui lit les deux fichiers séparément et ne voit pas ce qui manque entre.
+- **Ce qui trompe** : c'est la **deuxième fois** à l'identique. La
+  première, une bibliothèque avait renommé une classe ; la seconde, c'est
+  nous en retirant un attribut. Une occurrence est un accident, deux sont
+  un mécanisme absent — et un mécanisme absent se reproduira sur chaque
+  écran suivant qui pilote du style par attribut.
+- **Correction** : `outils/styles_morts.py`. Il lit les sélecteurs, lit
+  les littéraux du code, et signale les règles qui ne s'appliquent à rien
+  et les classes posées sans déclaration. Il ne comprend pas le CSS et
+  n'essaie pas : c'est grossier, et suffisant. Premier passage sur un
+  projet réel : **30 règles mortes**, dont des restes d'un écran resserré
+  trois tours plus tôt et jamais nettoyé.
+- **Ce qui vaut d'être retenu** : les défauts qui comptent ne sont pas
+  ceux qui échouent. Une règle morte ne casse rien, ne ralentit rien, ne
+  lève aucune alerte — elle retire une affordance et se tait. Ce genre de
+  défaut ne se corrige pas en relisant mieux : il se corrige en fabriquant
+  la chose qui se plaint.
