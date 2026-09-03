@@ -30,9 +30,15 @@ Ne jamais interrompre ce qu'on est en train de faire.
 1. Lire product/INDEX.md pour le prochain IDEA-nnn libre. Prendre en
    compte la section `## IDs réservés — archivés` : un ID qui y figure
    est pris, même s'il n'apparaît pas dans la liste IDEA.
-2. Vérifier le doublon : grep le titre dans product/ideas/.
-   Si l'idée existe → ajouter une ligne au fichier existant, répondre
-   `IDEA-nnn enrichie. On reprend.`
+2. Vérifier le doublon **dans les deux sens** : grep le sujet dans
+   `product/ideas/` ET dans `backlog/tasks/`.
+   - L'idée existe déjà → ajouter une ligne au fichier existant, répondre
+     `IDEA-nnn enrichie. On reprend.`
+   - **Une TASK ouverte la contient** → le dire avant de commencer :
+     `Couverte par TASK-nnn, je l'élargis.` Ce qu'on évite n'est pas du
+     travail en double, c'est deux passages sur les mêmes fichiers avec
+     deux raisonnements qui divergent — et le second ignore ce que le
+     premier a tranché.
 3. Sinon, écrire product/ideas/IDEA-nnn.md :
 
 ---
@@ -62,6 +68,16 @@ updated: AAAA-MM-JJ
 Plusieurs idées d'un coup → un fichier par idée, puis une seule ligne
 listant les IDs. Ne jamais fusionner : deux idées mêlées sont
 ingrillables séparément.
+
+## ! Capturer AVANT de proposer
+
+Une suite entrevue ne se propose jamais à l'oral en premier. Elle
+s'écrit, puis la question de fin de tour la **désigne par son ID**.
+
+Une proposition orale n'a que deux issues — oui tout de suite, ou perdue.
+Écrite d'abord, elle en a trois, et la troisième — « pas maintenant » —
+est la plus fréquente. Voir `CLAUDE.md`, § Rien ne se propose qui ne soit
+déjà écrit.
 
 ## Interdits du mode CAPTURE
 - Reformuler l'idée pour la rendre "meilleure". Le verbatim est la donnée.

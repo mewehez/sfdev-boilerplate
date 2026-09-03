@@ -180,6 +180,13 @@ c'est-à-dire au pire endroit. La construction de production entre donc
 dans la boucle de vérification, avant les relectures : les relire un
 écran qui ne se construit pas est du temps perdu deux fois.
 
+`!` **Et si l'écran contredit le serveur, c'est l'écran qu'on vérifie
+d'abord.** Une page qui s'affiche vide pendant que le serveur la rend
+complète en quelques millisecondes ne décrit pas un défaut du produit :
+elle décrit un outil d'observation dégradé. Onglet neuf, session neuve —
+ça coûte une seconde, et le croire coûte des heures **plus** un
+diagnostic faux. Un outil de mesure fait partie du système mesuré.
+
 ## Puis la confrontation, en deux temps
 1. `design-critic` sur l'écran écrit. Il a un contexte vierge : il voit
    ce que la session a cessé de voir. Appliquer ce qu'il remonte, ou

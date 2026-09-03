@@ -887,3 +887,29 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
   lève aucune alerte — elle retire une affordance et se tait. Ce genre de
   défaut ne se corrige pas en relisant mieux : il se corrige en fabriquant
   la chose qui se plaint.
+
+## 2026-09-03 — Quand l'outil d'observation et le serveur se contredisent
+
+- **Le défaut** : un écran s'affichait noir dans le navigateur de
+  vérification, sans la moindre erreur. J'ai cherché la cause dans la
+  feature du jour, puis dans la couche en dessous, puis j'ai annulé le
+  travail entier pour isoler — le noir restait. Ce n'était pas le
+  produit : c'était l'onglet de vérification, dégradé après des dizaines
+  de navigations. Un onglet neuf a affiché la page immédiatement, avec le
+  même code.
+- **Cause** : je disposais de deux témoins qui se contredisaient — le
+  serveur répondait `200` en 133 ms et servait la page complète, l'écran
+  montrait du noir — et j'ai systématiquement cru l'écran. Parce qu'il est
+  plus proche de l'utilisateur, donc il « compte plus ».
+- **Ce qui trompe** : c'est vrai qu'il compte plus. Mais il compte plus
+  **quand il est fiable**, et rien ne dit qu'il l'est. Un outil
+  d'observation dégradé ne s'annonce pas : il montre quelque chose, et ce
+  quelque chose a l'air d'un symptôme.
+- **Correction, dans `design-direction` § Après** : quand la
+  vérification visuelle contredit ce que le serveur affirme, **remplacer
+  l'outil d'observation avant de chercher dans le code**. Onglet neuf,
+  session neuve. Ça coûte une seconde ; l'inverse coûte des heures, et
+  produit en plus un diagnostic faux.
+- **Ce qui vaut d'être retenu** : un outil de mesure fait partie du
+  système mesuré. On le soupçonne au même titre que le reste — et en
+  premier quand il est le seul à se plaindre.

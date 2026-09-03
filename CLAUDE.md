@@ -92,6 +92,48 @@ l'argent, de l'authentification. Pas pour le reste.
 
 ---
 
+## Rien ne se propose qui ne soit déjà écrit
+
+Toute suite possible — un défaut trouvé en passant, une amélioration
+entrevue, une question laissée ouverte par une relecture — **s'écrit
+avant d'être proposée**. IDEA si c'est une idée, TASK si c'est du travail
+identifié, la section « ce qui reste ouvert » de la TASK en cours si
+c'est une conséquence de ce qu'on vient de faire.
+
+Pourquoi cet ordre et pas l'inverse : une proposition orale n'a que deux
+issues — **oui tout de suite, ou perdue**. Écrite d'abord, elle en a
+trois : on la prend, on la rejette *avec sa raison consignée*, ou on fait
+autre chose et elle attend sans se dissoudre. La troisième est la plus
+fréquente, et c'est celle que l'oral détruit.
+
+- La question de fin de tour ne fait donc que **désigner** ce qui existe
+  déjà, avec son ID. Elle n'introduit rien.
+- `!` Ne jamais présenter comme choix quelque chose dont l'utilisateur ne
+  peut pas relire le détail. Un choix sans trace lui demande de se fier à
+  une mémoire qui n'est pas la sienne.
+- Écrire coûte trois lignes. Reconstruire de mémoire, deux tours plus
+  tard, coûte le tour entier — et on ne reconstruit jamais la raison,
+  seulement la conclusion.
+
+### Une idée qui arrive en cours de route
+
+Elle **passe devant**. Celui qui l'apporte sait ce qui compte, et
+l'ordre du backlog n'est pas un argument contre.
+
+Mais avant de la traiter, une vérification, et elle est mécanique :
+
+> **Est-ce qu'une TASK ou une IDEA déjà écrite la contient ?**
+
+Chercher le sujet dans `backlog/tasks/` et `product/ideas/`. Le résultat
+s'annonce avant de commencer : « c'est TASK-nnn, je l'élargis » ou « rien
+ne la couvre, je capture ».
+
+Ce qu'on évite ainsi n'est pas du travail en double — c'est pire : deux
+passages sur les mêmes fichiers, à deux moments, avec deux raisonnements
+qui divergent. Le second ne sait pas ce que le premier a tranché.
+
+---
+
 ## Le web est le lieu du développement
 
 **Une feature se développe sur le web. Toujours.** Le mobile et le
