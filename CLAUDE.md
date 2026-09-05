@@ -383,6 +383,11 @@ de Lichess termine le PGN par deux sauts de ligne de plus que
 chose — une variante d'entraînement, une prévisualisation — la légende qui
 n'a pas suivi ne décore pas, elle ment.
 
+Et quand deux vues montrent la même chose — l'échiquier et sa légende, la
+liste et son compteur — elles se dérivent d'**une seule fonction**. Filtrées
+chacune de son côté, elles finissent par ne plus avoir les mêmes indices,
+et le survol de la troisième ligne éteint la deuxième flèche.
+
 ---
 
 ## Design
