@@ -325,6 +325,36 @@ tours, ou sortir du sujet en cours.
 
 ---
 
+## Rien ne s'écrit de mémoire
+
+Un nom de fichier, une signature, le comportement d'un outil, **une
+constante empruntée à un autre projet** : ça se lit chez son auteur. Un
+défaut, lui, se **reproduit** avant de se corriger — sans ça c'est une
+hypothèse, pas un défaut.
+
+Pourquoi cette règle et pas une autre : écrire de mémoire ne produit
+presque jamais une erreur franche. Ça produit du **plausible** — qui passe
+la relecture, qui passe la capture d'écran, et qui casse plus loin. Le coût
+ne se paie pas à l'écriture, il se paie en tours.
+
+- Quand un outil sait poser une valeur, le laisser faire plutôt que la
+  retaper.
+- Une hypothèse énoncée se **nomme** hypothèse, avec ce qui la confirmerait.
+- Une valeur reprise à un projet tiers **cite le fichier d'où elle vient**.
+  « relevé dans `src/svg.ts` de chessground » vaut mieux que la valeur
+  seule : le prochain qui la trouve suspecte saura où vérifier, au lieu de
+  la retoucher au jugé.
+
+`!` Le piège propre à un système emprunté, c'est que **le souvenir en est
+inégal**. Sur cinq teintes de pinceau reprises à chessground, les cinq
+étaient justes ; sur cinq valeurs de géométrie du même fichier, quatre
+étaient fausses — dont un trait deux fois et demie trop épais. Rien de tout
+ça ne se voit sur une capture isolée : tout se voit à côté de l'original.
+Et c'est d'avoir raison sur la moitié visible qui rend l'autre moitié
+crédible.
+
+---
+
 ## Design
 
 Avant le premier écran : skill `design-direction`. Elle écrit
