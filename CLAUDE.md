@@ -355,6 +355,36 @@ crédible.
 
 ---
 
+## Le défaut qui ne lève rien
+
+Un défaut qui plante se signale lui-même. Le défaut coûteux ne lève rien :
+il rend un **compte faux**. Et il le rend précisément dans l'écran dont le
+compte est la raison d'être.
+
+Cas d'espèce : deux entrées de cache pour une même partie, parce que
+l'identifiant était le condensat d'un texte non normalisé — l'export NDJSON
+de Lichess termine le PGN par deux sauts de ligne de plus que
+`/game/export`. Trois octets. Aucune exception, aucune trace, et la vue
+« Motifs » comptait la partie deux fois et chacun de ses motifs deux fois.
+
+- **Un identifiant dérivé d'un texte venu du dehors se normalise avant de
+  se hacher.** Deux portes d'entrée pour la même donnée, c'est deux formats
+  jusqu'à preuve du contraire.
+- Une vue qui compte se vérifie **sur son compte**, pas sur son rendu : le
+  nombre de fichiers n'est pas le nombre d'objets.
+- Quand un symptôme et un défaut apparaissent dans le même tour, la
+  tentation est de les relier. Ici le doublon était réel *et* n'expliquait
+  pas le symptôme — la variante servie faisait bien deux coups, parce que
+  le moteur tourne sous plafond de temps. **Diagnostiquer sur la donnée
+  servie, jamais sur celle qu'on croit servie.**
+
+`!` Corollaire d'affichage : une évaluation, une date, un numéro de coup
+**signent la position qui est à l'écran**. Dès que l'écran montre autre
+chose — une variante d'entraînement, une prévisualisation — la légende qui
+n'a pas suivi ne décore pas, elle ment.
+
+---
+
 ## Design
 
 Avant le premier écran : skill `design-direction`. Elle écrit
