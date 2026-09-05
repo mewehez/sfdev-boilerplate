@@ -390,6 +390,36 @@ et le survol de la troisième ligne éteint la deuxième flèche.
 
 ---
 
+## Une mesure se mesure aussi
+
+Une vérification qui ne peut pas réussir rend le même verdict que le
+défaut qu'elle cherche. C'est un faux négatif, et un faux négatif ne
+ressemble pas à une panne : il ressemble à un résultat.
+
+Cas d'espèce : pour vérifier une animation, j'ai relevé
+`el.style.transform` — le style **en ligne**. Or la technique employée
+(FLIP) pose ce style à sa valeur finale dès le premier tour et laisse la
+transition CSS interpoler dans le style **calculé**. La mesure affichait
+donc l'arrivée à 30 ms comme à 400 ms, et se lisait « rien ne bouge ».
+L'animation marchait. Il s'en est fallu d'un tour que je répare du code
+juste.
+
+- **Avant de croire une mesure négative, lui montrer un cas positif.**
+  Ici `prefers-reduced-motion` sert de témoin : la même sonde rend 0 image
+  en vol quand l'animation est coupée, et 11 quand elle ne l'est pas.
+  Deux nombres différents prouvent que la sonde regarde quelque chose.
+- Une sonde qui n'a jamais rien vu bouger n'a rien prouvé — elle n'a même
+  pas prouvé qu'elle fonctionne.
+- Le corollaire vaut pour les tests : un test qui passe du premier coup
+  sur un défaut qu'on vient de corriger doit être vu **échouer** sur le
+  code d'avant, sinon on ne sait pas ce qu'il tient.
+
+`!` Le piège est plus vicieux qu'une sonde muette, qui se remarque. Ici
+la sonde parlait, elle rendait des chiffres plausibles et cohérents entre
+eux — simplement, c'étaient toujours les mêmes.
+
+---
+
 ## Design
 
 Avant le premier écran : skill `design-direction`. Elle écrit
