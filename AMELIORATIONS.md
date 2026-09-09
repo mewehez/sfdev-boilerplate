@@ -4,6 +4,28 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 
 ---
 
+## 2026-09-09 — Une question posée alors que la réponse était publique
+
+- **Symptôme** : deux agents rendent la même question bloquante — « par
+  quoi voyage l'intention interrompue : paramètre d'URL ou cookie ? ».
+  Elle est transmise telle quelle au propriétaire, qui répond « un
+  paramètre d'URL, comme ce qui se fait normalement », puis : « à
+  l'avenir, pour ce genre de questions, tu peux chercher les pratiques
+  les plus utilisées et me faire les propositions ».
+- **Cause** : le socle sait quand **demander** (`G2`, l'humain tranche)
+  et quand **proposer** (`suggester`, `feature-scout`, `devancer`), mais
+  il ne distinguait pas les questions **propres au produit** — un
+  arbitrage de portée, une promesse — de celles dont la réponse est
+  **publique et documentée**. Les deux remontaient de la même façon.
+- **Correction** : une règle dans `CLAUDE.md` — sur un choix qui a une
+  convention établie, chercher ce qui se fait le plus et proposer. Avec
+  la moitié qui coûte le plus cher si on l'oublie : **la convention ne
+  s'arrête presque jamais au nom, elle porte sa précaution.** `?next=`,
+  `callbackUrl`, `ReturnUrl` sont la norme, et la norme inclut de
+  n'accepter qu'un chemin interne — sans quoi le produit devient un
+  tremplin de redirection. Rendre le nom sans la précaution, c'est
+  n'avoir rien cherché.
+
 ## 2026-09-09 — Un seul designer pour deux paradigmes
 
 - **Symptôme** : l'utilisateur, sur un produit à deux surfaces : « il

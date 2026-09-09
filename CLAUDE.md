@@ -143,6 +143,24 @@ deux** elle est :
 
 Un refus qui ne dit ni l'un ni l'autre est une opinion déguisée en règle.
 
+### Une question dont la réponse est publique ne se pose pas
+
+Quand un choix technique a une **convention établie** — le nom d'un
+paramètre de redirection, un format d'échange, une structure d'URL, un
+code de statut —, chercher ce qui se fait le plus et **proposer**, au
+lieu de poser la question à froid. Poser une question dont la réponse
+est publique coûte un tour pour rien.
+
+Et la convention ne s'arrête presque jamais au nom : elle porte sa
+précaution. `?next=` (Django), `callbackUrl` (NextAuth), `ReturnUrl`
+(ASP.NET) sont la norme — et la norme inclut de n'accepter qu'un chemin
+**interne**, sans quoi le produit devient un tremplin de redirection.
+Rendre le nom sans la précaution, c'est n'avoir rien cherché.
+
+`!` La question se pose quand elle est **propre au produit** : un
+arbitrage de portée, une promesse, un compromis local. Là, personne
+d'autre n'a la réponse, et `G2` tient — son avis l'emporte.
+
 ### Une page, c'est des fonctionnalités et une présentation
 
 Les deux se traitent séparément, et dans cet ordre. Mélanger produit
