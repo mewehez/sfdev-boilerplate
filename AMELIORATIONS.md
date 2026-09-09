@@ -4,6 +4,54 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 
 ---
 
+## 2026-09-09 — Le socle savait répondre, pas devancer
+
+- **Symptôme** : l'utilisateur, après quatre tranches livrées : « je
+  pense que tu te limites beaucoup. Si on devait simplement écouter les
+  clients, on ne développerait pas de produits poussés. La plupart des
+  produits présentent des éléments que le client n'a pas demandés, mais
+  c'est après qu'il se rend compte que c'est pratique. » Constat vérifié
+  sur les livrables : chaque tranche se terminait par une section « ce
+  que le produit ne fera pas », de trois à six lignes, sans qu'aucune
+  distingue une contrainte d'une prudence.
+- **Cause** : les deux agents qui proposaient quelque chose étaient tous
+  deux **réactifs**. `suggester` ne s'active que sur une question restée
+  sans réponse et a interdiction de recommander ; `feature-scout` déduit
+  du produit ce qui lui manque — ses sept lentilles partent toutes de
+  l'existant. Aucun dispositif ne proposait ce que personne n'avait
+  demandé, et rien ne jugeait ce qui serait proposé. Le champ
+  `origine: utilisateur | agent` d'une IDEA anticipait pourtant le cas
+  depuis le début : rien ne produisait jamais la seconde valeur.
+- **Cause seconde** : le socle récompense la rigueur, et la rigueur seule
+  produit de la prudence. « Ce que le produit ne fera pas » ne coûte rien
+  à écrire, se lit comme de la maîtrise, et n'est jamais relu.
+- **Correction** : une skill `devancer` et deux agents. `devanceur`
+  propose cinq à sept choses que personne n'a demandées — sept lentilles
+  **génératives**, dont la septième relit les refus écrits pour trouver
+  ceux qui sont des réflexes. `epreuve-du-reel` juge sur une échelle
+  fermée (`déjà attendu` / `plausible` / `risqué` / `farfelu`) et ne peut
+  rendre `farfelu` qu'en citant un empêchement d'une **liste close** ;
+  son fichier nomme explicitement ce qui n'en est jamais un — « personne
+  ne l'a demandé », « c'est ambitieux », « l'utilisateur ne comprendra
+  pas ». Trois règles entrent dans `CLAUDE.md` : devancer fait partie du
+  travail, un refus se défend comme une feature, deux surfaces veut dire
+  deux écrans.
+- **Ce que la première séance a produit** (sur le produit qui a servi de
+  terrain) : sept propositions, **zéro `farfelu`**. Le critique s'en
+  explique — les propositions n'entraient en conflit qu'avec des
+  documents qui se déclarent eux-mêmes non tranchés. *« Un domaine dont
+  les refus les plus structurants sont des hypothèses non instruites ne
+  peut pas produire d'empêchement, et c'est une information sur le
+  produit. »* Le dispositif a donc mesuré une prudence qui était
+  supposée. Il a aussi trouvé, en passant, un statut de frontmatter
+  invalide dans deux documents.
+- **Conséquence sur le schéma** : un DOM peut désormais porter
+  `status: hypothèse` — **déduit** d'autres faits, pas relevé, avec ce
+  qui ferait tomber chaque pari. Distinct de `raw`, qui est sourcé mais
+  pas encore recoupé. Écrire un domaine comme un pari assumé vaut mieux
+  que de construire sans domaine, et mieux que d'attendre un entretien
+  qui n'aura pas lieu avant des mois.
+
 ## 2026-09-03 — La page produit disait tout, donc n'était pas lue
 
 - **Symptôme** : l'utilisateur relève que la page qui présente le produit

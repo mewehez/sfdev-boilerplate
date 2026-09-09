@@ -100,6 +100,63 @@ abandonner.
 
 ---
 
+## Devancer la demande
+
+Écouter les utilisateurs produit des produits corrects. Aucun produit
+marquant n'a été demandé : **on ne demande que ce qu'on sait déjà
+nommer**. Un produit qui ne fait que ce qui a été dit reste plat, et il
+le reste sans que personne s'en plaigne — c'est ce qui rend ce défaut
+difficile à voir.
+
+La règle est en deux temps, et le second n'annule pas le premier :
+
+1. **Proposer ce que personne n'a demandé fait partie du travail.** Pas
+   à la place de ce qui est demandé — en plus, et régulièrement.
+2. **Ce qui est proposé se fait juger avant d'être construit.** La skill
+   `devancer` tient les deux : `devanceur` propose (sept lentilles
+   génératives, deux propositions au moins doivent déranger),
+   `epreuve-du-reel` juge sur une échelle fermée et ne peut tuer qu'en
+   nommant un empêchement.
+
+`!` « Personne ne l'a demandé » n'est pas une objection recevable dans ce
+dispositif ; « c'est ambitieux » non plus. Ce qui tue une proposition est
+un empêchement nommé : un fait établi contredit, un ADR contredit, une
+ressource que le terrain n'a pas, un tiers qui n'existe pas, un volume
+qui n'arrivera pas, un risque que le produit a écrit refuser.
+
+`!` Ne pas confondre avec `feature-scout`, qui **déduit** du produit ce
+qui lui manque et répond à « qu'est-ce qui manque ». Ici on répond à
+« qu'est-ce que personne n'a imaginé », et la réponse n'est pas dans le
+produit.
+
+### Un refus se défend comme une feature
+
+Une section « ce que le produit ne fera pas » est utile — et elle devient
+un réflexe dès qu'elle est gratuite. Chaque ligne dit **laquelle des
+deux** elle est :
+
+- une **contrainte** — une loi, un fait de terrain sourcé, une promesse
+  déjà faite. Elle cite son DOM ou son ADR ;
+- une **prudence** — un choix de portée. Elle dit ce qu'on gagne à ne pas
+  le faire, et **ce qu'on perd**. Une prudence se rediscute ; une
+  contrainte, non.
+
+Un refus qui ne dit ni l'un ni l'autre est une opinion déguisée en règle.
+
+### Deux surfaces veut dire deux écrans, pas un écran rétréci
+
+Le téléphone est le lieu du geste unique, à une main, sous mauvaise
+connexion. **Il n'est pas la mesure de ce que le produit peut porter.**
+Concevoir pour lui d'abord et « adapter » au grand écran produit un
+produit plat des deux côtés : la densité que le bureau permet ne s'y
+invente jamais après coup.
+
+Quand un produit a deux surfaces, chacune a **son propre plan**. Le même
+objet montré dans deux compositions, jamais la même composition à deux
+tailles.
+
+---
+
 ## Rien ne se propose qui ne soit déjà écrit
 
 Toute suite possible — un défaut trouvé en passant, une amélioration
@@ -258,7 +315,7 @@ IDEA    raw | parked | specd | killed
 SPEC    specd | remplacée | caduque
 BRIEF   draft | ready | shipped | caduc
 ADR     actif | remplacé par ADR-nnn
-DOM     raw | confirmé
+DOM     raw | hypothèse | confirmé
 TRC     raw | confirmé
 SUG     pending | validé | invalidé | abandonné
 INT     raw | confirmé
