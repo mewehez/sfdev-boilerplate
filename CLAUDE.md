@@ -143,6 +143,14 @@ deux** elle est :
 
 Un refus qui ne dit ni l'un ni l'autre est une opinion déguisée en règle.
 
+### Une page, c'est des fonctionnalités et une présentation
+
+Les deux se traitent séparément, et dans cet ordre. Mélanger produit
+toujours le même défaut : on discute d'une couleur avant de savoir ce que
+la page doit permettre, et la fonction manquante se découvre une fois la
+maquette faite. La skill `concevoir-une-page` tient l'ordre — les
+fonctions d'abord (`suggester`), la présentation ensuite.
+
 ### Deux surfaces veut dire deux écrans, pas un écran rétréci
 
 Le téléphone est le lieu du geste unique, à une main, sous mauvaise
@@ -154,6 +162,23 @@ invente jamais après coup.
 Quand un produit a deux surfaces, chacune a **son propre plan**. Le même
 objet montré dans deux compositions, jamais la même composition à deux
 tailles.
+
+Deux agents portent ces paradigmes et se dispatchent **en parallèle**,
+sans voir le travail l'un de l'autre : `designer-telephone` et
+`designer-bureau`. Ils s'appuient sur une référence commune —
+`design-direction/references/paradigmes-de-surface.md` : constantes
+physiques, familles de motifs éprouvés, et quel design pour quel type
+d'application. Un motif ne se cite pas pour sa notoriété, mais parce
+qu'il résout le problème posé.
+
+`!` Un même produit **change de famille** selon la surface : un outil
+dense sur bureau peut être un outil de terrain sur téléphone. Ce n'est
+pas une réduction, ce sont deux applications qui partagent une base de
+données.
+
+`!` Ce qu'un designer ne dessine pas : un logo, une icône, une
+illustration. Il écrit un `PROMPT-nnn` (`visual-prompt`) et laisse le
+trou. Un trou se voit et se comble ; un emoji posé en attendant reste.
 
 ---
 

@@ -4,6 +4,52 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 
 ---
 
+## 2026-09-09 — Un seul designer pour deux paradigmes
+
+- **Symptôme** : l'utilisateur, sur un produit à deux surfaces : « il
+  faut un agent spécialisé pour le mobile et un pour le desktop, ce ne
+  sont pas les mêmes paradigmes ». Constat vérifié : les écrans du grand
+  écran étaient des écrans de téléphone élargis — une colonne centrée,
+  l'action principale ancrée en bas, aucun clavier, aucune comparaison.
+- **Cause** : `design-direction` tenait le rôle d'UX/UI **pour le
+  produit**, sans distinguer les surfaces ; `design-critic` confronte à
+  `DESIGN.md` et `directeur-artistique` refuse le tiède — aucun des trois
+  ne conçoit, et aucun ne connaît les contraintes physiques d'un
+  appareil. Le socle n'écrivait nulle part qu'une cible tactile fait
+  44 pt, qu'un survol n'existe pas au doigt, ni qu'une colonne unique sur
+  1440 px est un défaut.
+- **Cause seconde** : concevoir une seule fois puis « adapter » est le
+  chemin naturel, et il produit un résultat plat des deux côtés. La
+  densité que le grand écran permet ne s'invente jamais après coup.
+- **Correction** : deux agents, `designer-telephone` et `designer-bureau`,
+  dispatchés **en parallèle** et sans voir le travail l'un de l'autre —
+  deux compositions du même objet, jamais une composition et sa
+  réduction. Une référence commune,
+  `design-direction/references/paradigmes-de-surface.md`, porte ce qui ne
+  se devine pas : les constantes physiques des deux appareils, les
+  familles de motifs éprouvés de chaque surface, ce qui échoue en
+  traversant, et une table **quel design pour quel type d'application**
+  — un motif ne se cite pas pour sa notoriété mais parce qu'il résout le
+  problème posé.
+- **Correction seconde** : une page est **des fonctionnalités ET une
+  présentation**, et les deux se traitent dans cet ordre. La skill
+  `concevoir-une-page` tient l'ordre : `suggester` pour les fonctions,
+  les deux designers pour la forme, les critiques après — jamais sur une
+  proposition.
+- **Correction troisième** : `visual-prompt` couvrait les images et les
+  illustrations, pas les logos ni les icônes. Elle porte maintenant un
+  `genre` obligatoire, et la règle qui manquait : un logo n'est pas une
+  image — le prompt demande du vecteur ou décrit une forme construite. Un
+  designer qui a besoin d'un asset écrit le prompt et **laisse le trou**.
+  Un trou se voit et se comble ; un emoji posé en attendant reste. La
+  génération reste manuelle : d'où l'exigence que le prompt soit copiable
+  tel quel, sans retouche.
+- **Défaut d'outil corrigé au passage** : `neutralite.py` cherchait ses
+  termes en sous-chaîne — « plancher » déclenchait sur « planche ». Borné
+  aux frontières de mot, **pluriel compris** : la première correction
+  laissait passer « planches », ce qui était pire que le faux positif
+  qu'elle réparait. Une correction se vérifie dans les deux sens.
+
 ## 2026-09-09 — Le socle savait répondre, pas devancer
 
 - **Symptôme** : l'utilisateur, après quatre tranches livrées : « je
