@@ -363,7 +363,7 @@ TRC     raw | confirmé
 SUG     pending | validé | invalidé | abandonné
 INT     raw | confirmé
 COPY    draft | retenu | rejeté
-PROMPT  draft | generated | retenu | rejeté
+PROMPT  draft | generated | retenu | rejeté | remplacé par PROMPT-nnn
 TASK    todo | doing | done
 
 ### Champs supplémentaires obligatoires
