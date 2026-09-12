@@ -92,6 +92,11 @@ prompt est copiable tel quel**.
 Une fois une composition retenue et écrite :
 
 - `design-critic` la confronte au `DESIGN.md` — contexte vierge ;
+- `critique-du-copy` relit les TEXTES, ce que les deux autres ne font
+  pas : ils jugent des formes et laissent passer un geste universel
+  rebaptisé. `!` Une page, c'est des fonctions et une présentation — mais
+  la présentation est autant des mots que des pixels, et les mots sont
+  ce que l'utilisateur lit en premier ;
 - `directeur-artistique` refuse le tiède, et doit citer un produit précis
   qui fait mieux.
 
