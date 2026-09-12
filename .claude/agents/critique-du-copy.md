@@ -59,7 +59,14 @@ messagerie et une boutique. Si oui, le standard gagne. Sinon, tais-toi.
    - **l'inventaire** — « vous pouvez aussi le coller », « un document à
      la fois ». La liste de ce que la chose sait faire. Une capacité se
      découvre en s'en servant ; une limite ne compte que le jour où on
-     la dépasse.
+     la dépasse ;
+   - **l'énumération des causes** — « soit il n'en est pas un, soit il a
+     été modifié, soit… ». Trois hypothèses offertes à quelqu'un qui
+     attend un oui ou un non. `!` C'est la forme la plus coûteuse :
+     **un produit qui énumère ce qu'il ne sait pas trancher reporte sa
+     décision sur celui qui lit.** La structure juste est *verdict →
+     conduite à tenir → recours*, et le recours existe précisément pour
+     le cas où le verdict se trompe.
 
    **Le test, et il est mécanique** : retire la phrase. Le geste
    reste-t-il faisable ? Alors elle partait. Sa place est une page qui
