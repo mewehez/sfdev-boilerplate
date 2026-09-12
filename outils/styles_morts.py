@@ -90,7 +90,22 @@ def controler(base: Path) -> int:
     # Les classes posées dans le code et absentes de toute feuille.
     orphelines: set[str] = set()
     for f in sources:
-        for citation in re.findall(r"className=[\"'{`]([^\"'}`]+)", f.read_text(errors="ignore")):
+        texte = f.read_text(errors="ignore")
+        # ! `className={classe}` ne cite AUCUNE classe : il en cite une
+        # dont le nom est calculé, et le contrôle ne peut pas le savoir.
+        # Il le signalait comme classe jamais déclarée — un contrôle qui
+        # crie sur un motif React courant finit par ne plus être lu.
+        texte = re.sub(r"className=\{\s*[_a-zA-Z][\w.]*\s*\}", "", texte)
+        # ! `className={x ? "a" : "b"}` cite `a` et `b`, pas `x` : dans une
+        # expression, seules les chaînes entre guillemets sont des classes.
+        # Le contrôle prenait la condition pour une classe orpheline.
+        citations = re.findall(r"className=[\"'`]([^\"'`]+)", texte)
+        for expression in re.findall(r"className=\{([^}]*)\}", texte):
+            # Une chaîne comparée — `etat === "fournie"` — n'est pas une
+            # classe non plus : c'est une valeur, la classe vient après.
+            citations.extend(re.findall(r"(?<![=!])\s*[\"'`]([^\"'`]+)[\"'`]",
+                                        re.sub(r"[=!]==?\s*[\"'`][^\"'`]*[\"'`]", "", expression)))
+        for citation in citations:
             for nom in citation.split():
                 # Les fragments d'expression — ternaires, gabarits — ne
                 # sont pas des classes. On ne garde que ce qui en a la

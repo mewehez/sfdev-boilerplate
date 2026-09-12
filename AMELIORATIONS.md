@@ -4,6 +4,49 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 
 ---
 
+## 2026-09-12 — Le contrôle de neutralité ne voit pas une CITATION
+
+- **Symptôme** : un agent du socle illustrait ses règles avec les chaînes
+  réelles de l'écran d'un produit — libellés, messages d'erreur, phrases
+  de l'utilisateur recopiées mot pour mot. `neutralite.py` était **vert**.
+- **Cause** : il cherche des MOTS surveillés. Le nom du produit y était
+  bien, et il ne l'a trouvé nulle part — les exemples ne le nommaient
+  pas, ils le *citaient*. Une citation d'interface ne contient aucun mot
+  de la liste : ni le nom du produit, ni son domaine. Le contrôle
+  mesurait la bonne chose, et cette forme-là lui échappe par
+  construction.
+- **Correction** : la règle passe à l'ÉCRITURE plutôt qu'au contrôle.
+  Un exemple dans le socle s'écrit générique dès le premier jet —
+  « la méthode A », « soit X, soit Y, soit Z » — et non pas nettoyé après
+  coup. Écrit dans `CLAUDE.md`, section du socle applicable à n'importe
+  quel produit.
+- **Reste ouvert** : le contrôle ne l'attrapera toujours pas. C'est une
+  discipline d'écriture, pas une barrière — et c'est dit comme telle.
+
+---
+
+## 2026-09-12 — Les leçons s'accumulent dans le PRODUIT, pas dans le socle
+
+- **Symptôme** : `CLAUDE.md` fait 585 lignes dans le socle et 1 101 dans
+  le produit en cours. Une vingtaine de leçons — toute la section des
+  contrôles mécaniques, et ses sous-sections `!` — n'existent que là-bas.
+  Deux outils ont divergé dans le même sens : `styles_morts.py` avait
+  trois corrections que le socle n'avait pas.
+- **Cause** : la règle « un outil corrigé rend une leçon, et la leçon
+  revient ici » a été suivie **dans le produit**. Le `CLAUDE.md` qu'on a
+  sous la main pendant qu'on travaille est celui du produit ; c'est là
+  qu'on écrit, et la remontée vers le socle demande un second geste que
+  rien ne réclame.
+- **Correction partielle** : `styles_morts.py` synchronisé. Le reste
+  demande une passe à part — chaque leçon doit être **dépersonnalisée**
+  en montant, ce qui est précisément le travail que le contrôle ne sait
+  pas faire.
+- **Reste ouvert** : une vingtaine de leçons à porter. `!` Tant qu'elles
+  restent en bas, le projet suivant repart sans elles — c'est-à-dire
+  qu'il les réapprendra en les payant.
+
+---
+
 ## 2026-09-09 — Une question posée alors que la réponse était publique
 
 - **Symptôme** : deux agents rendent la même question bloquante — « par

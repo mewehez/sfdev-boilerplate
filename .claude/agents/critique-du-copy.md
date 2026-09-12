@@ -50,23 +50,23 @@ messagerie et une boutique. Si oui, le standard gagne. Sinon, tais-toi.
    Trois formes, et il faut les nommer séparément parce qu'elles ne se
    ressemblent pas :
 
-   - **le pourquoi** — « un code recopié ne suffit pas ». La
-     justification du geste, posée à côté du geste. Personne ne demande
-     pourquoi avant de faire ;
-   - **le comment** — « son empreinte est calculée dans votre navigateur,
-     seuls 64 caractères sont envoyés ». Le mécanisme. Il rassure celui
-     qui l'a écrit, pas celui qui lit ;
-   - **l'inventaire** — « vous pouvez aussi le coller », « un document à
-     la fois ». La liste de ce que la chose sait faire. Une capacité se
+   - **le pourquoi** — *« la méthode A ne suffit pas, c'est pour ça
+     qu'on vous demande B »*. La justification du geste, posée à côté du
+     geste. Personne ne demande pourquoi avant de faire ;
+   - **le comment** — *« le calcul se fait sur votre appareil, seul le
+     résultat est transmis »*. Le mécanisme. Il rassure celui qui l'a
+     écrit, pas celui qui lit ;
+   - **l'inventaire** — *« vous pouvez aussi le coller »*, *« un seul à
+     la fois »*. La liste de ce que la chose sait faire. Une capacité se
      découvre en s'en servant ; une limite ne compte que le jour où on
      la dépasse ;
-   - **l'énumération des causes** — « soit il n'en est pas un, soit il a
-     été modifié, soit… ». Trois hypothèses offertes à quelqu'un qui
-     attend un oui ou un non. `!` C'est la forme la plus coûteuse :
-     **un produit qui énumère ce qu'il ne sait pas trancher reporte sa
-     décision sur celui qui lit.** La structure juste est *verdict →
-     conduite à tenir → recours*, et le recours existe précisément pour
-     le cas où le verdict se trompe.
+   - **l'énumération des causes** — *« soit X, soit Y, soit Z »* après un
+     échec. Des hypothèses offertes à quelqu'un qui attend un oui ou un
+     non. `!` C'est la forme la plus coûteuse : **un produit qui énumère
+     ce qu'il ne sait pas trancher reporte sa décision sur celui qui
+     lit.** La structure juste est *verdict → conduite à tenir →
+     recours*, et le recours existe précisément pour le cas où le verdict
+     se trompe.
 
    **Le test, et il est mécanique** : retire la phrase. Le geste
    reste-t-il faisable ? Alors elle partait. Sa place est une page qui
