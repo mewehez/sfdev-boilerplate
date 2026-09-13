@@ -17,6 +17,22 @@ Ce que le contrôle rend :
   s'applique à rien, et personne pour le dire.
 - les **classes orphelines** : une classe posée dans le code et qui
   n'existe dans aucune feuille de style. Souvent une faute de frappe.
+- les **noms vides** : un nom qui vit dans le REGISTRE de design sans une
+  seule règle et sans un seul emploi.
+
+! Ce troisième sens de lecture a été ajouté le 2026-09-13, après qu'un
+nom — `barre-onglets` — eut vécu des mois dans le registre et dans un
+titre de commentaire, sans rien rendre. Il n'était ni une règle morte, ni
+une classe orpheline : il n'était **nulle part**, et le contrôle disait
+« styles cohérents ».
+
+> **Un contrôle qui compare A et B ne voit jamais ce qui n'est ni dans A
+> ni dans B.**
+
+Et le registre n'est pas le résumé des deux autres sources : il
+**prescrit**. Un registre qui nomme des choses qui n'existent pas envoie
+chercher une forme introuvable, puis autorise à la réinventer sous le nom
+qui semblait pris — exactement ce qu'il existe pour empêcher.
 
 Il ne comprend pas le CSS et n'essaie pas : il lit les sélecteurs, lit les
 littéraux de chaîne du code, et compare. C'est grossier, et c'est
@@ -43,6 +59,12 @@ PREFIXES_ETRANGERS = ("openseadragon", "leaflet", "mapbox", "swiper", "ol-",
 CLASSE = re.compile(r"\.(-?[_a-zA-Z][\w-]*)")
 ATTRIBUT = re.compile(r"\[data-([\w-]+)\s*[~^|$*]?=\s*[\"']([^\"']*)[\"']\]")
 MOT = re.compile(r"[\w-]+")
+
+# Le registre de design : une table dont la première colonne nomme des
+# composants entre accents graves. Une entrée barrée — `~~nom~~` — dit
+# précisément qu'elle n'existe plus : on ne la réclame pas.
+REGISTRE = "DESIGN.md"
+NOM_REGISTRE = re.compile(r"`([^`]+)`")
 
 
 def _fichiers(base: Path, extensions: set[str]) -> list[Path]:
@@ -118,7 +140,29 @@ def controler(base: Path) -> int:
                 if (not nom.startswith(PREFIXES_ETRANGERS) and nom not in declarees):
                     orphelines.add(nom)
 
-    if not mortes and not orphelines:
+    # --- Troisième sens : le registre, confronté au réel.
+    vides: list[str] = []
+    for doc in base.rglob(REGISTRE):
+        if set(doc.parts) & IGNORES:
+            continue
+        for ligne_no, ligne in enumerate(doc.read_text(errors="ignore").split("\n"), 1):
+            if not ligne.startswith("|") or ligne.startswith("|---"):
+                continue
+            premiere = ligne.split("|")[1]
+            # Barrée : elle dit elle-même qu'elle n'existe plus.
+            if "~~" in premiere:
+                continue
+            for nom in NOM_REGISTRE.findall(premiere):
+                # Les suffixes — `-ligne`, `-quoi` — se lisent avec leur
+                # préfixe et n'existent pas seuls.
+                if nom.startswith("-") or not re.fullmatch(r"[_a-zA-Z][\w-]{2,}", nom):
+                    continue
+                if nom.startswith(PREFIXES_ETRANGERS):
+                    continue
+                if nom not in declarees and nom not in mots_code:
+                    vides.append(f"{doc.relative_to(base)}:{ligne_no}  `{nom}`")
+
+    if not mortes and not orphelines and not vides:
         print(f"Styles cohérents — {len(declarees)} classes déclarées, "
               f"{len(feuilles)} feuille(s).")
         return 0
@@ -133,8 +177,18 @@ def controler(base: Path) -> int:
         for o in sorted(orphelines):
             print(f"  {o}")
         print()
-    print("Une règle morte n'échoue pas : elle retire une affordance en\n"
-          "silence. Retirer la règle, ou corriger le sélecteur.")
+    if vides:
+        print(f"! {len(vides)} nom(s) au registre sans règle ni emploi :\n")
+        for v in sorted(set(vides)):
+            print(f"  {v}")
+        print()
+        print("Un registre qui nomme ce qui n'existe pas envoie chercher une\n"
+              "forme introuvable, puis autorise à la réinventer sous le nom qui\n"
+              "semblait pris. Le retirer, ou le barrer — `~~nom~~` — avec sa date.")
+        print()
+    if mortes or orphelines:
+        print("Une règle morte n'échoue pas : elle retire une affordance en\n"
+              "silence. Retirer la règle, ou corriger le sélecteur.")
     return 1
 
 

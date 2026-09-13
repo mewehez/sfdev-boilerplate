@@ -4,6 +4,40 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 
 ---
 
+## 2026-09-12 — `styles_morts` ne confronte pas le REGISTRE au réel
+
+- **Ce qui a été trouvé** : dans un produit fondé sur ce socle, une entrée
+  du registre de design vivait dans `DESIGN.md` **et** dans un titre de
+  commentaire de la feuille de style — sans une seule règle et sans un
+  seul emploi dans le code. Le nom disait « la navigation de
+  l'application » ; la navigation s'appelait autrement, depuis longtemps.
+  Le contrôle rendait « Styles cohérents ».
+- **Pourquoi il ne pouvait pas le voir** : il compare deux choses, dans
+  les deux sens — les règles au code (règles mortes) et le code aux règles
+  (classes orphelines). Un nom qui n'a **ni règle ni emploi** n'est dans
+  aucune des deux listes. Il est nulle part, donc il passe.
+- **Ce que ça coûte** : le registre est censé être ce qu'on lit avant
+  d'écrire un composant — « un composant qui existe se réemploie ». Un
+  registre qui nomme des choses qui n'existent pas envoie chercher une
+  forme qu'on ne trouvera pas, puis autorise à la réinventer sous le nom
+  qui semblait pris. C'est exactement ce que le registre existe pour
+  empêcher.
+- **La correction, faite le 2026-09-13** : un **troisième** sens de
+  lecture — chaque nom du registre est cherché dans la feuille **et** dans
+  le code. Trois verdicts au lieu de deux : règle morte, classe
+  orpheline, et **nom vide**. Les entrées barrées (`~~nom~~`) sont
+  exclues : elles disent précisément qu'elles n'existent plus.
+- `!` **Ce qu'il a trouvé à sa première exécution** : **sept** noms, sur
+  un seul produit. Un composant retiré dont l'entrée d'origine était
+  restée vivante à côté de sa version barrée ; trois noms pour une même
+  liste, dont le code écrit un quatrième depuis toujours ; et trois
+  composants **jamais écrits**. Un registre relu par des humains pendant
+  des mois ; le contrôle les a rendus en une seconde.
+- **Ce qui vaut d'être retenu** : un contrôle qui compare A et B ne voit
+  jamais ce qui n'est ni dans A ni dans B. Quand un document **prescrit**
+  (un registre, un index, un contrat), il faut le lire comme une troisième
+  source, pas comme le résumé des deux autres.
+
 ## 2026-09-12 — Le contrôle de neutralité ne voit pas une CITATION
 
 - **Symptôme** : un agent du socle illustrait ses règles avec les chaînes
