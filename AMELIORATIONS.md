@@ -4,6 +4,30 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 
 ---
 
+## 2026-09-14 — Aucun contrôle ne lisait les listes de statuts FERMÉES
+
+- **Ce qui a été trouvé** : le socle écrit, pour chaque type d'objet, une
+  liste de statuts **fermée** — `IDEA raw | parked | specd | killed`, et
+  ainsi de suite. Rien ne la vérifiait. Sur un produit fondé sur ce
+  socle, **six objets** portaient `done`, un mot qui n'existe dans aucune
+  liste — écrits par la même main, à deux jours d'écart, sans qu'un seul
+  contrôle bronche.
+- **Pourquoi c'est plus grave qu'une faute de frappe** : un statut hors
+  liste **ne casse rien**. Il ment doucement. Le prochain qui filtre sur
+  `specd` pour savoir ce qui est retenu ne voit pas ces objets ; celui
+  qui compte les `killed` pour savoir ce qui a été refusé non plus. C'est
+  un lien vers rien, en plus discret — et les listes fermées n'existent
+  que pour rendre ces filtres possibles.
+- **La correction, faite** : `liens_morts.py` lit `status:` du
+  frontmatter et le confronte à la liste de son type, déduite de l'ID —
+  qui est déjà validé.
+- **Ce qui vaut d'être retenu** : une **liste fermée écrite dans la
+  documentation n'est pas fermée** — c'est une intention. Elle ne se
+  ferme que le jour où un contrôle la lit. Même leçon que la veille sur
+  le registre de design, et par la même porte : un document qui
+  **prescrit** doit être une source pour l'outillage, pas un texte que
+  les humains sont censés respecter.
+
 ## 2026-09-12 — `styles_morts` ne confronte pas le REGISTRE au réel
 
 - **Ce qui a été trouvé** : dans un produit fondé sur ce socle, une entrée
