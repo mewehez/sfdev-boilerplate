@@ -4,6 +4,45 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 
 ---
 
+## 2026-09-14 — Un audit de dépendances vert sur un dépôt sans dépendances
+
+- **Ce qui a été trouvé** : `dependances.py`, copié du produit vers le
+  socle, a rendu « Dépendances sans faille connue. » et **zéro** sur le
+  socle — qui n'a ni `src/web/package.json` ni `src/api/pyproject.toml`,
+  ni la moindre dépendance. Il n'avait ouvert aucun fichier.
+- **Pourquoi c'est la forme chère du défaut** : l'outil portait déjà,
+  écrite dans sa propre docstring, la leçon « je n'ai pas regardé n'est
+  pas je n'ai rien vu », et un troisième code de retour pour elle. Il ne
+  la tenait qu'**un cran trop bas** : il traitait « l'auditeur manque »
+  (`pnpm`, `uv` absents) et pas « il n'y avait rien à auditer ». Dans les
+  deux cas l'outil n'a rien regardé ; dans un seul il le disait.
+- **Ce qu'il en coûtait** : le prochain projet parti de ce socle héritait
+  d'un contrôle qui **rassure** au lieu de crier. Un contrôle qui crie
+  pour rien cesse d'être lu ; un contrôle qui rassure pour rien est pire,
+  parce qu'on le croit.
+- **La correction, faite** : chaque auditeur rend `(ce qu'il a ouvert,
+  les lignes)`. Quand la liste des fichiers ouverts est vide, le contrôle
+  nomme les chemins qu'il a cherchés et rend **3**. Au passage,
+  `requirements.txt` compte autant que `pyproject.toml` : ne reconnaître
+  qu'une forme de projet Python revenait à rendre « rien à signaler » sur
+  l'autre, sans l'avoir ouverte.
+- **Vu échouer et vu réussir** : 3 sur le socle (aucun verrou), 0 sur le
+  produit qui en a. Deux réponses différentes prouvent que la sonde
+  regarde quelque chose — sans quoi elle n'aurait rien prouvé.
+- **Ce qui vaut d'être retenu** : **une leçon écrite dans un outil ne la
+  lui fait pas tenir partout.** Elle est tenue à l'endroit précis où on
+  l'a écrite, et le même défaut vit tranquillement un étage au-dessus. En
+  posant un garde, se demander de quoi d'autre « ne rien voir » peut
+  vouloir dire.
+- **Et le garde générique, trouvé en cherchant les autres cas** : les
+  trois autres contrôles tournent eux aussi à vide sur le socle — et
+  aucun ne ment, parce qu'ils disent **combien** dans la même phrase
+  (« 0 objets », « aucune feuille de style »). Seul celui qui annonçait
+  « rien à signaler » sans compte était indistinguable d'un vrai vert.
+  `→` **Un contrôle qui rend « propre » rend aussi la taille de ce qu'il
+  a ouvert.** C'est moins cher qu'un troisième code de retour, et ça
+  s'applique partout.
+
 ## 2026-09-14 — Aucun contrôle ne lisait les listes de statuts FERMÉES
 
 - **Ce qui a été trouvé** : le socle écrit, pour chaque type d'objet, une

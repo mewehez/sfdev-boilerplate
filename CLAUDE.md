@@ -77,6 +77,128 @@ zéro test sur un invariant qui ne se rattrape pas est une faute.
 
 ---
 
+## Les contrôles mécaniques
+
+`outils/` porte les contrôles qui tiennent une règle à notre place. Ils
+existent parce qu'une exemption écrite vaut mieux qu'une vigilance
+espérée : ce qu'on a trouvé une fois ne doit pas revenir.
+
+| contrôle | ce qu'il refuse |
+|----------|-----------------|
+| `neutralite.py` | le vocabulaire d'un projet passé, resté dans le socle |
+| `styles_morts.py` | une règle CSS qui ne s'applique à rien, une classe jamais déclarée, **un nom du registre sans règle ni emploi** |
+| `liens_morts.py` | un `[[lien]]` sans cible, un objet sans alias, un statut hors de sa liste fermée, un second coffre |
+| `graphe_obsidian.py` | un frontmatter qu'Obsidian ne sait pas lire (et il le répare) |
+| `dependances.py` | une faille connue dans ce qu'on installe |
+
+**`outils/` est du socle : il se copie tel quel dans le projet suivant.**
+Un outil qui ne vaut que pour CE produit — un dérivé d'image, un
+importateur de format maison — va dans **`outils/produit/`**, qui ne se
+copie pas. La frontière est dans l'arborescence, pas dans une intention :
+c'est la seule forme qui survit à une relecture rapide.
+
+### ! Un contrôle ne prouve que ce qu'il MESURE
+
+Vert ne veut pas dire juste. Trois familles, et la troisième est celle
+qu'aucune relecture n'attrape :
+
+- **il mesure à côté** — un contrôle vérifiait qu'un alias *existait*, là
+  où il fallait vérifier qu'il se *résolvait* ;
+- **il mesure une chose absente** — des tests verts sur une
+  fonctionnalité retirée de l'écran la veille. Un test vert sur une
+  fonctionnalité absente est un **faux témoin** : il ne se signale pas,
+  et il fait croire à une couverture qu'on n'a pas ;
+- **il ne peut pas voir ce qu'il cherche.** Un contrôle qui compare A et
+  B ne voit jamais ce qui n'est **ni dans A ni dans B**. Un nom qui vit
+  dans un document prescriptif sans une seule règle et sans un seul
+  emploi n'est ni une règle morte, ni une classe orpheline : il n'est
+  nulle part, et le contrôle rend « cohérent ».
+
+Deux conséquences, et elles sont contre-intuitives :
+
+- **Retirer une fonctionnalité, c'est retirer ses tests dans le même
+  geste.** Un test qu'on laisse derrière soi ne devient pas inutile, il
+  devient menteur.
+- **Quand l'observation contredit le contrôle, le contrôle est le
+  suspect.** On remplace l'instrument avant de chercher la cause.
+
+Et **avant de croire une mesure négative, lui montrer un cas positif.**
+Une sonde qui n'a jamais rien vu bouger n'a rien prouvé — elle n'a même
+pas prouvé qu'elle fonctionne. Corollaire pour les tests : un test qui
+passe du premier coup sur un défaut qu'on vient de corriger doit être vu
+**échouer** sur le code d'avant, sinon on ne sait pas ce qu'il tient.
+
+### ! « Je n'ai pas regardé » n'est pas « je n'ai rien vu »
+
+Un contrôle a trois issues, pas deux : **rien à signaler**, **j'ai
+trouvé**, et **je n'ai pas pu regarder**. Les deux dernières se
+ressemblent — un code de retour non nul — et les confondre coûte des
+deux côtés :
+
+- il **crie pour rien** là où ses outils manquent, et un contrôle qui
+  crie pour rien cesse d'être lu ;
+- ou, pire dans l'autre sens, un « rien à signaler » qui voulait dire
+  « je n'ai rien ouvert » **rassure à tort**.
+
+→ **Trois codes de retour, et le troisième se dit en toutes lettres.**
+
+`!` **Et une leçon écrite dans un outil ne la lui fait pas tenir
+partout.** Le cas trouvé : un audit de dépendances portait ce troisième
+code dans sa propre documentation — pour « l'auditeur manque » — et
+rendait quand même **vert** sur un dépôt où il n'y avait **aucun verrou à
+ouvrir**. Même aveuglement, un étage au-dessus, sous le nez de la règle
+qui l'interdit. En posant un garde, se demander de quoi d'autre « ne rien
+voir » peut vouloir dire.
+
+→ **Ce qui l'attrape, c'est le COMPTE.** Les autres contrôles tournent
+eux aussi à vide sur un dépôt neuf — et ils s'en sortent parce qu'ils le
+disent dans la même phrase : « 0 objets », « aucune feuille de style ».
+Seul celui qui annonçait « rien à signaler » sans dire **combien il avait
+regardé** était indistinguable d'un vrai vert. Un contrôle qui rend
+« propre » rend aussi la taille de ce qu'il a ouvert.
+
+→ Et **un contrôle se place là où vivent les données qu'il mesure.** Un
+outil qui déduit son contexte de son propre emplacement ne survit pas au
+déplacement : lancé ailleurs, il ne plante pas — il répond « rien en
+attente », ce qui est plausible. Quand il dépend d'un service, il dit
+**contre quoi** il a travaillé, sinon une réponse vide se lit comme une
+bonne nouvelle.
+
+### ! Un contrôle qui crie pour rien cesse d'être lu
+
+Un faux positif coûte plus cher ici qu'ailleurs, parce qu'un contrôle est
+fait pour être lu **rarement** : chaque ligne qu'il sort doit valoir une
+lecture. Ce qu'un contrôle n'est pas censé regarder — du code entre
+backticks, une valeur calculée à l'exécution, les dépendances installées
+— ne se signale pas.
+
+→ **La portée d'un contrôle fait partie de ce qu'il affirme.** Un contrôle
+juste, appliqué au mauvais périmètre, produit des faux positifs qui ont
+l'air de vrais — et on finit par corriger le code au lieu de corriger la
+portée.
+
+### La règle de travail
+
+**Un outil corrigé rend une leçon, et la leçon revient ici.** Un correctif
+qui reste dans le fichier de l'outil protège ce projet ; écrit dans le
+socle, il protège les suivants. C'est la seule raison d'avoir un socle
+plutôt qu'un dossier de scripts.
+
+Concrètement, à chaque correction d'outil :
+
+- le **cas** rejoint le contrôle, pour qu'il ne revienne pas ;
+- la **leçon**, si elle se généralise, rejoint cette section ;
+- le **fait** — ce qui a été trouvé, et ce que ça a coûté — rejoint la
+  TASK en cours, jamais le seul message de fin de tour.
+
+`!` Cette règle se suit **dans le produit** et s'oublie en montant : le
+`CLAUDE.md` qu'on a sous la main pendant qu'on travaille est celui du
+produit. La remontée demande un second geste que rien ne réclame — et
+tant qu'elle n'est pas faite, le projet suivant repart sans la leçon,
+c'est-à-dire qu'il la réapprendra en la payant.
+
+---
+
 ## Le chemin par défaut : la feature
 
 L'étalon est le mode non structuré : l'utilisateur dit une feature, un
