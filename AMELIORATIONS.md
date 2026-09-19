@@ -4,6 +4,46 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 
 ---
 
+## 2026-09-19 — Le contrôle des listes fermées RECOPIAIT les listes
+
+- **Ce qui a été trouvé** : `liens_morts.py` a gagné le 2026-09-14 la
+  validation des statuts contre les listes fermées de `CLAUDE.md`. Sa
+  table a été **tapée de mémoire** plutôt que lue. Cinq jours plus tard,
+  au premier statut légitimement hors de sa table, l'écart est apparu —
+  et il était double :
+  - `SUG` valait « pending | validée | invalidée » : au **féminin** quand
+    la règle dit « validé | invalidé », et **sans `abandonné`**, qui est
+    pourtant le chemin documenté vers l'archive ;
+  - `ADR`, `INT`, `COPY`, `PROMPT` et `TASK` n'y figuraient **pas du
+    tout**. **Six types sur onze**, et le contrôle rendait « cohérent »
+    pour les cinq autres sans les avoir ouverts.
+- **Ce que ça coûtait** : le premier statut légitimement `abandonné`
+  aurait été signalé comme un défaut. On aurait corrigé le **document**
+  au lieu de l'outil — un contrôle juste appliqué au mauvais périmètre
+  produit des faux positifs qui ont l'air de vrais.
+- **La correction, faite** : l'outil **lit** la table de `CLAUDE.md` au
+  lieu de la recopier. `CLAUDE.md` prescrit, l'outil applique. Une
+  divergence n'est plus à corriger : elle est devenue **impossible**.
+  Au passage, « remplacé par ADR-nnn » est traité comme un **motif** et
+  non un littéral — le lire littéralement rejetait la seule forme que la
+  règle autorise.
+- **Ce que l'élargissement a trouvé tout de suite** : un objet portait
+  un statut qu'aucune liste ne contenait, dans un des cinq types jamais
+  regardés. Le document expliquait lui-même pourquoi il avait eu besoin
+  d'un mot nouveau — et la règle ne l'avait jamais appris. Le correctif
+  a donc été **une ligne de `CLAUDE.md`**, et l'outil a suivi seul.
+- **Les trois verdicts, vus** : `0` avec sa portée affichée (« 11 listes
+  tenues sur les 11 types » — avant, 6 en silence), `1` sur le statut
+  hors liste, `3` quand `CLAUDE.md` est déplacé.
+- **Ce qui vaut d'être retenu** : **deux sources pour une même règle
+  finissent par divorcer**, exactement comme deux sources pour un même
+  nombre. Quand un contrôle applique une règle écrite ailleurs, il la
+  **lit**. Et quand il ne peut pas la lire, il le dit — c'est le même
+  troisième verdict que l'audit de dépendances, cinq jours plus tôt, et
+  c'est la deuxième fois de suite qu'il manquait.
+
+---
+
 ## 2026-09-14 — Un audit de dépendances vert sur un dépôt sans dépendances
 
 - **Ce qui a été trouvé** : `dependances.py`, copié du produit vers le

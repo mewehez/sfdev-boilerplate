@@ -177,6 +177,37 @@ juste, appliqué au mauvais périmètre, produit des faux positifs qui ont
 l'air de vrais — et on finit par corriger le code au lieu de corriger la
 portée.
 
+
+### ! Un contrôle qui applique une règle écrite ailleurs la LIT
+
+Un contrôle a gagné la validation des statuts contre les listes fermées
+de `CLAUDE.md` — et sa table a été **tapée de mémoire** plutôt que lue.
+Cinq jours ont suffi pour que l'écart se voie, et il était double : une
+liste au mauvais genre et amputée d'une valeur documentée, et **cinq
+types sur onze absents**. Le contrôle rendait « cohérent » pour ceux
+qu'il n'avait jamais ouverts.
+
+Le coût n'est pas le faux négatif, il est pire : au premier objet portant
+la valeur légitime que la table ignorait, on corrige **le document** au
+lieu de l'outil. Un contrôle juste appliqué à la mauvaise règle produit
+des faux positifs qui ont l'air de vrais.
+
+> **Deux sources pour une même règle finissent par divorcer**, exactement
+> comme deux sources pour un même nombre.
+
+→ **Quand un contrôle applique une règle écrite ailleurs, il la lit.** Le
+document prescrit, l'outil applique. La divergence n'est alors plus à
+corriger — elle est devenue impossible, et corriger la règle suffit à
+corriger le contrôle.
+
+→ Et **ce qui ressemble à un littéral n'en est pas toujours un** : une
+valeur comme « remplacé par <TYPE>-nnn » est un **motif**. La lire
+littéralement rejette la seule forme que la règle autorise.
+
+`!` Le troisième verdict vaut ici aussi, et c'est la deuxième fois de
+suite qu'il manquait : quand la règle est introuvable, le contrôle le
+**dit** et ne rend pas vert sur zéro liste vérifiée.
+
 ### La règle de travail
 
 **Un outil corrigé rend une leçon, et la leçon revient ici.** Un correctif
@@ -485,8 +516,15 @@ TRC     raw | confirmé
 SUG     pending | validé | invalidé | abandonné
 INT     raw | confirmé
 COPY    draft | retenu | rejeté
-PROMPT  draft | generated | retenu | rejeté | remplacé par PROMPT-nnn
+PROMPT  draft | generated | retenu | rejeté | remplacé par PROMPT-nnn | remplacé
 TASK    todo | doing | done
+
+`!` `PROMPT` porte **`remplacé` tout court**, en plus de « remplacé par
+PROMPT-nnn », et ce n'est pas un doublon : un prompt peut être supplanté
+par une solution qui **n'est pas un prompt** — une règle de style, un
+composant, rien du tout. Sans ce mot, deux prompts restent `retenu` pour
+un seul emplacement, et le filtre « ce qui est retenu » rend faux.
+
 
 ### Champs supplémentaires obligatoires
 TASK    phase: local | pilote | dur

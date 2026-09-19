@@ -57,22 +57,80 @@ INDENTE_RE = re.compile(r"^(?: {4}|\t).*$", re.M)
 def hors_code(txt: str) -> str:
     return CODE_RE.sub("", INDENTE_RE.sub("", BLOC_RE.sub("", txt)))
 
-# Les listes FERMÉES de `CLAUDE.md`. Un statut hors liste ne casse rien :
-# il ment doucement, et le prochain qui filtre ne voit pas l'objet.
-STATUTS = {
-    "IDEA": ("raw", "parked", "specd", "killed"),
-    "SPEC": ("specd", "remplacée", "caduque"),
-    "BRIEF": ("draft", "ready", "shipped", "caduc"),
-    "DOM": ("raw", "hypothèse", "confirmé"),
-    "TRC": ("raw", "confirmé"),
-    "SUG": ("pending", "validée", "invalidée"),
-}
+# Les listes FERMÉES — LUES DANS `CLAUDE.md`, jamais recopiées ici.
+#
+# ! Elles l'étaient, et elles ont divergé en cinq jours. Le 2026-09-14 ce
+# contrôle a gagné la validation des statuts, et sa table a été tapée
+# **de mémoire** plutôt que lue :
+#
+#   - `SUG` valait « pending | validée | invalidée » — au féminin, quand
+#     la règle dit « validé | invalidé », et **sans `abandonné`**, qui
+#     est pourtant le chemin documenté vers l'archive ;
+#   - `ADR`, `INT`, `COPY`, `PROMPT` et `TASK` n'y étaient pas du tout.
+#     **Six types sur onze contrôlés**, et le contrôle rendait
+#     « cohérent » pour les cinq autres sans jamais les avoir ouverts.
+#
+# Le premier statut légitimement `abandonné` aurait donc été signalé
+# comme un défaut — et on aurait corrigé le document au lieu de l'outil.
+#
+# > Deux sources pour une même règle finissent toujours par divorcer.
+#
+# D'où la lecture : `CLAUDE.md` PRESCRIT, ce fichier applique. Une
+# divergence n'est plus à corriger, elle est devenue impossible.
+REGLES = RACINE / "CLAUDE.md"
+TITRE_STATUTS = "### Status valides, par type"
+# « remplacé par ADR-nnn » n'est pas un littéral mais un motif.
+NNN_RE = re.compile(r"\b([A-Z]{3,6})-nnn\b")
+
+
+def statuts_permis() -> tuple[dict[str, tuple], str | None]:
+    """La table de `CLAUDE.md`, et ce qui a empêché de la lire.
+
+    ! Rend `({}, raison)` quand elle est introuvable — jamais `({}, None)`,
+    qui se lirait comme « aucun statut à vérifier ». « Je n'ai pas
+    regardé » n'est pas « je n'ai rien vu ».
+    """
+    if not REGLES.exists():
+        return {}, f"{REGLES.name} est introuvable"
+    texte = REGLES.read_text(encoding="utf-8")
+    if TITRE_STATUTS not in texte:
+        return {}, f"« {TITRE_STATUTS} » ne figure pas dans {REGLES.name}"
+    bloc = texte.split(TITRE_STATUTS, 1)[1]
+    table: dict[str, tuple] = {}
+    for ligne in bloc.splitlines()[1:]:
+        if not ligne.strip():
+            break                       # la table s'arrête à la ligne vide
+        mots = ligne.split(None, 1)
+        if len(mots) != 2 or mots[0] not in KINDS:
+            break
+        table[mots[0]] = tuple(v.strip() for v in mots[1].split("|") if v.strip())
+    if not table:
+        return {}, f"la table sous « {TITRE_STATUTS} » est vide"
+    return table, None
+
+
+def statut_permis(statut: str, permis: tuple) -> bool:
+    """! « remplacé par ADR-nnn » est un MOTIF, pas un littéral.
+
+    Le lire comme un littéral rejetterait `remplacé par ADR-015`, qui est
+    la seule forme que la règle autorise — un faux positif sur la valeur
+    exacte qu'on prescrit.
+    """
+    for p in permis:
+        if "-nnn" in p:
+            if re.fullmatch(re.escape(p).replace(re.escape("-nnn"), r"-\d{3}"),
+                            statut):
+                return True
+        elif statut == p:
+            return True
+    return False
+
 
 # Hors graphe : ni ID, ni frontmatter attendus (CLAUDE.md).
 IGNORE_DIRS = {"grill", "legal"}
 
 
-def objets() -> tuple[dict[str, Path], list[str]]:
+def objets(STATUTS: dict[str, tuple]) -> tuple[dict[str, Path], list[str]]:
     """Les objets du graphe par ID, et ceux à qui l'alias manque."""
     par_id: dict[str, Path] = {}
     sans_alias: list[str] = []
@@ -123,7 +181,7 @@ def objets() -> tuple[dict[str, Path], list[str]]:
             # lien vers rien, en plus discret.
             genre = ident.split("-")[0]
             permis = STATUTS.get(genre)
-            if permis and statut is not None and statut not in permis:
+            if permis and statut is not None and not statut_permis(statut, permis):
                 hors_liste.append(
                     f"{ident} — `{statut}`, attendu : {' | '.join(permis)}")
     return par_id, sans_alias, hors_liste
@@ -148,7 +206,8 @@ def coffres() -> list[Path]:
 
 
 def main() -> int:
-    par_id, sans_alias, hors_liste = objets()
+    STATUTS, muet = statuts_permis()
+    par_id, sans_alias, hors_liste = objets(STATUTS)
 
     # ! Un second coffre ne se voit pas : il s'ouvre, il affiche un
     # graphe, et ce graphe est faux d'un tiers sans le dire.
@@ -188,9 +247,21 @@ def main() -> int:
 
     perdues = seances_perdues(vises)
 
+    if muet is not None:
+        # ! Le troisième verdict, et il n'est pas le vert. Sans lui, un
+        # `CLAUDE.md` déplacé rendrait « cohérent » pour ZÉRO statut
+        # vérifié — « je n'ai pas regardé » lu comme « je n'ai rien vu ».
+        print(f"! Les listes de statuts n'ont pas pu être lues : {muet}.\n")
+        print("Ce n'est PAS « aucun statut hors liste » : c'est « je n'ai")
+        print("rien ouvert ». Les listes vivent dans CLAUDE.md, sous")
+        print(f"« {TITRE_STATUTS} » — ce contrôle les applique, il ne les")
+        print("recopie pas.")
+        return 3
+
     if not (morts or sans_alias or en_trop or fragiles or perdues or hors_liste):
         print(f"Liens cohérents — {len(par_id)} objets, toutes les cibles existent,\n"
-              "toutes les séances mènent quelque part.")
+              f"toutes les séances mènent quelque part,\n"
+              f"{len(STATUTS)} listes de statuts tenues sur les {len(KINDS)} types.")
         return 0
 
     if en_trop:
