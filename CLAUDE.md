@@ -208,6 +208,38 @@ littéralement rejette la seule forme que la règle autorise.
 suite qu'il manquait : quand la règle est introuvable, le contrôle le
 **dit** et ne rend pas vert sur zéro liste vérifiée.
 
+
+### ! Une sonde qui peut se voir elle-même ne signale jamais une absence
+
+Pour attendre la fin d'une suite de tests, une boucle :
+
+    until ! pgrep -f "pytest -q"; do sleep 10; done
+
+Elle ne sort **jamais**. Le motif `pytest -q` figure dans la ligne de
+commande du shell qui exécute la boucle : `pgrep -f` le trouve, la
+condition reste fausse, et la tâche reste éveillée — des jours, s'il
+faut. Mesuré : la sonde rend **deux PID alors qu'aucun test ne tourne**.
+Avec `[p]ytest -q`, elle rend zéro.
+
+C'est la famille de « une mesure se mesure aussi », dans son cas le plus
+retors : la sonde n'est pas muette et ne se trompe pas de cible — elle
+**se compte elle-même**, donc elle mesure sa propre existence.
+
+→ **Un motif de recherche de processus ne doit pas pouvoir matcher le
+processus qui cherche.** Le crochet (`[p]ytest`) est la forme éprouvée ;
+un PID retenu au lancement en est une autre, meilleure quand on l'a.
+
+`!` **Et la seconde moitié coûte plus cher que le bug.** Ces boucles
+n'avaient aucune raison d'exister : l'environnement notifie déjà la fin
+d'une tâche de fond. Elles ont été écrites par impatience — précisément
+ce que la règle des suites interdit déjà : *si l'on attend, on attend*.
+
+→ **Ne pas écrire d'attente pour un événement déjà notifié.** Une
+attente redondante n'apporte rien et ajoute un processus qui peut rester
+en vie tout seul. Quand une attente est vraiment nécessaire, elle porte
+sa propre borne de temps — une tâche de fond ne se fait pas interrompre
+par le délai qu'on croit lui avoir donné.
+
 ### La règle de travail
 
 **Un outil corrigé rend une leçon, et la leçon revient ici.** Un correctif

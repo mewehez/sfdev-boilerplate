@@ -4,6 +4,41 @@ Une entrée par friction réellement rencontrée. Rien de spéculatif.
 
 ---
 
+## 2026-09-19 — Une tâche d'attente qui ne pouvait pas se terminer
+
+- **Ce qui a été trouvé** : l'utilisateur a signalé qu'une tâche de fond
+  « attendre la fin de la suite » pouvait rester éveillée **des jours**.
+  La sonde était :
+
+      until ! pgrep -f "pytest -q"; do sleep 10; done
+
+  Le motif `pytest -q` figure dans la ligne de commande du shell qui
+  exécute la boucle. `pgrep -f` le trouve, la condition reste fausse, et
+  la boucle ne sort jamais. Mesuré : **deux PID rendus alors qu'aucun
+  test ne tournait** ; avec `[p]ytest -q`, zéro.
+- **Pourquoi c'est retors** : la sonde n'est ni muette ni braquée sur la
+  mauvaise cible. Elle **se compte elle-même** — elle mesure sa propre
+  existence, et son résultat est donc toujours « ça tourne encore ».
+  C'est la famille de « une mesure se mesure aussi », dans le seul cas
+  où le témoin positif ne sert à rien : la sonde voit toujours quelque
+  chose.
+- **La seconde moitié, plus chère que le bug** : ces attentes
+  n'avaient **aucune raison d'exister**. L'environnement notifie déjà la
+  fin d'une tâche de fond. Elles ont été écrites par impatience —
+  exactement ce que la règle des suites interdisait déjà : « si l'on
+  attend, on attend ».
+- **La correction, faite** : deux règles dans `CLAUDE.md` — un motif de
+  recherche de processus ne doit pas pouvoir matcher le processus qui
+  cherche ; et on n'écrit pas d'attente pour un événement déjà notifié.
+- **Ce qui vaut d'être retenu** : **un processus qu'on laisse derrière
+  soi n'est pas neutre**, et la règle valait déjà pour les serveurs de
+  développement. Elle vaut pour tout ce qu'on lance en fond : ce qui
+  n'a pas de fin garantie doit porter sa propre borne, parce qu'une
+  tâche de fond ne se fait pas interrompre par le délai qu'on croit lui
+  avoir donné.
+
+---
+
 ## 2026-09-19 — Le contrôle des listes fermées RECOPIAIT les listes
 
 - **Ce qui a été trouvé** : `liens_morts.py` a gagné le 2026-09-14 la
